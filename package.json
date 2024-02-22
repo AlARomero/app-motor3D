@@ -1,0 +1,37 @@
+{
+  "name": "app-motor3d",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config ./src/client/webpack.prod.js",
+    "dev": "webpack serve --config ./src/client/webpack.dev.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlARomero/app-motor3D.git"
+  },
+  "author": "AIARomero",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlARomero/app-motor3D/issues"
+  },
+  "homepage": "https://github.com/AlARomero/app-motor3D#readme",
+  "devDependencies": {
+    "babel-plugin-transform-commonjs": "^1.1.6",
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.2"
+  },
+  "dependencies": {
+    "babel-loader": "^9.1.3",
+    "jquery": "^3.7.1",
+    "lil-gui": "^0.19.1",
+    "three": "^0.161.0",
+    "webpack-merge": "^5.10.0"
+  },
+  "babel": {
+    "plugins": ["transform-commonjs"] 
+  }
+}
