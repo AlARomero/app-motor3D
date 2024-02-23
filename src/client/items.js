@@ -1,7 +1,4 @@
-import $ from 'jquery';
-
 // add items to the "Add Items" tab
-
 $(document).ready(function() {
   var items = [
    {
