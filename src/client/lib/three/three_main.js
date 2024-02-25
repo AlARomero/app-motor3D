@@ -117,8 +117,8 @@ var ThreeMain = function(model, element, canvasElement, opts) {
         
         // Environment
         renderer.toneMapping = THREE.LinearToneMapping;
-	renderer.toneMappingExposure = 0.85;
-	//renderer.outputEncoding = THREE.sRGBEncoding;
+	      renderer.toneMappingExposure = 0.85;
+	      //renderer.outputEncoding = THREE.sRGBEncoding;
       
         
         var skybox = new ThreeSkybox(scene);

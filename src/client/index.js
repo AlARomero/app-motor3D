@@ -460,6 +460,7 @@ var CameraButtons = function(blueprint3d) {
   
     this.handleWindowResize = function() {
       $(canvasWrapper).height(window.innerHeight - $(canvasWrapper).offset().top);
+      
       scope.floorplanner.resizeView();
     };
   

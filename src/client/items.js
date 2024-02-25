@@ -281,7 +281,7 @@ $(document).ready(function() {
                 item.model +
                 '" model-type="' +
                 item.type + 
-                '"><img src="' +
+                '"><img class="img-fluid" src="' +
                 item.image + 
                 '" alt="Add Item"> '+
                 item.name +
