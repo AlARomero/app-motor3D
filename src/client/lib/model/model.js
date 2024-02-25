@@ -515,7 +515,7 @@ function generateRandomString(longitud) {
     //console.log("EStoy en newRoom: ");
     this.floorplan.loadFloorplan(floorplan);
     utils.forEach(items, function(item) {
-      position = new THREE.Vector3(
+      const position = new THREE.Vector3(
         parseFloat(item.xpos), parseFloat(item.ypos), parseFloat(item.zpos));
 
       //var JS_VARIATION = "?" + generateRandomString(8);

@@ -475,7 +475,7 @@ var CameraButtons = function(blueprint3d) {
     }
   
     function loadDesign() {
-      files = $("#loadFile").get(0).files;
+      const files = $("#loadFile").get(0).files;
       var reader  = new FileReader();
       reader.onload = function(event) {
           var data = event.target.result;

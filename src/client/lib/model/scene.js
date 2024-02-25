@@ -522,9 +522,9 @@ var Scene = function(model, textureDir) {
           // Opción para cuando cargamos un diseño
     	  if (item.textureFill == 2){
                   item.textureFill = 0;
-                  myMaterials = metadata.model_texture.textures;  
-                  textures_url = metadata.model_texture.textures_url;  
-                  textures_name = metadata.model_texture.textures_name;  
+                  const myMaterials = metadata.model_texture.textures;  
+                  const textures_url = metadata.model_texture.textures_url;  
+                  const textures_name = metadata.model_texture.textures_name;  
                   
                   var app1 = "/AtrioGraphics/"
                   var app2 = "/planificador/"
