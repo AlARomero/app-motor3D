@@ -2,7 +2,8 @@
 <html>
   <head>
     <title>Blueprint 3D - Example</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="css/example.css" rel="stylesheet">
 
     <!-- Make sure you've built blueprint3d.js -->
@@ -12,176 +13,211 @@
   <body>
 
     <div class="container-fluid">
-      <div class="row main-row">
+      <div class="row d-flex vh-100 main-row">
         <!-- Left Column -->
-        <div class="col-xs-3 sidebar">
+        <div class=" col-3 d-flex flex-column alingn-items-start vh-100 sidebar" id="left-column" role="tablist" aria-orientation="vertical">
           <!-- Main Navigation -->
-          <ul class="nav nav-sidebar">
-            <li id="floorplan_tab"><a href="#">
-              Edit Floorplan
-              <span class="glyphicon glyphicon-chevron-right pull-right"></span>
-            </a></li>
-            <li id="design_tab"><a href="#">
-              Design
-              <span class="glyphicon glyphicon-chevron-right pull-right"></span>
-            </a></li>
-            <li id="items_tab"><a href="#">
-              Add Items
-              <span class="glyphicon glyphicon-chevron-right pull-right"></span>
-            </a></li>
+          <ul class="nav flex-column nav-pills mb-3">
+            <li class="nav-item flex-grow-1" id="floorplan_tab">
+              <button class="nav-link w-100" data-bs-toogle="pill" type="button" role="tab" >
+                Edit Floorplan
+                <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+              </button>
+            </li>
+            <li class="nav-item w-100 flex-grow-1" id="design_tab">
+              <button class="nav-link w-100" data-bs-toogle="pill" type="button" role="tab" >
+                Design
+                <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+              </button>
+            </li>
+            <li class="nav-item w-100 flex-grow-1" id="items_tab">
+              <button class="nav-link w-100" data-bs-toogle="pill" type="button" role="tab">
+                Add Items
+                <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+                </svg>
+              </button>
+            </li>
           </ul>
-          <hr />
 
           <!-- Context Menu -->
-          <div id="context-menu">
+          <div class="row" id="context-menu">
             <div style="margin: 0 20px">
               <span id="context-menu-name" class="lead"></span>
-              <br /><br />
+              <br>
+
               <button class="btn btn-block btn-danger" id="context-menu-delete">
-                <span class="glyphicon glyphicon-trash"></span> 
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                </svg>
                 Delete Item
               </button>
-            <br />
-            <div class="panel panel-default">
-              <div class="panel-heading">Adjust Size</div>
-              <div class="panel-body" style="color: #333333">
 
-                <div class="form form-horizontal" class="lead">
-                  <div class="form-group">
-                    <label class="col-sm-5 control-label">
-                       Width
-                    </label>
-                    <div class="col-sm-6">
-                      <input type="number" class="form-control" id="item-width">
+              <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#size-collapse" aria-expanded="false" aria-controls="size-collapse">Adjust size</button>
+              <input class="btn-check" type="checkbox" autocomplete="off" id="fixed">
+              <label class="btn btn-outline-secondary" for="fixed" style="margin-top: 0.5rem;">Lock in place</label>
+              <div class="collapse" id="size-collapse" style="margin-top: 0.5rem;">
+                <div class="card card-body" style="color: #333333">
+
+                  <div class="form form-horizontal" class="lead">
+                    <div class="form-group">
+                      <label class="col-5 control-label">
+                        Width
+                      </label>
+                      <div class="col-6">
+                        <input type="number" class="form-control" id="item-width">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-5 control-label">
+                        Depth 
+                      </label>
+                      <div class="col-6">
+                        <input type="number" class="form-control" id="item-depth">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-5 control-label">
+                        Height
+                      </label>
+                      <div class="col-6">
+                        <input type="number" class="form-control" id="item-height">
+                      </div>
                     </div>
                   </div>
-                  <div class="form-group">
-                    <label class="col-sm-5 control-label">
-                      Depth 
-                    </label>
-                    <div class="col-sm-6">
-                      <input type="number" class="form-control" id="item-depth">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-5 control-label">
-                      Height
-                    </label>
-                    <div class="col-sm-6">
-                      <input type="number" class="form-control" id="item-height">
-                    </div>
-                  </div>
+                  <small><span class="text-muted">Measurements in inches.</span></small>
                 </div>
-                <small><span class="text-muted">Measurements in inches.</span></small>
               </div>
-            </div>
-
-            <label><input type="checkbox" id="fixed" /> Lock in place</label>
-            <br /><br />
             </div>
           </div>
 
           <!-- Floor textures -->
           <div id="floorTexturesDiv" style="display:none; padding: 0 20px">
-            <div class="panel panel-default">
-              <div class="panel-heading">Adjust Floor</div>
-              <div class="panel-body" style="color: #333333">
+            <div class="d-flex justify-content-center align-items-center">
+              <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#floor-textures-collapse" aria-expanded="false" aria-controls="floor-textures-collapse">Adjust Floor</button>
+            </div>
+            <div class="collapse" id="floor-textures-collapse" style="margin-top: 0.5rem;">
+                <ul class="list-group" style="color: #333333">
+                  <li class="list-group-item">
+                    <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/_SUELO_04_MARMOL_BEIGE.jpg" texture-stretch="false" texture-scale="300" texture-norm="" texture-occ="" texture-rough="" texture-disp="">
+                      <img class="img-fluid" alt="Thumbnail light fine wood" src="rooms/textures/_SUELO_04_MARMOL_BEIGE.jpg" />
+                    </a>
+                  </li>
+                  <li class="list-group-item">
+                    <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/_SUELO_01_TARIMA_GRIS.jpg" texture-stretch="false" texture-scale="300" texture-norm="" texture-occ="" texture-rough="" texture-disp=""> 
+                      <img class="img-fluid" alt="_SUELO 01 TARIMA GRIS" src="rooms/textures/_SUELO_01_TARIMA_GRIS.jpg">
+                    </a>
+                  </li>
 
-                <div class="col-sm-6" style="padding: 3px">
-                  <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/_SUELO_04_MARMOL_BEIGE.jpg" texture-stretch="false" texture-scale="300" texture-norm="" texture-occ="" texture-rough="" texture-disp="">
-                    <img alt="Thumbnail light fine wood" src="rooms/textures/_SUELO_04_MARMOL_BEIGE.jpg" />
-                  </a>
-                </div>
-                <div class="col-sm-6" style="padding: 3px">
-                   <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/_SUELO_01_TARIMA_GRIS.jpg" texture-stretch="false" texture-scale="300" texture-norm="" texture-occ="" texture-rough="" texture-disp=""> 
-                       <img alt="_SUELO 01 TARIMA GRIS" src="rooms/textures/_SUELO_01_TARIMA_GRIS.jpg">
-		  </a>
-	        </div>
-                <div class="col-sm-6" style="padding: 3px">
-                   <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/_SUELO_02_TARIMA_MADERA.jpg" texture-stretch="false" texture-scale="300" texture-norm="" texture-occ="" texture-rough="" texture-disp=""> 
-                       <img alt="_SUELO 01 TARIMA GRIS" src="rooms/textures/_SUELO_02_TARIMA_MADERA.jpg">
-		  </a>
-	        </div>
-                <div class="col-sm-6" style="padding: 3px">
-                   <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/_SUELO_03_MARMOL_GRIS.jpg" texture-stretch="false" texture-scale="300" texture-norm="" texture-occ="" texture-rough="" texture-disp=""> 
-                       <img alt="_SUELO 01 TARIMA GRIS" src="rooms/textures/_SUELO_03_MARMOL_GRIS.jpg">
-		  </a>
-	        </div>  
+                  <li class="list-group-item">
+                    <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/_SUELO_02_TARIMA_MADERA.jpg" texture-stretch="false" texture-scale="300" texture-norm="" texture-occ="" texture-rough="" texture-disp=""> 
+                      <img class="img-fluid" alt="_SUELO 01 TARIMA GRIS" src="rooms/textures/_SUELO_02_TARIMA_MADERA.jpg">
+                    </a>
+                  </li>
+                  <li class="list-group-item">
+                    <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/_SUELO_03_MARMOL_GRIS.jpg" texture-stretch="false" texture-scale="300" texture-norm="" texture-occ="" texture-rough="" texture-disp=""> 
+                      <img class="img-fluid" alt="_SUELO 01 TARIMA GRIS" src="rooms/textures/_SUELO_03_MARMOL_GRIS.jpg">
+                    </a>
+                  </li>  
                    
-              </div>
+                </ul>
             </div>
           </div>
 
           <!-- Wall Textures -->
           <div id="wallTextures" style="display:none; padding: 0 20px">
-            <div class="panel panel-default">
-              <div class="panel-heading">Adjust Wall</div>
-              <div class="panel-body" style="color: #333333">
-                <div class="col-sm-6" style="padding: 3px">
+            <div class="d-flex justify-content-center align-items-center">
+              <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#wall-textures-collapse" aria-expanded="false" aria-controls="wall-textures-collapse">Adjust Wall</button>
+            </div>
+            <div class="collapse" id="wall-textures-collapse" style="margin-top: 0.5rem;">
+              <ul class="list-group" style="color: #333333">
+                <li class="list-group-item">
                   <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/marbletiles.jpg" texture-stretch="false" texture-scale="300">
-                    <img alt="Thumbnail marbletiles" src="rooms/thumbnails/thumbnail_marbletiles.jpg" />
+                    <img class="img-fluid" alt="Thumbnail marbletiles" src="rooms/thumbnails/thumbnail_marbletiles.jpg" />
                   </a>
-                </div>
-                <div class="col-sm-6" style="padding: 3px">
+                </li>
+                <li class="list-group-item">
                   <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/wallmap_yellow.png" texture-stretch="true" texture-scale="">
-                    <img alt="Thumbnail wallmap yellow" src="rooms/thumbnails/thumbnail_wallmap_yellow.png" />
+                    <img class="img-fluid" alt="Thumbnail wallmap yellow" src="rooms/thumbnails/thumbnail_wallmap_yellow.png" />
                   </a>
-                </div>
-                <div class="col-sm-6" style="padding: 3px">
+                </li>
+                <li class="list-group-item">
                   <a href="#" class="thumbnail texture-select-thumbnail" texture-url="rooms/textures/light_brick.jpg" texture-stretch="false" texture-scale="100">
-                    <img alt="Thumbnail light brick" src="rooms/thumbnails/thumbnail_light_brick.jpg" />
+                    <img class="img-fluid" alt="Thumbnail light brick" src="rooms/thumbnails/thumbnail_light_brick.jpg" />
                   </a>
-                </div>
-              </div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
 
         <!-- Right Column -->
-        <div class="col-xs-9 main">
+        <div class="col-9 main">
 
           <!-- 3D Viewer -->
           <div id="viewer">
 
             <div id="main-controls">
-              <a href="#" class="btn btn-default btn-sm" id="new">
+              <a href="#" class="btn btn-secondary btn-sm" id="new" role="button">
                 New Plan
               </a>
-              <a href="#" class="btn btn-default btn-sm" id="saveFile">
+              <a href="#" class="btn btn-secondary btn-sm" id="saveFile" role="button">
                 Save Plan
               </a>
-              <a class="btn btn-sm btn-default btn-file">
+              <a class="btn btn-sm btn-secondary btn-file" role="button">
                <input type="file" class="hidden-input" id="loadFile">
                Load Plan
               </a>
             </div>
 
             <div id="camera-controls">
-              <a href="#" class="btn btn-default bottom" id="zoom-out">
-                <span class="glyphicon glyphicon-zoom-out"></span>
+              <a href="#" class="btn btn-secondary bottom" role="button" id="zoom-out">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-out" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"/>
+                  <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z"/>
+                  <path fill-rule="evenodd" d="M3 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5"/>
+                </svg>
               </a>
-              <a href="#" class="btn btn-default bottom" id="reset-view">
-                <span class="glyphicon glyphicon glyphicon-home"></span>
+              <a href="#" class="btn btn-secondary bottom" role="button" id="reset-view">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-houses" viewBox="0 0 16 16">
+                  <path d="M5.793 1a1 1 0 0 1 1.414 0l.647.646a.5.5 0 1 1-.708.708L6.5 1.707 2 6.207V12.5a.5.5 0 0 0 .5.5.5.5 0 0 1 0 1A1.5 1.5 0 0 1 1 12.5V7.207l-.146.147a.5.5 0 0 1-.708-.708zm3 1a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708zm.707.707L5 7.207V13.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.207z"/>
+                </svg>
               </a>
-              <a href="#" class="btn btn-default bottom" id="zoom-in">
-                <span class="glyphicon glyphicon-zoom-in"></span>
+              <a href="#" class="btn btn-secondary bottom" role="button" id="zoom-in">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-in" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11M13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0"/>
+                  <path d="M10.344 11.742q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1 6.5 6.5 0 0 1-1.398 1.4z"/>
+                  <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5"/>
+                </svg>
               </a>
               
               <span>&nbsp;</span>
 
-              <a class="btn btn-default bottom" href="#" id="move-left" >
-                <span class="glyphicon glyphicon-arrow-left"></span>
+              <a class="btn btn-secondary bottom" href="#" id="move-left"role="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                </svg>
               </a>
               <span class="btn-group-vertical">
-                <a class="btn btn-default" href="#" id="move-up">
-                  <span class="glyphicon glyphicon-arrow-up"></span>
+                <a class="btn btn-secondary" href="#" id="move-up" role="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"/>
+                  </svg>
                 </a>
-                <a class="btn btn-default" href="#" id="move-down">
-                  <span class="glyphicon glyphicon-arrow-down"></span>
+                <a class="btn btn-secondary" href="#" id="move-down" role="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"/>
+                  </svg>
                 </a>
               </span>
-              <a class="btn btn-default bottom" href="#" id="move-right" >
-                <span class="glyphicon glyphicon-arrow-right"></span>
+              <a class="btn btn-secondary bottom" href="#" id="move-right" role="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                </svg>
               </a>
             </div>
 
@@ -196,18 +232,24 @@
             <div id="floorplanner-controls">
 
               <button id="move" class="btn btn-sm btn-default">
-                <span class="glyphicon glyphicon-move"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10M.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8"/>
+                </svg>
                 Move Walls
               </button>
               <button id="draw" class="btn btn-sm btn-default">
-                <span class="glyphicon glyphicon-pencil"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+                  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                </svg>
                 Draw Walls
               </button>
               <button id="delete" class="btn btn-sm btn-default">
-                <span class="glyphicon glyphicon-remove"></span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                </svg>
                 Delete Walls
               </button>
-              <span class="pull-right">
+              <span id="btn-done">
                 <button class="btn btn-primary btn-sm" id="update-floorplan">Done &raquo;</button>
               </span>
 
@@ -229,8 +271,7 @@
         <!-- End Right Column -->
       </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="   crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="js/modernizr.js"></script>
     <script src="items.js"></script>
     <script src="bundle.js"></script>

@@ -34,18 +34,18 @@ div {
   border-right: 1px solid #eee;
 }
 
-.nav-sidebar {
-  margin-right: -21px; /* 20px padding + 1px border */
+.nav {
+  margin-right: 21px; /* 20px padding + 1px border */
   margin-bottom: 20px;
-  margin-left: -20px;
+  margin-left: 20px;
 }
-.nav-sidebar > li > a {
+.nav > li > button {
   padding-right: 20px;
   padding-left: 20px;
 }
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus {
+.nav > .active > button,
+.nav > .active > button:hover,
+.nav > .active > button:focus {
   color: #fff;
   background-color: #428bca;
 }
@@ -101,6 +101,7 @@ div {
   position: absolute;
   top: 20px;
   left: 20px;
+  margin-left: 22rem; /* Mueve hasta el inicio del 3d el panel de control principal */
   padding: 0;  
 }
 
@@ -116,8 +117,8 @@ div {
   position: absolute;
   left: 0;
   top: 0;
-  margin: 20px 0;
-  padding: 0 20px; 
+  margin: 1rem 0 0 20rem; /* Mueve hasta el inicio del 3d el panel de control de muros */
+  padding: 0 3rem; 
   width: 100%;
 }
 
@@ -130,6 +131,18 @@ div {
   padding: 5px 10px;
   z-index: 10;
   display: none;
+}
+
+#btn-done { /* Mueve el boton done hasta el final de la ventana */
+  margin-left: 40rem;
+}
+
+#move-up { /*Espaciado entre boton de arriba y abajo*/
+  margin-bottom: 0.05rem;
+}
+
+#move-down { /*Espaciado entre boton de arriba y abajo*/
+  margin-top: 0.15rem;
 }
 
 .add-item {
