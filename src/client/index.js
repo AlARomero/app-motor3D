@@ -201,7 +201,7 @@ var CameraButtons = function(blueprint3d) {
     var floorplanControls = floorplanControls;
     var modalEffects = modalEffects;
   
-    var ACTIVE_CLASS = "active";
+    const CHECKED = "checked";
   
     var tabs = {
       "FLOORPLAN" : $("#floorplan_tab"),
@@ -277,10 +277,10 @@ var CameraButtons = function(blueprint3d) {
       // show the right tab as active
       if (currentState.tab !== newState.tab) {
         if (currentState.tab != null) {
-          currentState.tab.removeClass(ACTIVE_CLASS);          
+          currentState.tab.prop(CHECKED, false);          
         }
         if (newState.tab != null) {
-          newState.tab.addClass(ACTIVE_CLASS);
+          newState.tab.prop(CHECKED, true);
         }
       }
   

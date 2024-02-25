@@ -17,32 +17,29 @@
         <!-- Left Column -->
         <div class=" col-3 d-flex flex-column alingn-items-start vh-100 sidebar" id="left-column" role="tablist" aria-orientation="vertical">
           <!-- Main Navigation -->
-          <ul class="nav flex-column nav-pills mb-3">
-            <li class="nav-item flex-grow-1" id="floorplan_tab">
-              <button class="nav-link w-100" data-bs-toogle="pill" type="button" role="tab" >
-                Edit Floorplan
-                <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-                </svg>
-              </button>
-            </li>
-            <li class="nav-item w-100 flex-grow-1" id="design_tab">
-              <button class="nav-link w-100" data-bs-toogle="pill" type="button" role="tab" >
-                Design
-                <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-                </svg>
-              </button>
-            </li>
-            <li class="nav-item w-100 flex-grow-1" id="items_tab">
-              <button class="nav-link w-100" data-bs-toogle="pill" type="button" role="tab">
-                Add Items
-                <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
-                </svg>
-              </button>
-            </li>
-          </ul>
+          <div class="btn-group-vertical" role="group" aria-label="Vertical-main-functions-group" style="margin-bottom: 0.5rem;">
+            <input type="radio" class="btn-check" name="floorplan_tab" id="floorplan_tab" autocomplete="off">
+            <label class="btn btn-outline-primary" for="floorplan_tab">
+              Edit Floorplan
+              <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              </svg>
+            </label>
+            <input type="radio" class="btn-check" name="design_tab" id="design_tab" autocomplete="off">
+            <label class="btn btn-outline-primary" for="design_tab">
+              Design
+              <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              </svg>
+            </label>
+            <input type="radio" class="btn-check" name="items_tab" id="items_tab" autocomplete="off">
+            <label class="btn btn-outline-primary" for="items_tab">
+              Add Items
+              <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+              </svg>
+            </label>
+          </div>
 
           <!-- Context Menu -->
           <div class="row" id="context-menu">

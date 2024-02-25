@@ -34,18 +34,18 @@ div {
   border-right: 1px solid #eee;
 }
 
-.nav {
+.main-nav {
   margin-right: 21px; /* 20px padding + 1px border */
   margin-bottom: 20px;
   margin-left: 20px;
 }
-.nav > li > button {
+.main-nav > li > button {
   padding-right: 20px;
   padding-left: 20px;
 }
-.nav > .active > button,
-.nav > .active > button:hover,
-.nav > .active > button:focus {
+.main-nav > .active > button,
+.main-nav > .active > button:hover,
+.main-nav > .active > button:focus {
   color: #fff;
   background-color: #428bca;
 }
