@@ -165,7 +165,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
         // handle window resizing
         scope.updateWindowSize();
         if (options.resize) {
-          JQUERY(window).resize(scope.updateWindowSize);
+          JQUERY(window).on('resize', scope.updateWindowSize);
         }
 
         // setup camera nicely

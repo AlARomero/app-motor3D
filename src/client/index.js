@@ -19,30 +19,30 @@ var CameraButtons = function(blueprint3d) {
   
     function init() {
       // Camera controls
-      $("#zoom-in").click(zoomIn);
-      $("#zoom-out").click(zoomOut);  
-      $("#zoom-in").dblclick(preventDefault);
-      $("#zoom-out").dblclick(preventDefault);
+      $("#zoom-in").on('click', zoomIn);
+      $("#zoom-out").on('click', zoomOut);  
+      $("#zoom-in").on('dblclick', preventDefault);
+      $("#zoom-out").on('dblclick', preventDefault);
   
-      $("#reset-view").click(three.centerCamera)
+      $("#reset-view").on('click', three.centerCamera)
   
-      $("#move-left").click(function(){
+      $("#move-left").on('click', function(){
         pan(directions.LEFT)
       })
-      $("#move-right").click(function(){
+      $("#move-right").on('click', function(){
         pan(directions.RIGHT)
       })
-      $("#move-up").click(function(){
+      $("#move-up").on('click', function(){
         pan(directions.UP)
       })
-      $("#move-down").click(function(){
+      $("#move-down").on('click', function(){
         pan(directions.DOWN)
       })
   
-      $("#move-left").dblclick(preventDefault);
-      $("#move-right").dblclick(preventDefault);
-      $("#move-up").dblclick(preventDefault);
-      $("#move-down").dblclick(preventDefault);
+      $("#move-left").on('dblclick', preventDefault);
+      $("#move-right").on('dblclick', preventDefault);
+      $("#move-up").on('dblclick', preventDefault);
+      $("#move-down").on('dblclick', preventDefault);
     }
   
     function preventDefault(e) {
@@ -93,7 +93,7 @@ var CameraButtons = function(blueprint3d) {
     var three = blueprint3d.three;
   
     function init() {
-      $("#context-menu-delete").click(function(event) {
+      $("#context-menu-delete").on('click', function(event) {
           selectedItem.remove();
       });
   
@@ -102,7 +102,7 @@ var CameraButtons = function(blueprint3d) {
   
       initResize();
   
-      $("#fixed").click(function() {
+      $("#fixed").on('click', function() {
           var checked = $(this).prop('checked');
           selectedItem.setFixed(checked);
       });
@@ -139,9 +139,9 @@ var CameraButtons = function(blueprint3d) {
     }
   
     function initResize() {
-      $("#item-height").change(resize);
-      $("#item-width").change(resize);
-      $("#item-depth").change(resize);
+      $("#item-height").on('change', resize);
+      $("#item-width").on('change', resize);
+      $("#item-depth").on('change', resize);
     }
   
     function itemUnselected() {
@@ -313,7 +313,7 @@ var CameraButtons = function(blueprint3d) {
     }
   
     function initLeftMenu() {
-      $( window ).resize( handleWindowResize );
+      $( window ).on('resize', handleWindowResize );
       handleWindowResize();
     }
   
@@ -325,7 +325,7 @@ var CameraButtons = function(blueprint3d) {
   
     // TODO: this doesn't really belong here
     function initItems() {
-      $("#add-items").find(".add-item").mousedown(function(e) {
+      $("#add-items").find(".add-item").on('mousedown', function(e) {
         var modelUrl = $(this).attr("model-url");
         var itemType = parseInt($(this).attr("model-type"));
         var metadata = {
@@ -441,15 +441,15 @@ var CameraButtons = function(blueprint3d) {
         }
       });
   
-      $(move).click(function(){
+      $(move).on('click', function(){
         scope.floorplanner.setMode(scope.floorplanner.modes.MOVE);
       });
   
-      $(draw).click(function(){
+      $(draw).on('click', function(){
         scope.floorplanner.setMode(scope.floorplanner.modes.DRAW);
       });
   
-      $(remove).click(function(){
+      $(remove).on('click', function(){
         scope.floorplanner.setMode(scope.floorplanner.modes.DELETE);
       });
     }
@@ -496,9 +496,9 @@ var CameraButtons = function(blueprint3d) {
     }
   
     function init() {
-      $("#new").click(newDesign);
-      $("#loadFile").change(loadDesign);
-      $("#saveFile").click(saveDesign);
+      $("#new").on('click', newDesign);
+      $("#loadFile").on('change', loadDesign);
+      $("#saveFile").on('click', saveDesign);
     }
   
     init();
@@ -508,7 +508,7 @@ var CameraButtons = function(blueprint3d) {
    * Initialize!
    */
   
-  $(document).ready(function() {
+  $(function() {
   
     // main setup
     var opts = {

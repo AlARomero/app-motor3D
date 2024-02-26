@@ -513,7 +513,7 @@ var Floorplanner = function(canvas, model) {
         if (scope.mode == scope.modes.ALTURA_MUROS) {
             console.log("En alturaMuros");
             scope.setMode(scope.modes.MOVE);
-            $('#move').focus();
+            $('#move').trigger('focus');
             
         }
       }
@@ -744,7 +744,7 @@ var Floorplanner = function(canvas, model) {
         if (scope.mode == scope.modes.ALTURA_MUROS) {
             console.log("En alturaMuros");
             scope.setMode(scope.modes.MOVE);
-            $('#move').focus();
+            $('#move').trigger('focus');
             
         }
       }
