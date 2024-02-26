@@ -127,7 +127,13 @@ var CameraButtons = function(blueprint3d) {
   
       $("#context-menu").show();
   
-      $("#fixed").prop('checked', item.fixed);
+      if (item.metadata.itemType == 8){
+        // TODO hacer que los botones se vean bien añadiendo margenes
+        $("#item-elevation-range").val(cmToIn(/* TODO Posicion y del objeto*/ 0.0).toFixed(0));
+        $("#elevation-controls-btn").show();
+      }
+
+      $("#fixed").prop('checked', item.fixed); //TODO Por que esto esta aqui?
     }
   
     function resize() {
@@ -137,16 +143,22 @@ var CameraButtons = function(blueprint3d) {
         inToCm($("#item-depth").val())
       );
     }
+
+    function setNewElevation() {
+      selectedItem.setPosition(/* TODO Posicion del objeto en x*/ 0, inToCm($("#item-elevation-range").val()), /* TODO Posicion del objeto en z*/ 0);
+    }
   
     function initResize() {
       $("#item-height").on('change', resize);
       $("#item-width").on('change', resize);
       $("#item-depth").on('change', resize);
+      $("#item-elevation-range").on('change', setNewElevation);
     }
   
     function itemUnselected() {
       selectedItem = null;
       $("#context-menu").hide();
+      $("#elevation-controls-btn").hide();
     }
   
     init();

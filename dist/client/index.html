@@ -47,48 +47,67 @@
               <span id="context-menu-name" class="lead"></span>
               <br>
 
-              <button class="btn btn-block btn-danger" id="context-menu-delete">
+              <!-- Boton toggle de control de movimiento de objeto colapsado -->
+              <button class="btn btn-primary" type="button" id="elevation-controls-btn" data-bs-toggle="collapse" data-bs-target="#elevation-controls" aria-expanded="false" aria-controls="elevation-controls">Floor elevation</button>
+              <!-- Boton toggle del colapsado de tamaño de objeto-->
+              <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#size-collapse" aria-expanded="false" aria-controls="size-collapse">Adjust size</button>
+              <!-- Input lock in place -->
+              <input class="btn-check" type="checkbox" autocomplete="off" id="fixed">
+              <label class="btn btn-outline-secondary" for="fixed" style="margin-top: 0.5rem;">Lock in place</label>
+              <!-- Boton de supresion de objeto -->
+              <button class="btn btn-block btn-danger" id="context-menu-delete" style="margin-top: 0.5rem;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                   <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
                 </svg>
                 Delete Item
               </button>
 
-              <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#size-collapse" aria-expanded="false" aria-controls="size-collapse">Adjust size</button>
-              <input class="btn-check" type="checkbox" autocomplete="off" id="fixed">
-              <label class="btn btn-outline-secondary" for="fixed" style="margin-top: 0.5rem;">Lock in place</label>
+              <!-- Div de tamaño de objeto colapsado -->
               <div class="collapse" id="size-collapse" style="margin-top: 0.5rem;">
-                <div class="card card-body" style="color: #333333">
-
-                  <div class="form form-horizontal" class="lead">
-                    <div class="form-group">
-                      <label class="col-5 control-label">
-                        Width
-                      </label>
-                      <div class="col-6">
-                        <input type="number" class="form-control" id="item-width">
+                <div class="card">
+                  <div class="card-header"> Size </div>
+                  <div class="card-body" style="color: #333333">
+                    <div class="form form-horizontal" class="lead">
+                      <div class="form-group">
+                        <label class="col-5 control-label">
+                          Width
+                        </label>
+                        <div class="col-6">
+                          <input type="number" class="form-control" id="item-width">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-5 control-label">
+                          Depth 
+                        </label>
+                        <div class="col-6">
+                          <input type="number" class="form-control" id="item-depth">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-sm-5 control-label">
+                          Height
+                        </label>
+                        <div class="col-6">
+                          <input type="number" class="form-control" id="item-height">
+                        </div>
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label class="col-sm-5 control-label">
-                        Depth 
-                      </label>
-                      <div class="col-6">
-                        <input type="number" class="form-control" id="item-depth">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label class="col-sm-5 control-label">
-                        Height
-                      </label>
-                      <div class="col-6">
-                        <input type="number" class="form-control" id="item-height">
-                      </div>
-                    </div>
+                    <small><span class="text-muted">Measurements in inches.</span></small>
                   </div>
-                  <small><span class="text-muted">Measurements in inches.</span></small>
+                </div>
+            </div>
+
+              <!-- Div de control de movimiento de objeto colapsado -->
+              <div class="collapse" id="elevation-controls" style="margin-top: 0.5rem;">
+                <div class="card">
+                  <div class="card-header"> Elevation </div>
+                  <div class="card-body">
+                    <input type="range" class="form-range" id="item-elevation-range" min="0" step="0.01" max="105">
+                  </div>
                 </div>
               </div>
+
             </div>
           </div>
 
