@@ -417,7 +417,7 @@ var CameraButtons = function(blueprint3d) {
   
     function init() {
   
-      $( window ).resize( scope.handleWindowResize );
+      $( window ).on('resize', scope.handleWindowResize );
       scope.handleWindowResize();
   
       // mode buttons
