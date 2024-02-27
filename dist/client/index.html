@@ -47,15 +47,15 @@
               <span id="context-menu-name" class="lead"></span>
               <br>
 
-              <!-- Boton toggle de control de movimiento de objeto colapsado -->
-              <button class="btn btn-primary" type="button" id="elevation-controls-btn" data-bs-toggle="collapse" data-bs-target="#elevation-controls" aria-expanded="false" aria-controls="elevation-controls">Floor elevation</button>
               <!-- Boton toggle del colapsado de tamaño de objeto-->
-              <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#size-collapse" aria-expanded="false" aria-controls="size-collapse">Adjust size</button>
+              <button class="btn btn-primary w-45" type="button" data-bs-toggle="collapse" data-bs-target="#size-collapse" aria-expanded="false" aria-controls="size-collapse">Adjust size</button>
               <!-- Input lock in place -->
-              <input class="btn-check" type="checkbox" autocomplete="off" id="fixed">
-              <label class="btn btn-outline-secondary" for="fixed" style="margin-top: 0.5rem;">Lock in place</label>
+              <input class="btn-check w-45" type="checkbox" autocomplete="off" id="fixed">
+              <label class="btn btn-outline-secondary w-45" for="fixed">Lock in place</label>
+              <!-- Boton toggle de control de movimiento de objeto colapsado -->
+              <button class="btn btn-primary w-45 m-t-0-5" type="button" id="elevation-controls-btn" data-bs-toggle="collapse" data-bs-target="#elevation-controls" aria-expanded="false" aria-controls="elevation-controls">Floor elevation</button>
               <!-- Boton de supresion de objeto -->
-              <button class="btn btn-block btn-danger" id="context-menu-delete" style="margin-top: 0.5rem;">
+              <button class="btn btn-block btn-danger w-45 m-t-0-5" id="context-menu-delete">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
                   <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
                 </svg>
@@ -103,7 +103,11 @@
                 <div class="card">
                   <div class="card-header"> Elevation </div>
                   <div class="card-body">
-                    <input type="range" class="form-range" id="item-elevation-range" min="0" step="0.01" max="105">
+                    <div class="d-flex justify-content-between">
+                      <span>0</span>
+                      <input type="number" min="0" max="300" step="1" class="form-control w-50" id="actual-elevation-value">
+                      <span>300</span>
+                    </div>
                   </div>
                 </div>
               </div>

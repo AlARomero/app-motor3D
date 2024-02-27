@@ -124,14 +124,23 @@ var CameraButtons = function(blueprint3d) {
       $("#item-width").val(cmToIn(selectedItem.getWidth()).toFixed(0));
       $("#item-height").val(cmToIn(selectedItem.getHeight()).toFixed(0));
       $("#item-depth").val(cmToIn(selectedItem.getDepth()).toFixed(0));
-  
-      $("#context-menu").show();
-  
+
+      // Si es tipo 8 se muestra el control de elevacion con el valor correspondiente al objeto seleccionado
       if (item.metadata.itemType == 8){
-        // TODO hacer que los botones se vean bien añadiendo margenes
-        $("#item-elevation-range").val(cmToIn(/* TODO Posicion y del objeto*/ 0.0).toFixed(0));
+        $("#actual-elevation-value").val((selectedItem.position.y - selectedItem.desfaseAltura).toFixed(2));
         $("#elevation-controls-btn").show();
       }
+      // Si no es tipo 8 se oculta el control de elevacion y el boton que permite mostrarlo
+      else {
+        if($("#elevation-controls-btn").attr('aria-expanded') === 'true'){
+          $("#elevation-controls-btn").trigger('click');
+        }
+        $("#elevation-controls-btn").hide();
+      }
+  
+      /*Se muestra el context menu (sin el control de elevacion aunque este esta        */
+      /*  dentro del context menu, se muestra o no segun el tipo de objeto seleccionado)*/
+      $("#context-menu").show();
 
       $("#fixed").prop('checked', item.fixed); //TODO Por que esto esta aqui?
     }
@@ -144,21 +153,35 @@ var CameraButtons = function(blueprint3d) {
       );
     }
 
-    function setNewElevation() {
-      selectedItem.setPosition(/* TODO Posicion del objeto en x*/ 0, inToCm($("#item-elevation-range").val()), /* TODO Posicion del objeto en z*/ 0);
+    //Funcion que actualiza la posicion del objeto seleccionado
+    function setNewItemPosition() {
+      let x = selectedItem.position.x; //TODO Posicion x del objeto se cambia arrastrandolo, necesario tambien un control?
+      let y = $("#actual-elevation-value").val();
+      let z = selectedItem.position.z; //TODO Posicion z del objeto se cambia arrastrandolo, necesario tambien un control?
+
+      //Control de valores minimos y maximos
+      if(y > 300) // Maximo
+        y = 300;
+      else if(y < 0)  //Minimo
+        y = 0;
+      
+      y = (parseFloat(y)+ parseFloat(selectedItem.desfaseAltura));
+      
+      $("#actual-elevation-value").val((y - selectedItem.desfaseAltura).toFixed(2));
+      selectedItem.setPosition(x, y, z);      
     }
   
     function initResize() {
       $("#item-height").on('change', resize);
       $("#item-width").on('change', resize);
       $("#item-depth").on('change', resize);
-      $("#item-elevation-range").on('change', setNewElevation);
+      //Se agrega el evento para el control de elevacion
+      $("#actual-elevation-value").on('change', setNewItemPosition);
     }
   
     function itemUnselected() {
       selectedItem = null;
       $("#context-menu").hide();
-      $("#elevation-controls-btn").hide();
     }
   
     init();
