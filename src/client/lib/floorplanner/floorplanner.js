@@ -345,10 +345,10 @@ var Floorplanner = function(canvas, model) {
         initTouch();
       
     } else {
-        canvasElement.mousedown(mousedown);
-        canvasElement.mousemove(mousemove);
-        canvasElement.mouseup(mouseup);
-        canvasElement.mouseleave(mouseleave);
+        canvasElement.on('mousedown', mousedown);
+        canvasElement.on('mousemove', mousemove);
+        canvasElement.on('mouseup', mouseup);
+        canvasElement.on('mouseleave', mouseleave);
         //canvasElement.dblclick(dblclick);
     }
      

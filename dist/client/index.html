@@ -151,7 +151,8 @@
           <!-- Wall Textures -->
           <div id="wallTextures" style="display:none; padding: 0 20px">
             <div class="d-flex justify-content-center align-items-center">
-              <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#wall-textures-collapse" aria-expanded="false" aria-controls="wall-textures-collapse">Adjust Wall</button>
+              <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#wall-textures-collapse" aria-expanded="false" aria-controls="wall-textures-collapse" style="margin-right: 0.5rem;">Selected Wall Texture</button>
+              <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#structure-wall-height" aria-expanded="false" aria-controls="structure-wall-height">Structure Wall Height</button>
             </div>
             <div class="collapse" id="wall-textures-collapse" style="margin-top: 0.5rem;">
               <ul class="list-group" style="color: #333333">
@@ -171,6 +172,16 @@
                   </a>
                 </li>
               </ul>
+            </div>
+            <div class="collapse" id="structure-wall-height" style="margin-top: 0.5rem;">
+              <div class="card">
+                <div class="card-header"> Structure Wall Height </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-center">
+                    <input type="number" min="1"  step="1" class="form-control w-50" id="actual-wall-height">
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

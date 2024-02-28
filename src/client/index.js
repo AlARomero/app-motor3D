@@ -383,15 +383,16 @@ var CameraButtons = function(blueprint3d) {
    * Change floor and wall textures
    */
   
-  var TextureSelector = function (blueprint3d, sideMenu) {
+  var WallAndFloorSelector = function (blueprint3d, sideMenu) {
   
     var scope = this;
     var three = blueprint3d.three;
     var isAdmin = isAdmin;
+    this.floorPlanner = blueprint3d.floorplanner;
   
     var currentTarget = null;
   
-    function initTextureSelectors() {
+    function initSelectors() {
       $(".texture-select-thumbnail").on('click', function(e) {
         var textureUrl = $(this).attr("texture-url");
         var textureStretch = ($(this).attr("texture-stretch") == "true");
@@ -401,19 +402,23 @@ var CameraButtons = function(blueprint3d) {
         e.preventDefault();
       });
     }
-  
+
     function init() {
       three.wallClicked.add(wallClicked);
       three.floorClicked.add(floorClicked);
       three.itemSelectedCallbacks.add(reset);
       three.nothingClicked.add(reset);
       sideMenu.stateChangeCallbacks.add(reset);
-      initTextureSelectors();
+
+      $("#actual-wall-height").on('change', updateWallsHeight);
+
+      initSelectors();
     }
   
     function wallClicked(halfEdge) {
       currentTarget = halfEdge;
       $("#floorTexturesDiv").hide();  
+      $("#actual-wall-height").val(halfEdge.height);
       $("#wallTextures").show();  
     }
   
@@ -426,6 +431,23 @@ var CameraButtons = function(blueprint3d) {
     function reset() {
       $("#wallTextures").hide();  
       $("#floorTexturesDiv").hide();  
+    }
+
+    //Funcion que actualiza la altura de los muros
+    function updateWallsHeight() {
+      let height = parseFloat($("#actual-wall-height").val());
+    
+      console.log("updateWallsHeight: " + height);
+    
+      // Control de valores minimos
+      if (height < 0) 
+        height = 0;
+    
+      // TODO Se cambia el valor en todos los muros
+
+      scope.floorPlanner.changeHeightAllWalls(height);
+      console.log(currentTarget.height);  //TODO arreglar alturas de Edges?
+      console.log(currentTarget.wall.height);
     }
   
     init();
@@ -559,7 +581,7 @@ var CameraButtons = function(blueprint3d) {
     var viewerFloorplanner = new ViewerFloorplanner(blueprint3d);
     var contextMenu = new ContextMenu(blueprint3d);
     var sideMenu = new SideMenu(blueprint3d, viewerFloorplanner, modalEffects);
-    var textureSelector = new TextureSelector(blueprint3d, sideMenu);        
+    var wallAndFloorSelector = new WallAndFloorSelector(blueprint3d, sideMenu);        
     var cameraButtons = new CameraButtons(blueprint3d);
     mainControls(blueprint3d);
     
