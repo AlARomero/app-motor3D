@@ -380,7 +380,7 @@ var CameraButtons = function(blueprint3d) {
   }
   
   /*
-   * Change floor and wall textures
+   * Change floor and wall textures and adjust wall height
    */
   
   var WallAndFloorSelector = function (blueprint3d, sideMenu) {
@@ -410,6 +410,7 @@ var CameraButtons = function(blueprint3d) {
       three.nothingClicked.add(reset);
       sideMenu.stateChangeCallbacks.add(reset);
 
+      //Se agrega el evento para el control de altura de los muros
       $("#actual-wall-height").on('change', updateWallsHeight);
 
       initSelectors();
@@ -419,6 +420,7 @@ var CameraButtons = function(blueprint3d) {
       currentTarget = halfEdge;
       $("#floorTexturesDiv").hide();  
       $("#actual-wall-height").val(halfEdge.height);
+      // Recoge tambien el boton de altura
       $("#wallTextures").show();  
     }
   
@@ -435,17 +437,31 @@ var CameraButtons = function(blueprint3d) {
 
     //Funcion que actualiza la altura de los muros
     function updateWallsHeight() {
+      // Obtengo el muro seleccionado (ya que se selecciona un half edge)
+      const wall = currentTarget.wall;
+
+      // Se obtiene la altura que se quiere cambiar desde el boton
       let height = parseFloat($("#actual-wall-height").val());
-    
-      console.log("updateWallsHeight: " + height);
     
       // Control de valores minimos
       if (height < 0) 
         height = 0;
-    
-      // TODO Se cambia el valor en todos los muros
 
-      scope.floorPlanner.changeHeightAllWalls(height);
+      // Se cambia la altura a los half edges que tenga el muro
+      if(wall.frontEdge)
+        wall.frontEdge.height = height;
+      if(wall.backEdge)
+        wall.backEdge.height = height;
+
+      // Finalmente se le cambia la altura al muro
+      wall.setWallHeight(height);
+
+      // Se pide que se vuelva a dibujar el muro
+      wall.fireRedraw();
+
+      // Se pide que se actualice todo el plano 3D
+      three.needsUpdate()
+
       console.log(currentTarget.height);  //TODO arreglar alturas de Edges?
       console.log(currentTarget.wall.height);
     }
