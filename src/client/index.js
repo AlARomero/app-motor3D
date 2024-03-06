@@ -19,30 +19,30 @@ var CameraButtons = function(blueprint3d) {
   
     function init() {
       // Camera controls
-      $("#zoom-in").click(zoomIn);
-      $("#zoom-out").click(zoomOut);  
-      $("#zoom-in").dblclick(preventDefault);
-      $("#zoom-out").dblclick(preventDefault);
+      $("#zoom-in").on('click', zoomIn);
+      $("#zoom-out").on('click', zoomOut);  
+      $("#zoom-in").on('dblclick', preventDefault);
+      $("#zoom-out").on('dblclick', preventDefault);
   
-      $("#reset-view").click(three.centerCamera)
+      $("#reset-view").on('click', three.centerCamera)
   
-      $("#move-left").click(function(){
+      $("#move-left").on('click', function(){
         pan(directions.LEFT)
       })
-      $("#move-right").click(function(){
+      $("#move-right").on('click', function(){
         pan(directions.RIGHT)
       })
-      $("#move-up").click(function(){
+      $("#move-up").on('click', function(){
         pan(directions.UP)
       })
-      $("#move-down").click(function(){
+      $("#move-down").on('click', function(){
         pan(directions.DOWN)
       })
   
-      $("#move-left").dblclick(preventDefault);
-      $("#move-right").dblclick(preventDefault);
-      $("#move-up").dblclick(preventDefault);
-      $("#move-down").dblclick(preventDefault);
+      $("#move-left").on('dblclick', preventDefault);
+      $("#move-right").on('dblclick', preventDefault);
+      $("#move-up").on('dblclick', preventDefault);
+      $("#move-down").on('dblclick', preventDefault);
     }
   
     function preventDefault(e) {
@@ -93,7 +93,7 @@ var CameraButtons = function(blueprint3d) {
     var three = blueprint3d.three;
   
     function init() {
-      $("#context-menu-delete").click(function(event) {
+      $("#context-menu-delete").on('click', function(event) {
           selectedItem.remove();
       });
   
@@ -102,7 +102,7 @@ var CameraButtons = function(blueprint3d) {
   
       initResize();
   
-      $("#fixed").click(function() {
+      $("#fixed").on('click', function() {
           var checked = $(this).prop('checked');
           selectedItem.setFixed(checked);
       });
@@ -124,10 +124,25 @@ var CameraButtons = function(blueprint3d) {
       $("#item-width").val(cmToIn(selectedItem.getWidth()).toFixed(0));
       $("#item-height").val(cmToIn(selectedItem.getHeight()).toFixed(0));
       $("#item-depth").val(cmToIn(selectedItem.getDepth()).toFixed(0));
+
+      // Si es tipo 8 se muestra el control de elevacion con el valor correspondiente al objeto seleccionado
+      if (item.metadata.itemType == 8){
+        $("#actual-elevation-value").val((selectedItem.position.y - selectedItem.desfaseAltura).toFixed(2));
+        $("#elevation-controls-btn").show();
+      }
+      // Si no es tipo 8 se oculta el control de elevacion y el boton que permite mostrarlo
+      else {
+        if($("#elevation-controls-btn").attr('aria-expanded') === 'true'){
+          $("#elevation-controls-btn").trigger('click');
+        }
+        $("#elevation-controls-btn").hide();
+      }
   
+      /*Se muestra el context menu (sin el control de elevacion aunque este esta        */
+      /*  dentro del context menu, se muestra o no segun el tipo de objeto seleccionado)*/
       $("#context-menu").show();
-  
-      $("#fixed").prop('checked', item.fixed);
+
+      $("#fixed").prop('checked', item.fixed); //TODO Por que esto esta aqui?
     }
   
     function resize() {
@@ -137,11 +152,31 @@ var CameraButtons = function(blueprint3d) {
         inToCm($("#item-depth").val())
       );
     }
+
+    //Funcion que actualiza la posicion del objeto seleccionado
+    function setNewItemPosition() {
+      let x = selectedItem.position.x; //TODO Posicion x del objeto se cambia arrastrandolo, necesario tambien un control?
+      let y = $("#actual-elevation-value").val();
+      let z = selectedItem.position.z; //TODO Posicion z del objeto se cambia arrastrandolo, necesario tambien un control?
+
+      //Control de valores minimos y maximos
+      if(y > 300) // Maximo
+        y = 300;
+      else if(y < 0)  //Minimo
+        y = 0;
+      
+      y = (parseFloat(y)+ parseFloat(selectedItem.desfaseAltura));
+      
+      $("#actual-elevation-value").val((y - selectedItem.desfaseAltura).toFixed(2));
+      selectedItem.setPosition(x, y, z);      
+    }
   
     function initResize() {
-      $("#item-height").change(resize);
-      $("#item-width").change(resize);
-      $("#item-depth").change(resize);
+      $("#item-height").on('change', resize);
+      $("#item-width").on('change', resize);
+      $("#item-depth").on('change', resize);
+      //Se agrega el evento para el control de elevacion
+      $("#actual-elevation-value").on('change', setNewItemPosition);
     }
   
     function itemUnselected() {
@@ -313,7 +348,7 @@ var CameraButtons = function(blueprint3d) {
     }
   
     function initLeftMenu() {
-      $( window ).resize( handleWindowResize );
+      $( window ).on('resize', handleWindowResize );
       handleWindowResize();
     }
   
@@ -325,7 +360,7 @@ var CameraButtons = function(blueprint3d) {
   
     // TODO: this doesn't really belong here
     function initItems() {
-      $("#add-items").find(".add-item").mousedown(function(e) {
+      $("#add-items").find(".add-item").on('mousedown', function(e) {
         var modelUrl = $(this).attr("model-url");
         var itemType = parseInt($(this).attr("model-type"));
         var metadata = {
@@ -345,19 +380,20 @@ var CameraButtons = function(blueprint3d) {
   }
   
   /*
-   * Change floor and wall textures
+   * Change floor and wall textures and adjust wall height
    */
   
-  var TextureSelector = function (blueprint3d, sideMenu) {
+  var WallAndFloorSelector = function (blueprint3d, sideMenu) {
   
     var scope = this;
     var three = blueprint3d.three;
     var isAdmin = isAdmin;
+    this.floorPlanner = blueprint3d.floorplanner;
   
     var currentTarget = null;
   
-    function initTextureSelectors() {
-      $(".texture-select-thumbnail").click(function(e) {
+    function initSelectors() {
+      $(".texture-select-thumbnail").on('click', function(e) {
         var textureUrl = $(this).attr("texture-url");
         var textureStretch = ($(this).attr("texture-stretch") == "true");
         var textureScale = parseInt($(this).attr("texture-scale"));
@@ -366,19 +402,25 @@ var CameraButtons = function(blueprint3d) {
         e.preventDefault();
       });
     }
-  
+
     function init() {
       three.wallClicked.add(wallClicked);
       three.floorClicked.add(floorClicked);
       three.itemSelectedCallbacks.add(reset);
       three.nothingClicked.add(reset);
       sideMenu.stateChangeCallbacks.add(reset);
-      initTextureSelectors();
+
+      //Se agrega el evento para el control de altura de los muros
+      $("#actual-wall-height").on('change', updateWallsHeight);
+
+      initSelectors();
     }
   
     function wallClicked(halfEdge) {
       currentTarget = halfEdge;
       $("#floorTexturesDiv").hide();  
+      $("#actual-wall-height").val(halfEdge.height);
+      // Recoge tambien el boton de altura
       $("#wallTextures").show();  
     }
   
@@ -391,6 +433,37 @@ var CameraButtons = function(blueprint3d) {
     function reset() {
       $("#wallTextures").hide();  
       $("#floorTexturesDiv").hide();  
+    }
+
+    //Funcion que actualiza la altura de los muros
+    function updateWallsHeight() {
+      // Obtengo el muro seleccionado (ya que se selecciona un half edge)
+      const wall = currentTarget.wall;
+
+      // Se obtiene la altura que se quiere cambiar desde el boton
+      let height = parseFloat($("#actual-wall-height").val());
+    
+      // Control de valores minimos
+      if (height < 0) 
+        height = 0;
+
+      // Se cambia la altura a los half edges que tenga el muro
+      if(wall.frontEdge)
+        wall.frontEdge.height = height;
+      if(wall.backEdge)
+        wall.backEdge.height = height;
+
+      // Finalmente se le cambia la altura al muro
+      wall.setWallHeight(height);
+
+      // Se pide que se vuelva a dibujar el muro
+      wall.fireRedraw();
+
+      // Se pide que se actualice todo el plano 3D
+      three.needsUpdate()
+
+      console.log(currentTarget.height);  //TODO arreglar alturas de Edges?
+      console.log(currentTarget.wall.height);
     }
   
     init();
@@ -417,7 +490,7 @@ var CameraButtons = function(blueprint3d) {
   
     function init() {
   
-      $( window ).resize( scope.handleWindowResize );
+      $( window ).on('resize', scope.handleWindowResize );
       scope.handleWindowResize();
   
       // mode buttons
@@ -441,15 +514,15 @@ var CameraButtons = function(blueprint3d) {
         }
       });
   
-      $(move).click(function(){
+      $(move).on('click', function(){
         scope.floorplanner.setMode(scope.floorplanner.modes.MOVE);
       });
   
-      $(draw).click(function(){
+      $(draw).on('click', function(){
         scope.floorplanner.setMode(scope.floorplanner.modes.DRAW);
       });
   
-      $(remove).click(function(){
+      $(remove).on('click', function(){
         scope.floorplanner.setMode(scope.floorplanner.modes.DELETE);
       });
     }
@@ -496,9 +569,9 @@ var CameraButtons = function(blueprint3d) {
     }
   
     function init() {
-      $("#new").click(newDesign);
-      $("#loadFile").change(loadDesign);
-      $("#saveFile").click(saveDesign);
+      $("#new").on('click', newDesign);
+      $("#loadFile").on('change', loadDesign);
+      $("#saveFile").on('click', saveDesign);
     }
   
     init();
@@ -508,7 +581,7 @@ var CameraButtons = function(blueprint3d) {
    * Initialize!
    */
   
-  $(document).ready(function() {
+  $(function() {
   
     // main setup
     var opts = {
@@ -524,7 +597,7 @@ var CameraButtons = function(blueprint3d) {
     var viewerFloorplanner = new ViewerFloorplanner(blueprint3d);
     var contextMenu = new ContextMenu(blueprint3d);
     var sideMenu = new SideMenu(blueprint3d, viewerFloorplanner, modalEffects);
-    var textureSelector = new TextureSelector(blueprint3d, sideMenu);        
+    var wallAndFloorSelector = new WallAndFloorSelector(blueprint3d, sideMenu);        
     var cameraButtons = new CameraButtons(blueprint3d);
     mainControls(blueprint3d);
     

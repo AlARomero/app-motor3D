@@ -1,5 +1,5 @@
 // add items to the "Add Items" tab
-$(document).ready(function() {
+$(function() {
   var items = [
    {
       "name" : "Closed Door",

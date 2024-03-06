@@ -419,8 +419,8 @@ var Model = function(textureDir) {
       camera = camera || null;
       var data;
       var exporter = new GLTFExporter();
-      var options = {
-	onlyVisible: true
+      var options = {      
+        onlyVisible: true
         //binary: true
       };
       

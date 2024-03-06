@@ -50,7 +50,7 @@ var FloorplannerView = function(floorplan, viewmodel, canvas, scene) {
   var lineasOutsideMuros = [];
   
   function init() {
-    JQUERY(window).resize(scope.handleWindowResize);
+    JQUERY(window).on('resize', scope.handleWindowResize);
     scope.handleWindowResize();
   }
 
