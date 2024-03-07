@@ -1,4 +1,29 @@
 import * as THREE from 'three';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+
+// class ThreeSkybox {
+//   constructor(scene) {
+//     this.scene = scene;
+//     this.setHdrSkybox('venice_sunset_1k.hdr')
+//   }
+
+//   setHdrSkybox(hdr) {
+
+//     new RGBELoader()
+//       .setPath( './assets/hdr/' )
+//       .load( hdr, function ( texture ) {
+
+//         texture.mapping = THREE.EquirectangularReflectionMapping;
+
+//         this.scene.getScene().background = texture;
+//         this.scene.getScene().environment = texture;
+
+//         texture.dispose();
+
+//       } );
+//   }
+// }
+
 
 var ThreeSkybox = function(scene) {
 

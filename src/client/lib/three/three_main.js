@@ -120,7 +120,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 	      renderer.toneMappingExposure = 0.85;
 	      //renderer.outputEncoding = THREE.sRGBEncoding;
       
-        
+        //Carga del entorno (Iluminación o HDR)
         var skybox = new ThreeSkybox(scene);
 
         scope.controls = new ThreeControls(camera, domElement);
@@ -132,22 +132,13 @@ var ThreeMain = function(model, element, canvasElement, opts) {
         }
 
         //scene.getScene().background = new THREE.Color(1,0,0);
-        if (parseInt(THREE.REVISION) <= 120) { 
-            new RGBELoader().setPath( 'images/' )
-                            .load( 'venice_sunset_1k.hdr', function ( texture ) {
-                                texture.mapping = THREE.EquirectangularReflectionMapping;
-                                scene.getScene().background = texture;
-                                //scene.getScene().backgroundBlurriness = 0.35;
-                                //scene.getScene().environment = texture;
 
-                            } );
-        } else {
 
-            const environment = new RoomEnvironment( renderer );
-            const pmremGenerator = new THREE.PMREMGenerator( renderer );
-            scene.getScene().environment = pmremGenerator.fromScene( environment ).texture;
-            environment.dispose();  
-        }  
+        const environment = new RoomEnvironment( renderer );
+        const pmremGenerator = new THREE.PMREMGenerator( renderer );
+        scene.getScene().environment = pmremGenerator.fromScene( environment ).texture;
+        environment.dispose();  
+
         /*composer = new EffectComposer( renderer );
         const renderPass = new RenderPass( scene.getScene(), camera );
         composer.addPass( renderPass );*/

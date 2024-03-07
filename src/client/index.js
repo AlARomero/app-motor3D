@@ -444,8 +444,14 @@ var CameraButtons = function(blueprint3d) {
       let height = parseFloat($("#actual-wall-height").val());
     
       // Control de valores minimos
-      if (height < 0) 
+      if (height < 0) { 
         height = 0;
+        $("#actual-wall-height").val(0);
+      }
+      else if (height > 700) {
+        height = 700;
+        $("#actual-wall-height").val(700);
+      }
 
       // Se cambia la altura a los half edges que tenga el muro
       if(wall.frontEdge)
@@ -459,11 +465,8 @@ var CameraButtons = function(blueprint3d) {
       // Se pide que se vuelva a dibujar el muro
       wall.fireRedraw();
 
-      // Se pide que se actualice todo el plano 3D
-      three.needsUpdate()
-
-      console.log(currentTarget.height);  //TODO arreglar alturas de Edges?
-      console.log(currentTarget.wall.height);
+      // Se pide que se actualice el plano 3D
+      three.needsUpdate();
     }
   
     init();
