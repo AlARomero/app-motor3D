@@ -133,7 +133,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
         //scene.getScene().background = new THREE.Color(1,0,0);
 
-
+        // Seleccionado el entorno de iluminación de interior
         const environment = new RoomEnvironment( renderer );
         const pmremGenerator = new THREE.PMREMGenerator( renderer );
         scene.getScene().environment = pmremGenerator.fromScene( environment ).texture;
