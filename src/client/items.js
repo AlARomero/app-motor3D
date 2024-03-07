@@ -5,127 +5,148 @@ $(function() {
       "name" : "Closed Door",
       "image" : "models/thumbnails/EE-PCI-04_1_G2BH.jpg",
       "model" : "models/gltf/EE-PCI-04_1_G2BH.gltf",
-      "type" : "7"
+      "type" : "7",
+      "can-have-children": "false"
     }, 
     {
       "name" : "Open Door",
       "image" : "models/thumbnails/EE-PAB-02_1_SRG0.jpg",
       "model" : "models/gltf/EE-PAB-02_1_SRG0.gltf",
-      "type" : "7"
+      "type" : "7",
+      "can-have-children": "false"
     }, 
   {
     "name": "PC Sobremesa",
     "image": "models/thumbnails/ED-PPC-02_1_5V7L.jpg",
     "model": "models/gltf/ED-PPC-02_1_5V7L.gltf",
-    "type": "8"
+    "type": "8",
+    "can-have-children": "false"
   },
   {
     "name": "Smartphone",
     "image": "models/thumbnails/ED-SMP-01_1_P0K6.jpg",
     "model": "models/gltf/ED-SMP-01_1_P0K6.gltf",
-    "type": "8"
+    "type": "8",
+    "can-have-children": "false"
   },
   {
     "name": "Interruptor doble",
     "image": "models/thumbnails/EE-INT-02_1_71NL.jpg",
     "model": "models/gltf/EE-INT-02_1_71NL.gltf",
-    "type": "2"
+    "type": "2",
+    "can-have-children": "false"
   },
   {
     "name": "Interruptor simple",
     "image": "models/thumbnails/EE-INT-01_1_KR0I.jpg",
     "model": "models/gltf/EE-INT-01_1_KR0I.gltf",
-    "type": "2"
+    "type": "2",
+    "can-have-children": "false"
   },
   {
     "name": "Alfombra",
     "image": "models/thumbnails/ED-ALF-03_1_TPZ7.jpg",
     "model": "models/gltf/ED-ALF-03_1_TPZ7.gltf",
-    "type": "8"
+    "type": "8",
+    "can-have-children": "true" //TODO change to false
   },
   {
     "name": "Aire acondicionado. Split",
     "image": "models/thumbnails/EE-AAC-01_1_8H7G.jpg",
     "model": "models/gltf/EE-AAC-01_1_8H7G.gltf",
-    "type": "2"
+    "type": "2",
+    "can-have-children": "false"
   },
   {
     "name": "Enchufe triple",
     "image": "models/thumbnails/EE-ENC-03_1_WZRL.jpg",
     "model": "models/gltf/EE-ENC-03_1_WZRL.gltf",
-    "type": "2"
+    "type": "2",
+    "can-have-children": "false"
   },
   {
     "name": "Radiador",
     "image": "models/thumbnails/EE-RAD-01_1_MFTK.jpg",
     "model": "models/gltf/EE-RAD-01_1_MFTK.gltf",
-    "type": "2"
+    "type": "2",
+    "can-have-children": "false"
   },
   {
     "name": "Estor bajo abierto",
     "image": "models/thumbnails/ED-EST-02_1_OC5Q.jpg",
     "model": "models/gltf/ED-EST-02_1_OC5Q.gltf",
-    "type": "2"
+    "type": "2",
+    "can-have-children": "false"
   },
   {
     "name": "Soporte",
     "image": "models/thumbnails/1564_69_XX3K.jpg",
     "model": "models/gltf/1564_69_XX3K.gltf",
-    "type": "1"
+    "type": "1",
+    "can-have-children": "false"
   },
   {
     "name": "Encimera curvo izquierda",
     "image": "models/thumbnails/1729_69_5EQ8.jpg",
     "model": "models/gltf/1729_69_5EQ8.gltf",
-    "type": "8"
+    "type": "8",
+    "can-have-children": "false"
   },
   {
     "name": "Armario rinconera curvo",
     "image": "models/thumbnails/5987_69_BL9H.jpg",
     "model": "models/gltf/5987_69_BL9H.gltf",
-    "type": "1"
+    "type": "1",
+    "can-have-children": "false"
   },
   {
     "name": "Módulo colgante",
     "image": "models/thumbnails/2119_69_KLAL.jpg",
     "model": "models/gltf/2119_69_KLAL.gltf",
-    "type": "8"
+    "type": "8",
+    "can-have-children": "false"
   },
   {
     "name": "Planta alta",
     "image": "models/thumbnails/ED-PLA-02_1_O3NS.jpg",
     "model": "models/gltf/ED-PLA-02_1_O3NS.gltf",
-    "type": "8"
+    "type": "8",
+    "can-have-children": "false"
   },
   {
     "name": "Arcón dos cajones",
     "image": "models/thumbnails/1958_69_AG39.jpg",
     "model": "models/gltf/1958_69_AG39.gltf",
-    "type": "1"
+    "type": "1",
+    "can-have-children": "false"
   },
   {
     "name": "Armario estantería izquierdo",
     "image": "models/thumbnails/6105_69_W2Y4.jpg",
     "model": "models/gltf/6105_69_W2Y4.gltf",
-    "type": "1"
+    "type": "1",
+    "can-have-children": "false"
   },
   {
     "name": "Armario una puerta",
     "image": "models/thumbnails/5532_69_QX64.jpg",
     "model": "models/gltf/5532_69_QX64.gltf",
-    "type": "1"
+    "type": "1",
+    "can-have-children": "false"
   },
   {
     "name": "Coche de juguete",
     "image": "models/thumbnails/ED-JCO-01_1_L6X9.jpg",
     "model": "models/gltf/ED-JCO-01_1_L6X9.gltf",
-    "type": "8"
+    "type": "8",
+    "can-have-children": "false"
   },
   {
     "name": "Compacto alto 74cm",
     "image": "models/thumbnails/3392_69_TOIB.jpg",
     "model": "models/gltf/3392_69_TOIB.gltf",
-    "type": "1"
+    "type": "1",
+    "can-have-children": "false"
   }
     /*{
       "name" : "Chair",

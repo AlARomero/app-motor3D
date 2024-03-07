@@ -2495,6 +2495,18 @@ itemUtils.clickPressed = function(item, intersection,myIntersectedObjects) {
     
 };
 
+itemUtils.canHaveChildren = function(item) {
+    return item.metadata.canHaveChildren;
+}
+
+itemUtils.getDescription = function(item) {
+    return item.metadata.description;
+}
+
+itemUtils.setDescription = function(item, description) {
+    item.metadata.description = description;
+}
+
 itemUtils.clickDragged = function(item, intersection) {
     if (intersection) {    	
     	// keys a 0 para SI mostrar el error de posicion

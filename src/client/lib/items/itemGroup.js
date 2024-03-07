@@ -432,6 +432,14 @@ class ItemGroup extends THREE.Group {
         // subclass can define to take action after a resize
     };
 
+    canHaveChildren() { 
+        return itemUtils.canHaveChildren(this);
+    }
+
+    getDescription() {
+        return itemUtils.getDescription(this);
+    }
+
     getHeight() {
         return itemUtils.getHeight(this);
     };

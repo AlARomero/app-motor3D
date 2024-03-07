@@ -118,19 +118,25 @@ var CameraButtons = function(blueprint3d) {
   
     function itemSelected(item) {
       selectedItem = item;
-  
+
+      // Se actualiza el nombre del objeto seleccionado en el context menu
       $("#context-menu-name").text(item.metadata.itemName);
   
+      // Se actualizan los valores de ancho, alto y profundidad del objeto seleccionado
+
       $("#item-width").val(cmToIn(selectedItem.getWidth()).toFixed(0));
       $("#item-height").val(cmToIn(selectedItem.getHeight()).toFixed(0));
       $("#item-depth").val(cmToIn(selectedItem.getDepth()).toFixed(0));
 
       // Si es tipo 8 se muestra el control de elevacion con el valor correspondiente al objeto seleccionado
+
       if (item.metadata.itemType == 8){
         $("#actual-elevation-value").val((selectedItem.position.y - selectedItem.desfaseAltura).toFixed(2));
         $("#elevation-controls-btn").show();
       }
+
       // Si no es tipo 8 se oculta el control de elevacion y el boton que permite mostrarlo
+
       else {
         if($("#elevation-controls-btn").attr('aria-expanded') === 'true'){
           $("#elevation-controls-btn").trigger('click');
@@ -238,13 +244,13 @@ var CameraButtons = function(blueprint3d) {
   
     const CHECKED = "checked";
   
-    var tabs = {
+    const tabs = {
       "FLOORPLAN" : $("#floorplan_tab"),
       "SHOP" : $("#items_tab"),
       "DESIGN" : $("#design_tab")
     }
   
-    var scope = this;
+    const scope = this;
     this.stateChangeCallbacks = $.Callbacks();
   
     this.states = {
@@ -263,15 +269,15 @@ var CameraButtons = function(blueprint3d) {
     }
   
     // sidebar state
-    var currentState = scope.states.FLOORPLAN;
+    let currentState = scope.states.FLOORPLAN;
   
     function init() {
-      for (var tab in tabs) {
-        var elem = tabs[tab];
+      for (let tab in tabs) {
+        const elem = tabs[tab];
         elem.click(tabClicked(elem));
       }
   
-      $("#update-floorplan").click(floorplanUpdate);
+      $("#update-floorplan").on('click', floorplanUpdate);
   
       initLeftMenu();
   
@@ -361,13 +367,16 @@ var CameraButtons = function(blueprint3d) {
     // TODO: this doesn't really belong here
     function initItems() {
       $("#add-items").find(".add-item").on('mousedown', function(e) {
-        var modelUrl = $(this).attr("model-url");
-        var itemType = parseInt($(this).attr("model-type"));
-        var metadata = {
+        const modelUrl = $(this).attr("model-url");
+        const itemType = parseInt($(this).attr("model-type"));
+        const canHaveChildren = $(this).attr("can-have-children") === true;
+        const metadata = {
           itemName: $(this).attr("model-name"),
           resizable: true,
           modelUrl: modelUrl,
-          itemType: itemType
+          itemType: itemType,
+          itemDescription: "",
+          canHaveChildren: canHaveChildren
         }
   
         blueprint3d.model.scene.addItem(itemType, modelUrl, metadata);
