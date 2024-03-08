@@ -316,8 +316,8 @@ var CameraButtons = function(blueprint3d) {
         blueprint3d.three.stopSpin();
   
         // Selected a new tab
-        for (var key in scope.states) {
-          var state = scope.states[key];
+        for (let key in scope.states) {
+          const state = scope.states[key];
           if (state.tab == tab) {
             setCurrentState(state);
             break;

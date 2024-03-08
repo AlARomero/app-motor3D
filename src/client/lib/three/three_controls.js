@@ -395,17 +395,17 @@ var ThreeControls = function (object, domElement) {
 		if ( scope.noPan === true ) { return; }
                 //console.log("Presiono tecla");
 		switch ( event.keyCode ) {
-
-			case scope.keys.UP:
+			// MOD Alberto - Cambio de teclas para que se ajusten a las flechas del teclado
+			case scope.keys.BOTTOM:
 				scope.pan( new THREE.Vector2( 0, -scope.keyPanSpeed ) );
 				break;
-			case scope.keys.BOTTOM:
+			case scope.keys.UP:
 				scope.pan( new THREE.Vector2( 0, scope.keyPanSpeed ) );
 				break;
-			case scope.keys.LEFT:
+			case scope.keys.RIGHT:
 				scope.pan( new THREE.Vector2( -scope.keyPanSpeed, 0 ) );
 				break;
-			case scope.keys.RIGHT:
+			case scope.keys.LEFT:
 				scope.pan( new THREE.Vector2( scope.keyPanSpeed, 0 ) );
 				break;
 		}
