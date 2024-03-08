@@ -93,8 +93,16 @@ var CameraButtons = function(blueprint3d) {
     var three = blueprint3d.three;
   
     function init() {
+      // Se agrega el evento para el boton de borrar objeto
       $("#context-menu-delete").on('click', function(event) {
           selectedItem.remove();
+      });
+
+      // Se agrega el evento para el boton de guardar edicion de descripcion
+      $("#save-description").on('click', () => {
+        selectedItem.metadata.itemDescription = $("#description-textarea").val();
+        changeDescriptionOnDisplay();
+        $('#close-description-modal').trigger('click');
       });
   
       three.itemSelectedCallbacks.add(itemSelected);
@@ -116,12 +124,21 @@ var CameraButtons = function(blueprint3d) {
       return inches * 2.54;
     }
   
+    function changeDescriptionOnDisplay() {
+      $("#item-description").text(selectedItem.metadata.itemDescription);
+    }
+
     function itemSelected(item) {
       selectedItem = item;
 
       // Se actualiza el nombre del objeto seleccionado en el context menu
       $("#context-menu-name").text(item.metadata.itemName);
-  
+
+      // Se actualiza la descripcion (tambien la del modal de edicion de descripcion)
+      changeDescriptionOnDisplay();
+      $("#description-textarea").val(item.metadata.itemDescription);
+      
+      
       // Se actualizan los valores de ancho, alto y profundidad del objeto seleccionado
 
       $("#item-width").val(cmToIn(selectedItem.getWidth()).toFixed(0));
@@ -299,8 +316,8 @@ var CameraButtons = function(blueprint3d) {
         blueprint3d.three.stopSpin();
   
         // Selected a new tab
-        for (var key in scope.states) {
-          var state = scope.states[key];
+        for (let key in scope.states) {
+          const state = scope.states[key];
           if (state.tab == tab) {
             setCurrentState(state);
             break;
