@@ -2495,6 +2495,25 @@ itemUtils.clickPressed = function(item, intersection,myIntersectedObjects) {
     
 };
 
+itemUtils.boundItem = function(item, itemBounded) {
+    item.itemsBounded.push(itemBounded);
+}
+
+itemUtils.unboundItem = function(item, itemBounded) {
+    var idx = item.itemsBounded.indexOf(itemBounded);
+    if (idx !== -1) {
+        item.itemsBounded.splice(idx, 1);
+    }
+}
+
+itemUtils.getDescription = function(item) {
+    return item.metadata.description;
+}
+
+itemUtils.setDescription = function(item, description) {
+    item.metadata.description = description;
+}
+
 itemUtils.clickDragged = function(item, intersection) {
     if (intersection) {    	
     	// keys a 0 para SI mostrar el error de posicion

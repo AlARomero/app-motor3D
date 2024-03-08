@@ -13,6 +13,9 @@ class ItemGroup extends THREE.Group {
         this.scene = model.scene;
         //this.controller = model.getController();
 
+        // Items relacionados con este mismo, array de items e itemgroups
+        this.itemsBounded = [];
+
         this.errorGlow = new THREE.Mesh();
         this.error = false;
         this.helperGlow = new THREE.Mesh();  
@@ -431,6 +434,18 @@ class ItemGroup extends THREE.Group {
     resized() {
         // subclass can define to take action after a resize
     };
+
+    boundItem(item) {
+        itemUtils.boundItem(this, item);
+    }
+
+    unboundItem(item) {
+        itemUtils.unboundItem(this, item);
+    }
+
+    getDescription() {
+        return itemUtils.getDescription(this);
+    }
 
     getHeight() {
         return itemUtils.getHeight(this);
