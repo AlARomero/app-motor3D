@@ -15,6 +15,9 @@ class Item extends THREE.Mesh {
         this.scene = model.scene;
         //this.controller = model.getController();
 
+        // Items relacionados con este mismo, array de items e itemgroups
+        this.itemsBounded = [];
+
         this.errorGlow = new THREE.Mesh();
         this.error = false;
         this.helperGlow = new THREE.Mesh();  
@@ -405,8 +408,12 @@ class Item extends THREE.Mesh {
         // subclass can define to take action after a resize
     };
 
-    canHaveChildren() {
-        return  itemUtils.canHaveChildren(this);
+    boundItem(item) {
+        itemUtils.boundItem(this, item);
+    }
+
+    unboundItem(item) {
+        itemUtils.unboundItem(this, item);
     }
 
     getDescription() {

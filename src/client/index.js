@@ -369,14 +369,14 @@ var CameraButtons = function(blueprint3d) {
       $("#add-items").find(".add-item").on('mousedown', function(e) {
         const modelUrl = $(this).attr("model-url");
         const itemType = parseInt($(this).attr("model-type"));
-        const canHaveChildren = $(this).attr("can-have-children") === true;
+        const isTable = $(this).attr("is-table") === true;
         const metadata = {
           itemName: $(this).attr("model-name"),
           resizable: true,
           modelUrl: modelUrl,
           itemType: itemType,
           itemDescription: "",
-          canHaveChildren: canHaveChildren
+          isTable: isTable
         }
   
         blueprint3d.model.scene.addItem(itemType, modelUrl, metadata);

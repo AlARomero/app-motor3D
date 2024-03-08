@@ -2495,8 +2495,15 @@ itemUtils.clickPressed = function(item, intersection,myIntersectedObjects) {
     
 };
 
-itemUtils.canHaveChildren = function(item) {
-    return item.metadata.canHaveChildren;
+itemUtils.boundItem = function(item, itemBounded) {
+    item.itemsBounded.push(itemBounded);
+}
+
+itemUtils.unboundItem = function(item, itemBounded) {
+    var idx = item.itemsBounded.indexOf(itemBounded);
+    if (idx !== -1) {
+        item.itemsBounded.splice(idx, 1);
+    }
 }
 
 itemUtils.getDescription = function(item) {
