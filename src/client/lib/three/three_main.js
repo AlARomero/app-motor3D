@@ -116,8 +116,8 @@ var ThreeMain = function(model, element, canvasElement, opts) {
         //alert(renderer.capabilities.maxTextureSize);
         
         // Environment
-        renderer.toneMapping = THREE.LinearToneMapping;
-	      renderer.toneMappingExposure = 0.85;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+	      renderer.toneMappingExposure = 0.5;
 	      //renderer.outputEncoding = THREE.sRGBEncoding;
       
         //Carga del entorno (Iluminación o HDR)
