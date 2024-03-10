@@ -174,7 +174,40 @@
               <p class="card-header">
                 Comensales
               </p>
+              <div class="card-body" id="comensales-content">
+
+              </div>
+              <div class="card-footer d-flex justify-content-center">
+                  <button  type="button" class="btn btn-primary" id='add-first-comensal'>
+                    Add Comensal
+                  </button>
+              </div>
             </div>
+
+            <!-- Modal de comensales -->
+            <div class="modal fade" id="comensales-modal" tabindex="-1" aria-labelledby="comensales-modal-label" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title fs-5" id="comensales-modal-label">
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close-comensal-modal" id="close-comensal-modal"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form>
+                      <div class="mb-3">
+                        <label for="nombre-comensal" class="col-form-label">Nombre:</label>
+                        <textarea class="form-control" id="nombre-comensal"></textarea>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="save-comensal">Save</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 

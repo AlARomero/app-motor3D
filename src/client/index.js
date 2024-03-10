@@ -1,4 +1,5 @@
 const Blueprint3d = require('./lib/blueprint3d');
+import * as Comensales from './comensales';
 
 /*
  * Camera Buttons
@@ -104,6 +105,18 @@ var CameraButtons = function(blueprint3d) {
         changeDescriptionOnDisplay();
         $('#close-description-modal').trigger('click');
       });
+
+      $("#add-first-comensal").on('click', () => {
+        Comensales.creaComensal(selectedItem, 'comensales-content');
+      })
+
+      // Se agrega el evento para el boton de guardar edicion de comensales
+      $("#save-comensal").on('click', (e) => {
+        const id = parseInt($('#comensales-modal-label').text().split(' ')[2]);
+        const params = {id: id, nombre: $("#nombre-comensal").val()};
+        Comensales.modificaComensal(selectedItem, params);
+        $('#close-comensal-modal').trigger('click');
+      });
   
       three.itemSelectedCallbacks.add(itemSelected);
       three.itemUnselectedCallbacks.add(itemUnselected);
@@ -173,14 +186,10 @@ var CameraButtons = function(blueprint3d) {
     }
 
     function initComensales() {
-      console.log("Iniciando comensales");
       if(selectedItem.metadata.isTable) {
+        // Si es mesa puede tener comensales, se construye el html y se muestra dentro del contenedor
         console.log("Es una mesa");
-        // Tiene comensales
-        selectedItem.itemsBounded.forEach((comensal) => {
-          //TODO
-        })
-        // Se muestra el control de comensales
+        Comensales.comensalesToHtml(selectedItem, 'comensales-content');
         $("#comensales-container").show();
       }
       else{
