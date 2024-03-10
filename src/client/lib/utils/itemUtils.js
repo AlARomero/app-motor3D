@@ -2499,6 +2499,24 @@ itemUtils.boundItem = function(item, itemBounded) {
     item.itemsBounded.push(itemBounded);
 }
 
+itemUtils.findBoundItem = function(item, index) {
+    let found = false;
+    let supIndex = 0;
+    let itemSup = null;
+    while(!found && supIndex < item.itemsBounded.length) {
+        itemSup = item.itemsBounded[supIndex];
+        if (itemSup.id === index) {
+            found = true;
+        }
+        supIndex++;
+    }
+
+    if (found)
+        return itemSup;
+    else
+        return null;
+}
+
 itemUtils.unboundItem = function(item, itemBounded) {
     var idx = item.itemsBounded.indexOf(itemBounded);
     if (idx !== -1) {

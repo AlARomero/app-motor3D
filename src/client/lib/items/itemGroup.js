@@ -443,6 +443,10 @@ class ItemGroup extends THREE.Group {
         itemUtils.unboundItem(this, item);
     }
 
+    findBoundItem(index) {
+        return itemUtils.findBoundItem(this, index);
+    }
+
     getDescription() {
         return itemUtils.getDescription(this);
     }

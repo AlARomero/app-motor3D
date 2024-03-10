@@ -1,4 +1,5 @@
 const Blueprint3d = require('./lib/blueprint3d');
+import * as Comensales from './comensales';
 
 /*
  * Camera Buttons
@@ -104,6 +105,18 @@ var CameraButtons = function(blueprint3d) {
         changeDescriptionOnDisplay();
         $('#close-description-modal').trigger('click');
       });
+
+      $("#add-first-comensal").on('click', () => {
+        Comensales.creaComensal(selectedItem, 'comensales-content');
+      })
+
+      // Se agrega el evento para el boton de guardar edicion de comensales
+      $("#save-comensal").on('click', (e) => {
+        const id = parseInt($('#comensales-modal-label').text().split(' ')[2]);
+        const params = {id: id, nombre: $("#nombre-comensal").val()};
+        Comensales.modificaComensal(selectedItem, params);
+        $('#close-comensal-modal').trigger('click');
+      });
   
       three.itemSelectedCallbacks.add(itemSelected);
       three.itemUnselectedCallbacks.add(itemUnselected);
@@ -114,6 +127,7 @@ var CameraButtons = function(blueprint3d) {
           var checked = $(this).prop('checked');
           selectedItem.setFixed(checked);
       });
+
     }
   
     function cmToIn(cm) {
@@ -160,12 +174,28 @@ var CameraButtons = function(blueprint3d) {
         }
         $("#elevation-controls-btn").hide();
       }
-  
+      
+      // Se inicializan los comensales (en el caso de ser una mesa)
+      initComensales();
+
       /*Se muestra el context menu (sin el control de elevacion aunque este esta        */
       /*  dentro del context menu, se muestra o no segun el tipo de objeto seleccionado)*/
       $("#context-menu").show();
 
       $("#fixed").prop('checked', item.fixed); //TODO Por que esto esta aqui?
+    }
+
+    function initComensales() {
+      if(selectedItem.metadata.isTable) {
+        // Si es mesa puede tener comensales, se construye el html y se muestra dentro del contenedor
+        console.log("Es una mesa");
+        Comensales.comensalesToHtml(selectedItem, 'comensales-content');
+        $("#comensales-container").show();
+      }
+      else{
+        // Si no es una mesa, se esconde el control de comensales
+        $("#comensales-container").hide();
+      }
     }
   
     function resize() {
@@ -386,7 +416,7 @@ var CameraButtons = function(blueprint3d) {
       $("#add-items").find(".add-item").on('mousedown', function(e) {
         const modelUrl = $(this).attr("model-url");
         const itemType = parseInt($(this).attr("model-type"));
-        const isTable = $(this).attr("is-table") === true;
+        const isTable = $(this).attr("model-is-table") === 'true';
         const metadata = {
           itemName: $(this).attr("model-name"),
           resizable: true,
@@ -633,6 +663,8 @@ var CameraButtons = function(blueprint3d) {
     // This serialization format needs work
     // Load a simple rectangle room
    blueprint3d.model.loadSerialized('{"floorplan":{"corners":{"f90da5e3-9e0e-eba7-173d-eb0b071e838e":{"x":-104.0130000000003,"y":331.7239999999996},"da026c08-d76a-a944-8e7b-096b752da9ed":{"x":406.0189999999998,"y":331.7239999999996},"4e3d65cb-54c0-0681-28bf-bddcc7bdb571":{"x":406.0189999999998,"y":-178.308},"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2":{"x":-104.0130000000003,"y":-178.308}},"walls":[{"corner1":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","corner2":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","corner2":"da026c08-d76a-a944-8e7b-096b752da9ed","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"da026c08-d76a-a944-8e7b-096b752da9ed","corner2":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","corner2":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}}],"wallTextures":[],"floorTextures":{},"newFloorTextures":{}},"items":[]}');
+
+   $('#script-loading-screen').hide();
           
   });
   

@@ -1,6 +1,6 @@
 // add items to the "Add Items" tab
 $(function() {
-  var items = [
+  const items = [
    {
       "name" : "Closed Door",
       "image" : "models/thumbnails/EE-PCI-04_1_G2BH.jpg",
@@ -27,7 +27,7 @@ $(function() {
     "image": "models/thumbnails/ED-SMP-01_1_P0K6.jpg",
     "model": "models/gltf/ED-SMP-01_1_P0K6.gltf",
     "type": "8",
-    "can-have-children": "false"
+    "is-table": "false"
   },
   {
     "name": "Interruptor doble",
@@ -41,7 +41,7 @@ $(function() {
     "image": "models/thumbnails/EE-INT-01_1_KR0I.jpg",
     "model": "models/gltf/EE-INT-01_1_KR0I.gltf",
     "type": "2",
-    "can-have-children": "false"
+    "is-table": "false"
   },
   {
     "name": "Alfombra",
@@ -292,16 +292,18 @@ $(function() {
 
 
 
-  var itemsDiv = $("#items-wrapper")
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
-    var html = '<div class="col-sm-4">' +
+  const itemsDiv = $("#items-wrapper")
+  for (const element of items) {
+    const item = element;
+    const html = '<div class="col-sm-4">' +
                 '<a class="thumbnail add-item" model-name="' + 
                 item.name + 
                 '" model-url="' +
                 item.model +
                 '" model-type="' +
                 item.type + 
+                '" model-is-table="' +
+                item["is-table"] + 
                 '"><img class="img-fluid" src="' +
                 item.image + 
                 '" alt="Add Item"> '+

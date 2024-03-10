@@ -416,6 +416,10 @@ class Item extends THREE.Mesh {
         itemUtils.unboundItem(this, item);
     }
 
+    findBoundItem(index) {
+        return itemUtils.findBoundItem(this, index);
+    }
+
     getDescription() {
         return itemUtils.getDescription(this);
     }
