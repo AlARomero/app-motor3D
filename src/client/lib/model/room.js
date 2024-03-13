@@ -10,7 +10,7 @@ var utils = require('../utils/utils')
 
 var HalfEdge = require('./half_edge')
 
-var Room = function(floorplan, corners) {
+var Room = function(floorplan, corners, altitude = 0) {
  
   var scope = this;
 
@@ -20,6 +20,8 @@ var Room = function(floorplan, corners) {
 
   this.interiorCorners = [];
   this.edgePointer = null;
+
+  this.altitude = altitude;
   
   // floor plane for intersection testing
   this.floorPlane = null;
@@ -145,10 +147,13 @@ var Room = function(floorplan, corners) {
       // find if wall is heading in that direction
       var wallTo = firstCorner.wallTo(secondCorner);
       var wallFrom = firstCorner.wallFrom(secondCorner);
+      console.log("ALTITUUUUUUD " + scope.altitude)
       if (wallTo) {
-        var edge = new HalfEdge(scope, wallTo, true);
+        var edge = new HalfEdge(scope, wallTo, true, scope.altitude);
+        console.log(edge);
       } else if (wallFrom) {
-        var edge = new HalfEdge(scope, wallFrom, false);
+        var edge = new HalfEdge(scope, wallFrom, false, scope.altitude);
+        console.log(edge);
       } else {
         // something horrible has happened
         console.log("corners arent connected by a wall, uh oh");

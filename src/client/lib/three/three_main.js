@@ -65,7 +65,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
   
   this.aux = controller;
   
-  var floorplan;
+  let floorplan;
 
   // var canvas;
   // var canvasElement = canvasElement;
@@ -187,6 +187,10 @@ var ThreeMain = function(model, element, canvasElement, opts) {
   
   this.isTouchMode = function() {
       return touchMode;
+  }
+
+  this.getFloorPlan = function() {
+    return floorplan;
   }
   
     // https://codepen.io/Ferie/pen/vQOMmO

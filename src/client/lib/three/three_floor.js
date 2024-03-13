@@ -9,10 +9,10 @@ var ThreeFloor = function(scene, room) {
   
   this.room = room;
   var scene = scene;
-
+  const altitude = room.altitude;
   var floorPlane = null;
   var roofPlane = null;
-
+  
   init();
 
   function init() {
@@ -84,6 +84,7 @@ var ThreeFloor = function(scene, room) {
 
     floor.rotation.set(Math.PI/2, 0, 0);
     floor.scale.set(textureScale, textureScale, textureScale);
+    floor.position.set(0, altitude, 0);
     floor.receiveShadow = true;
     floor.castShadow = false;
     

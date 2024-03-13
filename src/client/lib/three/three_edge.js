@@ -8,6 +8,7 @@ var ThreeEdge = function(scene, edge, controls) {
   var controls = controls;
   var wall = edge.wall;
   var front = edge.front;
+  var altitude = edge.altitude;
 
   var planes = [];
   var basePlanes = []; // always visible
@@ -442,6 +443,7 @@ var ThreeEdge = function(scene, edge, controls) {
 
     mesh.receiveShadow = true;
     mesh.castShadow = false;
+    mesh.position.set(mesh.position.x, altitude, mesh.position.z);
        
     return mesh;
   }
@@ -481,6 +483,7 @@ var ThreeEdge = function(scene, edge, controls) {
     });  
 
     var filler = new THREE.Mesh(geometry, fillerMaterial);
+    filler.position.set(filler.position.x, altitude, filler.position.z);
     return filler;
   }
 
@@ -502,7 +505,8 @@ var ThreeEdge = function(scene, edge, controls) {
 
     var filler = new THREE.Mesh(geometry, fillerMaterial);
     filler.rotation.set(Math.PI/2, 0, 0);
-    filler.position.y = height;
+    filler.position.y = altitude + height;
+    //filler.position.y = height;
     return filler;
   }
 

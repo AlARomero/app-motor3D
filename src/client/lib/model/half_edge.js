@@ -8,7 +8,7 @@ var utils = require('../utils/utils')
 // are created for each interior wall.
 // A wall can have two half edges if it is visible
 // from both sides.
-var HalfEdge = function(room, wall, front) {
+var HalfEdge = function(room, wall, front, altitude = 0) {
 
   var scope = this;
 
@@ -18,7 +18,7 @@ var HalfEdge = function(room, wall, front) {
   this.front = front || false;
   this.wall = wall;
   this.cambio = false;
-  
+  this.altitude = altitude;
   // used for intersection testing... not convinced this belongs here
   this.plane = null;
 
@@ -27,7 +27,6 @@ var HalfEdge = function(room, wall, front) {
   this.invInteriorTransform = new THREE.Matrix4(); 
   this.exteriorTransform = new THREE.Matrix4();
   this.invExteriorTransform = new THREE.Matrix4();
-
   this.offset = wall.thickness / 2.0;
   this.distane = null;
   this.height = wall.height;

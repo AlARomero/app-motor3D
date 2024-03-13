@@ -35,7 +35,6 @@ function creaComensal(mesa, container) {
 /**
  * Modifica un comensal en una mesa específica.
  * @param {OnFloorItemGroup} mesa - El número de la mesa donde se encuentra el comensal.
- * @param {number} id - El ID del comensal que se va a modificar.
  * @param {key: value} params - Un objeto que contiene los nuevos valores para el comensal.
  */
 function modificaComensal(mesa, params) {

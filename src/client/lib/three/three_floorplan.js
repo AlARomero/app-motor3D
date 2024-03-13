@@ -12,8 +12,8 @@ var ThreeFloorplan = function(scene, floorplan, controls) {
   this.floorplan = floorplan;
   this.controls = controls;
 
-  this.floors = [];
-  this.edges = [];
+  this.floors = []; // Floor
+  this.edges = []; // ThreeEdges
 
   floorplan.fireOnUpdatedRooms(redraw);
 
@@ -37,9 +37,9 @@ var ThreeFloorplan = function(scene, floorplan, controls) {
     });
 
     // draw edges
-    utils.forEach(scope.floorplan.wallEdges(), function(edge) {
+    utils.forEach(scope.floorplan.wallEdges(), function(edge) { // edge = half-edge
       var threeEdge = new ThreeEdge(
-        scene, edge, scope.controls);
+        scene, edge, scope.controls); 
       scope.edges.push(threeEdge);
     });
   }

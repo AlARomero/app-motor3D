@@ -468,6 +468,7 @@ var CameraButtons = function(blueprint3d) {
 
       //Se agrega el evento para el control de altura de los muros
       $("#actual-wall-height").on('change', updateWallsHeight);
+      $("#actual-floor-height").on('change', updateFloorHeight);
 
       initSelectors();
     }
@@ -482,7 +483,8 @@ var CameraButtons = function(blueprint3d) {
   
     function floorClicked(room) {
       currentTarget = room;
-      $("#wallTextures").hide();  
+      $("#wallTextures").hide(); 
+      $("#actual-floor-height").val(room.altitude); 
       $("#floorTexturesDiv").show();  
     }
   
@@ -523,6 +525,27 @@ var CameraButtons = function(blueprint3d) {
 
       // Se pide que se actualice el plano 3D
       three.needsUpdate();
+    }
+
+    function updateFloorHeight() {
+      const room = currentTarget;
+      const floorplan = three.getFloorPlan().floorplan;
+      
+      console.log(room);
+      console.log(floorplan);
+      
+      let altitude = parseFloat($("#actual-floor-height").val());
+
+      if (altitude < 0) { 
+        altitude = 0;
+        $("#actual-floor-height").val(0);
+      }
+      else if (altitude > 700) {
+        altitude = 700;
+        $("#actual-floor-height").val(700);
+      }
+
+      floorplan.changeRoomAltitude(room.getUuid(), altitude);
     }
   
     init();

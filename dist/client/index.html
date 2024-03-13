@@ -217,6 +217,9 @@
             <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
               data-bs-target="#floor-textures-collapse" aria-expanded="false"
               aria-controls="floor-textures-collapse">Adjust Floor</button>
+              <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
+              data-bs-target="#structure-floor-height" aria-expanded="false"
+              aria-controls="structure-floor-height">Floor Height</button>
           </div>
           <div class="collapse" id="floor-textures-collapse" style="margin-top: 0.5rem;">
             <ul class="list-group" style="color: #333333">
@@ -253,6 +256,16 @@
 
             </ul>
           </div>
+          <div class="collapse" id="structure-floor-height" style="margin-top: 0.5rem;">
+            <div class="card">
+              <div class="card-header">Floor Height </div>
+              <div class="card-body">
+                <div class="d-flex justify-content-center">
+                  <input type="number" min="1" step="1" class="form-control w-50" id="actual-floor-height">
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Wall Textures -->
@@ -263,7 +276,7 @@
               style="margin-right: 0.5rem;">Selected Wall Texture</button>
             <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
               data-bs-target="#structure-wall-height" aria-expanded="false"
-              aria-controls="structure-wall-height">Structure Wall Height</button>
+              aria-controls="structure-wall-height">Wall Height</button>
           </div>
           <div class="collapse" id="wall-textures-collapse" style="margin-top: 0.5rem;">
             <ul class="list-group" style="color: #333333">

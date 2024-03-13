@@ -15,6 +15,8 @@ var Floorplan = function() {
   var walls = [];
   var corners = [];
   var rooms = [];
+
+  const roomsAltitude = {};  // Room Uuid -> altitude
   
   // For debug
   var interiorPoints = [];
@@ -311,6 +313,20 @@ var Floorplan = function() {
     walls = [];
   }
 
+  this.changeRoomAltitude = function(uuid, altitude) {
+    roomsAltitude[uuid] = altitude;
+
+    this.update();
+  }
+
+  function getUuidByCorners(corners) {
+    var cornerUuids = utils.map(corners, function(c) {
+      return c.id;
+    });
+    cornerUuids.sort();
+    return cornerUuids.join();    
+  }
+
   // update rooms
   this.update = function() {
 
@@ -321,7 +337,9 @@ var Floorplan = function() {
     var roomCorners = findRooms(corners);
     rooms = [];
     utils.forEach(roomCorners, function(corners) {
-      rooms.push(new Room(scope, corners));
+      const newRoom = new Room(scope, corners, roomsAltitude[getUuidByCorners(corners)]);
+      console.log(getUuidByCorners(corners))
+      rooms.push(newRoom);
     });
     assignOrphanEdges();
 
