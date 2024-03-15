@@ -122,6 +122,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
       
         //Carga del entorno (Iluminación o HDR)
         var skybox = new ThreeSkybox(scene);
+        skybox.addToScene();
 
         scope.controls = new ThreeControls(camera, domElement);
 
