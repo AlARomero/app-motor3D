@@ -1344,6 +1344,52 @@ utils.writeDebug = function(line) {
     }
 }
 
+utils.setItemAltitude = function(item, altitude) {
+    const itemInstance = typeof item;
+
+    switch (itemInstance) {
+        case FloorItem:
+        case FloorItemGroup:
+        case OnFloorItem:
+        case OnFloorGroup:
+            item.position.y = altitude + item.desfaseAltura; 
+            break;
+        case WallItem:
+        case WallItemGroup:
+        case InWallItem:
+        case InWallItemGroup:
+        case InWallFloorItem:
+        case InWallFloorItemGroup:
+            item.position.y = item.currentWallEdge;
+            break;
+        case WallFloorItem:
+            item.position.y = item.currentWallEdge + item.desfaseAltura;
+            break;
+    }
+}
+
+// utils.getItemRoom = function(item) {
+//     const itemInstance = typeof item;
+
+//     switch (itemInstance) {
+//         case FloorItem:
+//         case FloorItemGroup:
+//         case OnFloorItem:
+//         case OnFloorGroup:
+//             return item.room;
+//         case WallItem:
+//         case WallItemGroup:
+//         case InWallItem:
+//         case InWallItemGroup:
+//         case InWallFloorItem:
+//         case InWallFloorItemGroup:
+//             return item.room;
+//         case WallFloorItem:
+//             return item.room;
+//     }
+
+// }
+
 utils.dumpVec3 = function(v3, precision = 3) {
   return `${v3.x.toFixed(precision)}, ${v3.y.toFixed(precision)}, ${v3.z.toFixed(precision)}`;
 }

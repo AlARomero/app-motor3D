@@ -338,7 +338,6 @@ var Floorplan = function() {
     rooms = [];
     utils.forEach(roomCorners, function(corners) {
       const newRoom = new Room(scope, corners, roomsAltitude[getUuidByCorners(corners)]);
-      console.log(getUuidByCorners(corners))
       rooms.push(newRoom);
     });
     assignOrphanEdges();

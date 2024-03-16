@@ -15,7 +15,7 @@ class Item extends THREE.Mesh {
         this.scene = model.scene;
         //this.controller = model.getController();
 
-        // Items relacionados con este mismo, array de items e itemgroups
+        // Items relacionados con este mismo, array de items e itemgroups (comensales)
         this.itemsBounded = [];
 
         this.errorGlow = new THREE.Mesh();

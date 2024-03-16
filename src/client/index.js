@@ -465,6 +465,7 @@ var CameraButtons = function(blueprint3d) {
       three.itemSelectedCallbacks.add(reset);
       three.nothingClicked.add(reset);
       sideMenu.stateChangeCallbacks.add(reset);
+      three.getFloorPlan().floorplan.fireOnUpdatedRooms(() => {}); //TODO cuando se actualiza una habitacion, tambien los items de esta.
 
       //Se agrega el evento para el control de altura de los muros
       $("#actual-wall-height").on('change', updateWallsHeight);
