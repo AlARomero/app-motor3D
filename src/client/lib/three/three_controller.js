@@ -29,6 +29,9 @@ var ThreeController = function(three, model, camera, element, controls, hud) {
   //MOD Rafa
   var myIntersectedObjects;
   //
+
+  this.itemDraggedCallbacks = JQUERY.Callbacks();
+
   var mouseoverObject;
   var selectedObject;
 
@@ -701,6 +704,7 @@ function clickPressed(vec2) {
 
       switch(state) {
         case states.DRAGGING:
+          scope.itemDraggedCallbacks.fire(selectedObject);
           selectedObject.clickReleased();
           scope.needsUpdate_afterDragging = true;
           //console.log("mouseUpEvent needsUpdate_afterDragging " + scope.needsUpdate_afterDragging);

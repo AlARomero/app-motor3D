@@ -10,14 +10,14 @@ var ThreeFloor = function(scene, room) {
   this.room = room;
   var scene = scene;
   const altitude = room.altitude;
-  var floorPlane = null;
+  this.floorPlane = null;
   var roofPlane = null;
   
   init();
 
   function init() {
     scope.room.fireOnFloorChange(redraw);
-    floorPlane = buildFloor();
+    scope.floorPlane = buildFloor();
     // roofs look weird, so commented out
     // roofPlane = buildRoof();
     //scope.updateWindowSize();
@@ -26,7 +26,7 @@ var ThreeFloor = function(scene, room) {
   
   function redraw() {
     scope.removeFromScene();
-    floorPlane = buildFloor();
+    scope.floorPlane = buildFloor();
     scope.addToScene();
     
     // MOD. Rafa. Added to update de scene
@@ -249,7 +249,7 @@ var ThreeFloor = function(scene, room) {
         scene.needsUpdate = true;
         
     });*/
-    
+
     return floor;
 
     /*var texloader = new THREE.TextureLoader();
@@ -303,7 +303,7 @@ var ThreeFloor = function(scene, room) {
   }
 
   this.addToScene = function() {
-    scene.add(floorPlane);
+    scene.add(this.floorPlane);
     // scene.add(roofPlane);
     // hack so we can do intersect testing
     room.floorPlane.visible = false;
@@ -311,7 +311,7 @@ var ThreeFloor = function(scene, room) {
   }
 
   this.removeFromScene = function() {
-    scene.remove(floorPlane);
+    scene.remove(this.floorPlane);
     // scene.remove(roofPlane);
     scene.remove(room.floorPlane);
   }

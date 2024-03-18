@@ -1,4 +1,4 @@
-var WallItemGroup = require('./wall_itemGroup');
+const WallItemGroup = require('./wall_itemGroup');
 
 class InWallItemGroup extends WallItemGroup {
     constructor(three, metadata, geometry, material, position, rotation, scale) {

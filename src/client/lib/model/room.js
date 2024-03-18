@@ -58,6 +58,10 @@ var Room = function(floorplan, corners, altitude = 0) {
     return tex || defaultTexture;
   }
 
+  this.getFloorplan = function() {
+    return floorplan;
+  }
+
   // textureStretch always true, just an argument for consistency with walls
   this.setTexture = function(textureUrl, textureStretch, textureScale,additionalTextures) { 
     var uuid = this.getUuid();
@@ -107,6 +111,7 @@ var Room = function(floorplan, corners, altitude = 0) {
         side: THREE.DoubleSide
       }));
     scope.floorPlane.visible = true;
+    scope.floorPlane.position.set(scope.floorPlane.position.x, scope.altitude, scope.floorPlane.position.z);
     scope.floorPlane.rotation.set(Math.PI/2, 0, 0);
     scope.floorPlane.room = scope; // js monkey patch
   }

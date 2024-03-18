@@ -498,6 +498,7 @@ var CameraButtons = function(blueprint3d) {
     function updateWallsHeight() {
       // Obtengo el muro seleccionado (ya que se selecciona un half edge)
       const wall = currentTarget.wall;
+      const floorplan = currentTarget.room.getFloorplan();
 
       // Se obtiene la altura que se quiere cambiar desde el boton
       let height = parseFloat($("#actual-wall-height").val());
@@ -521,19 +522,13 @@ var CameraButtons = function(blueprint3d) {
       // Finalmente se le cambia la altura al muro
       wall.setWallHeight(height);
 
-      // Se pide que se vuelva a dibujar el muro
-      wall.fireRedraw();
-
-      // Se pide que se actualice el plano 3D
-      three.needsUpdate();
+      // Se pide que se actualice el plano de suelo (los muros y suelos en general)
+      floorplan.update();
     }
 
     function updateFloorHeight() {
       const room = currentTarget;
       const floorplan = three.getFloorPlan().floorplan;
-      
-      console.log(room);
-      console.log(floorplan);
       
       let altitude = parseFloat($("#actual-floor-height").val());
 
@@ -545,7 +540,7 @@ var CameraButtons = function(blueprint3d) {
         altitude = 700;
         $("#actual-floor-height").val(700);
       }
-
+      
       floorplan.changeRoomAltitude(room.getUuid(), altitude);
     }
   

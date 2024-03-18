@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { color } from 'three/examples/jsm/nodes/shadernode/ShaderNode';
 var JQUERY = require('jquery');
 
 var utils = require('../utils/utils')
@@ -79,11 +80,13 @@ var HalfEdge = function(room, wall, front, altitude = 0) {
     }
 
     var v1 = transformCorner(this.interiorStart());
+    v1.y = altitude;
     var v2 = transformCorner(this.interiorEnd());
+    v2.y = altitude;
     var v3 = v2.clone();
-    v3.y = this.wall.height;
+    v3.y = this.wall.height + this.altitude;
     var v4 = v1.clone();
-    v4.y = this.wall.height;
+    v4.y = this.wall.height + this.altitude;
 
     // DEPRECATED in r140
     //var geometry = new THREE.Geometry();
@@ -124,14 +127,12 @@ var HalfEdge = function(room, wall, front, altitude = 0) {
       new THREE.MeshBasicMaterial());
     this.plane.visible = true;
     this.plane.edge = scope; // js monkey patch
-
     this.computeTransforms(
       this.interiorTransform, this.invInteriorTransform,
       this.interiorStart(), this.interiorEnd());
     this.computeTransforms(
       this.exteriorTransform, this.invExteriorTransform,
       this.exteriorStart(), this.exteriorEnd());
-
   }
 
   this.interiorDistance = function() {

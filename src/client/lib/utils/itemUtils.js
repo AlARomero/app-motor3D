@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 import * as THREE from 'three';
-var itemUtils = {};
+const itemUtils = {};
 
 var utils = require('./utils');
 
@@ -2531,6 +2531,55 @@ itemUtils.getDescription = function(item) {
 itemUtils.setDescription = function(item, description) {
     item.metadata.description = description;
 }
+
+itemUtils.isWallItem = function(item) {
+    if (
+        item.constructor.name === 'WallItem' || item.constructor.name === 'WallItemGroup' ||
+        item.constructor.name === 'WallFloorItem' || item.constructor.name === 'InWallItem' ||
+        item.constructor.name === 'InWallItemGroup' || item.constructor.name === 'InWallFloorItem' ||
+        item.constructor.name === 'InWallFloorItemGroup'
+        ){
+        return true;
+    }
+    return false;
+}
+
+itemUtils.isItemInRoom = function(item, floor) {
+    let contains = false;
+    console.log(item.constructor.name);
+    if (this.isWallItem(item)) { // Item de muro
+        const room = item.currentWallEdge.room;
+
+        contains = room.getUuid() === floor.room.getUuid();
+    }
+    else { // Item de suelo
+
+        const roomFloor = floor.floorPlane;
+        console.log(roomFloor);
+        // Convertir la posición del objeto
+        const itemPosition = item.position.clone();
+
+        // Crear un raycaster
+        const raycaster = new THREE.Raycaster();
+        
+        // Establecer el origen del rayo en el punto que estás comprobando y la dirección hacia abajo o arriba
+        if (itemPosition.y > roomFloor.position.y){
+            raycaster.set(itemPosition, new THREE.Vector3(0, -1, 0));
+        }
+        else{
+            raycaster.set(itemPosition, new THREE.Vector3(0, 1, 0));
+        }
+        
+        // Obtener las intersecciones del rayo con la geometría
+        const intersects = raycaster.intersectObject(roomFloor);
+        
+        // Si hay al menos una intersección, el punto está dentro del polígono
+        contains = intersects.length > 0;
+    }
+
+    return contains;
+}
+
 
 itemUtils.clickDragged = function(item, intersection) {
     if (intersection) {    	

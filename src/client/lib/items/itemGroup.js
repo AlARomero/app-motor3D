@@ -482,16 +482,18 @@ class ItemGroup extends THREE.Group {
         // handle in sub class
     };
 
+    isItemInRoom(roomFloor) {
+        return itemUtils.isItemInRoom(this, roomFloor);
+    }
 
     initObject() {
         itemUtils.initObject(this);   
 
     };
-
     removed() {
         // implement in subclass
     }
-    
+
     // el clone es diferente para item e itemgroup
     clone() {
         return new this.constructor(this.model, this.metadata,this,this.material).copy(this);

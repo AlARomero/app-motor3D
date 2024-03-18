@@ -97,6 +97,8 @@ var ThreeMain = function(model, element, canvasElement, opts) {
   function init() {
     
     try {
+        model.floorplan.fireOnUpdatedRooms(scope.updateHeightItemsInRooms);
+
         THREE.ImageUtils.crossOrigin = "";
 
         domElement = scope.element.get(0); // Container
@@ -106,7 +108,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
           antialias: true,
           preserveDrawingBuffer: true // required to support .toDataURL()
         });
-        renderer.autoClear = false,
+        renderer.autoClear = false;
         renderer.shadowMap.enabled = true;
         console.log("DevicePixelRatio: " + window.devicePixelRatio);
         renderer.setPixelRatio(Math.min(2,window.devicePixelRatio ));
@@ -725,6 +727,47 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     }
 
     return vec2;
+  }
+
+  this.updateHeightItemsInRooms = function() { // Cuando se actualiza la altura de las habitaciones
+    const floors = floorplan.floors;
+    const roomsAltitude = floorplan.floorplan.getRoomsAltitude();
+    const items = model.scene.getItems();
+    let roomFound = false
+    let floorIter = 0;
+
+      items.forEach(item => {
+        while (!roomFound && floorIter < floors.length) {
+          // Para todos los items, se busca el suelo de habitacion al que pertenezca
+          const floor = floors[floorIter];
+
+          roomFound = item.isItemInRoom(floor); // Comprueba si el item está en la habitación
+          if (roomFound && floorplan.floorplan.roomsAltitudeChanged(floor)){ 
+            // Si la altitud cambio, se actualiza la posición del item
+
+            const newRoomAltitude = roomsAltitude[floor.room.getUuid()]['newAltitude'];
+            const oldRoomAltitude = roomsAltitude[floor.room.getUuid()]['oldAltitude'];
+
+            if (item.constructor.name === 'InWallFloorItem' || item.constructor.name === 'InWallFloorItemGroup') {
+              // Item pegado al muro y suelo
+              
+              //TODO No funciona el setPosition con item de muro pegado a suelo
+              item.setPosition(item.position.x, newRoomAltitude, item.position.z);
+              roomFound = true;
+            }
+            else {
+              // Item de muro normal o suelo
+              
+              const plusAltitude = newRoomAltitude - oldRoomAltitude;
+              item.setPosition(item.position.x, item.position.y + plusAltitude, item.position.z);
+              roomFound = true;
+            }
+          }
+          floorIter++;
+        }
+        roomFound = false;
+        floorIter = 0;
+      })
   }
 
   init();

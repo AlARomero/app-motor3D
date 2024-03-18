@@ -16,7 +16,7 @@ var Floorplan = function() {
   var corners = [];
   var rooms = [];
 
-  const roomsAltitude = {};  // Room Uuid -> altitude
+  const roomsAltitude = {};  // Room Uuid -> {oldAltitude, newAltitude}
   
   // For debug
   var interiorPoints = [];
@@ -288,6 +288,18 @@ var Floorplan = function() {
     }
   }
 
+
+  this.getRoomsAltitude = function() {
+    return roomsAltitude;
+  }
+
+  this.roomsAltitudeChanged = function(floor) {
+    const newRoomAltitude = roomsAltitude[floor.room.getUuid()]['newAltitude'];
+    const oldRoomAltitude = roomsAltitude[floor.room.getUuid()]['oldAltitude'];
+
+    return newRoomAltitude !== oldRoomAltitude;
+  }
+
   // clear out obsolete floor textures
   function updateFloorTextures() {
     var uuids = utils.map(rooms, function(room) {
@@ -314,7 +326,15 @@ var Floorplan = function() {
   }
 
   this.changeRoomAltitude = function(uuid, altitude) {
-    roomsAltitude[uuid] = altitude;
+    if(!roomsAltitude.hasOwnProperty(uuid)) {
+      roomsAltitude[uuid] = {oldAltitude: 0, newAltitude: altitude};
+    }
+    else {
+      roomsAltitude[uuid] = {
+        oldAltitude: roomsAltitude[uuid]['newAltitude'], 
+        newAltitude: altitude
+      };
+    }
 
     this.update();
   }
@@ -337,7 +357,14 @@ var Floorplan = function() {
     var roomCorners = findRooms(corners);
     rooms = [];
     utils.forEach(roomCorners, function(corners) {
-      const newRoom = new Room(scope, corners, roomsAltitude[getUuidByCorners(corners)]);
+
+      let altitude = 0;
+
+      if (roomsAltitude.hasOwnProperty(getUuidByCorners(corners))) {
+        altitude = roomsAltitude[getUuidByCorners(corners)]['newAltitude'];
+      }
+
+      const newRoom = new Room(scope, corners, altitude);
       rooms.push(newRoom);
     });
     assignOrphanEdges();
