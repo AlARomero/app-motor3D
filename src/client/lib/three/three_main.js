@@ -44,6 +44,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
   var touchMode = false;
   var model = model;
   this.element = JQUERY(element);
+  let startDragRoom = null;
   var domElement;
 
   var camera;
@@ -97,7 +98,10 @@ var ThreeMain = function(model, element, canvasElement, opts) {
   function init() {
     
     try {
+        // Añadir una funcion al callback para actualizar la altura de un item cuando se modifica la habitacion
         model.floorplan.fireOnUpdatedRooms(scope.updateHeightItemsInRooms);
+        // Añadir una funcion al callback para ajustar la altura de un nuevo item en la escena con su habitacion
+        scene.itemLoadedCallbacks.add(scope.updateHeightNewItemInRoom);
 
         THREE.ImageUtils.crossOrigin = "";
 
@@ -152,6 +156,11 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
         controller = new ThreeController(
           scope, model, camera, scope.element, scope.controls, hud);
+
+        // Añadir funcion al callback para saber la habitacion inicial de un dragging state
+        controller.itemStartDragCallbacks.add(scope.updateOldRoomSelected);
+        // Añadir funcion al callback para actualizar la altura de un item cuando se arrastra
+        controller.itemDraggedCallbacks.add(scope.updateItemDraggedHeight);
 
         domElement.appendChild(renderer.domElement);
 
@@ -729,6 +738,60 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     return vec2;
   }
 
+  function getRoomFromItem(item) {
+    const floors = floorplan.floors;
+    let floorIter = 0;
+    let found = false;
+
+    while (floorIter < floors.length && !found) {
+      const floor = floors[floorIter];
+      found = item.isItemInRoom(floor);
+      if (found) {
+        return floor.room;
+      }
+      floorIter++;
+    }
+
+    return null;
+  }
+
+  this.updateOldRoomSelected = function(item) {
+
+    // Siempre deberia haber habitacion, si no algo va mal
+
+    startDragRoom = getRoomFromItem(item);
+
+  }
+
+  this.updateItemDraggedHeight = function(item) {
+    const room = getRoomFromItem(item);
+    
+    const roomAltitude = room.altitude;
+    const oldRoomAltitude = startDragRoom.altitude;
+
+    item.setPosition(item.position.x, item.position.y + (roomAltitude - oldRoomAltitude), item.position.z);
+  }
+
+  this.updateHeightNewItemInRoom = function(item) {
+    const floors = floorplan.floors;
+    let floorIter = 0;
+    let found = false;
+
+    while (floorIter < floors.length && !found) {
+      const floor = floors[floorIter];
+      found = item.isItemInRoom(floor);
+
+      if (found) {
+        const roomAltitude = floor.room.altitude;
+        item.setPosition(item.position.x, item.position.y + roomAltitude, item.position.z);
+      }
+
+      floorIter++;
+    }
+  }
+
+
+  // TODO: remodelarpara usar getRoomFromItem
   this.updateHeightItemsInRooms = function() { // Cuando se actualiza la altura de las habitaciones
     const floors = floorplan.floors;
     const roomsAltitude = floorplan.floorplan.getRoomsAltitude();
@@ -751,7 +814,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
             if (item.constructor.name === 'InWallFloorItem' || item.constructor.name === 'InWallFloorItemGroup') {
               // Item pegado al muro y suelo
               
-              //TODO No funciona el setPosition con item de muro pegado a suelo
+              //TODO No funciona el setPosition con item boundToFloor = true;
               item.setPosition(item.position.x, newRoomAltitude, item.position.z);
               roomFound = true;
             }

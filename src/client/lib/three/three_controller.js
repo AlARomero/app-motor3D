@@ -30,6 +30,7 @@ var ThreeController = function(three, model, camera, element, controls, hud) {
   var myIntersectedObjects;
   //
 
+  this.itemStartDragCallbacks = JQUERY.Callbacks();
   this.itemDraggedCallbacks = JQUERY.Callbacks();
 
   var mouseoverObject;
@@ -540,6 +541,7 @@ function clickPressed(vec2) {
       
       // mover objeto a un punto
       if (scene.mover){
+
     	  var raycaster;
     	  var mouse;
     	  
@@ -667,7 +669,9 @@ function clickPressed(vec2) {
           } else if (intersectedObject != null) {
             scope.setSelectedObject(intersectedObject);
             if (!intersectedObject.fixed) {
-              switchState(states.DRAGGING);              
+              switchState(states.DRAGGING);
+              console.log("itemStartDragCallbacks.fire");
+              scope.itemStartDragCallbacks.fire(selectedObject);            
             }
             
           }
