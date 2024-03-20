@@ -765,11 +765,16 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
   this.updateItemDraggedHeight = function(item) {
     const room = getRoomFromItem(item);
-    
     const roomAltitude = room.altitude;
-    const oldRoomAltitude = startDragRoom.altitude;
 
-    item.setPosition(item.position.x, item.position.y + (roomAltitude - oldRoomAltitude), item.position.z);
+    if (startDragRoom) {
+      // Si se ha movido de habitacion o se reconoce la habitacion inicial
+      const oldRoomAltitude = startDragRoom.altitude;
+
+      item.setPosition(item.position.x, item.position.y + (roomAltitude - oldRoomAltitude), item.position.z);
+    }
+    // Si no se reconoce la habitacion inicial, no se hace nada (no deberia pasar)
+
   }
 
   this.updateHeightNewItemInRoom = function(item) {
@@ -790,46 +795,31 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     }
   }
 
-
-  // TODO: remodelarpara usar getRoomFromItem
   this.updateHeightItemsInRooms = function() { // Cuando se actualiza la altura de las habitaciones
-    const floors = floorplan.floors;
     const roomsAltitude = floorplan.floorplan.getRoomsAltitude();
     const items = model.scene.getItems();
-    let roomFound = false
-    let floorIter = 0;
 
       items.forEach(item => {
-        while (!roomFound && floorIter < floors.length) {
-          // Para todos los items, se busca el suelo de habitacion al que pertenezca
-          const floor = floors[floorIter];
 
-          roomFound = item.isItemInRoom(floor); // Comprueba si el item está en la habitación
-          if (roomFound && floorplan.floorplan.roomsAltitudeChanged(floor)){ 
-            // Si la altitud cambio, se actualiza la posición del item
+        const room = getRoomFromItem(item);
+        if (room && floorplan.floorplan.roomsAltitudeChanged(room)) {
+          const newRoomAltitude = roomsAltitude[room.getUuid()]['newAltitude'];
+          const oldRoomAltitude = roomsAltitude[room.getUuid()]['oldAltitude'];
 
-            const newRoomAltitude = roomsAltitude[floor.room.getUuid()]['newAltitude'];
-            const oldRoomAltitude = roomsAltitude[floor.room.getUuid()]['oldAltitude'];
-
-            if (item.constructor.name === 'InWallFloorItem' || item.constructor.name === 'InWallFloorItemGroup') {
+          if (item.constructor.name === 'InWallFloorItem' || item.constructor.name === 'InWallFloorItemGroup') {
               // Item pegado al muro y suelo
               
               //TODO No funciona el setPosition con item boundToFloor = true;
               item.setPosition(item.position.x, newRoomAltitude, item.position.z);
-              roomFound = true;
-            }
-            else {
+          }
+
+          else {
               // Item de muro normal o suelo
               
               const plusAltitude = newRoomAltitude - oldRoomAltitude;
               item.setPosition(item.position.x, item.position.y + plusAltitude, item.position.z);
-              roomFound = true;
-            }
           }
-          floorIter++;
         }
-        roomFound = false;
-        floorIter = 0;
       })
   }
 

@@ -293,11 +293,15 @@ var Floorplan = function() {
     return roomsAltitude;
   }
 
-  this.roomsAltitudeChanged = function(floor) {
-    const newRoomAltitude = roomsAltitude[floor.room.getUuid()]['newAltitude'];
-    const oldRoomAltitude = roomsAltitude[floor.room.getUuid()]['oldAltitude'];
+  this.roomsAltitudeChanged = function(room) {
+    if (roomsAltitude.hasOwnProperty(room.getUuid())) {
+      const newRoomAltitude = roomsAltitude[room.getUuid()]['newAltitude'];
+      const oldRoomAltitude = roomsAltitude[room.getUuid()]['oldAltitude'];
 
-    return newRoomAltitude !== oldRoomAltitude;
+      return newRoomAltitude !== oldRoomAltitude;
+    }
+    // Si no hay registro, no ha cambiado la altura de la habitación
+    return false
   }
 
   // clear out obsolete floor textures
