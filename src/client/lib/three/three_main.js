@@ -1,16 +1,16 @@
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 import * as THREE from 'three';
 var JQUERY = require('jquery');
 
-var ThreeController = require('./three_controller');
-var ThreeFloorplan = require('./three_floorplan');
-var ThreeLights = require('./three_lights');
-var ThreeSkybox = require('./three_skybox');
-var ThreeControls = require('./three_controls');
+const ThreeController = require('./three_controller');
+const ThreeFloorplan = require('./three_floorplan');
+const ThreeLights = require('./three_lights');
+const ThreeSkybox = require('./three_skybox');
+const ThreeControls = require('./three_controls');
 // var ThreeCanvas = require('./three_canvas')
-var ThreeHUD = require('./three_hud.js');
+const ThreeHUD = require('./three_hud.js');
 
 
 //var utils = require('../utils/utils');
@@ -49,6 +49,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
   var camera;
   var renderer;
+  let css2DRenderer;
   this.lights;
   //var composer;
   
@@ -164,6 +165,14 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
         domElement.appendChild(renderer.domElement);
 
+        /* CSS2DRenderer */
+        css2DRenderer = new CSS2DRenderer();
+        css2DRenderer.setSize(window.innerWidth, window.innerHeight); // Asegúrate de que el tamaño del renderer coincide con el de tu WebGLRenderer
+        css2DRenderer.domElement.style.position = 'absolute'; // Posiciona el elemento DOM del renderer en la esquina superior izquierda de la página
+        css2DRenderer.domElement.style.top = 0;
+        domElement.appendChild(css2DRenderer.domElement); // Agrega el elemento DOM del renderer a tu página HTML
+        /* End CSS2DRenderer */
+
         // handle window resizing
         scope.updateWindowSize();
         if (options.resize) {
@@ -181,15 +190,17 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
         animate();
 
-        scope.element.mouseenter(function() {
+        scope.element.on('mouseenter', function() {
           mouseOver = true;
-        }).mouseleave(function() {
+        }).on('mouseleave', function() {
           mouseOver = false;
-        }).click(function() {
+        }).on('click', function() {
           hasClicked = true;
         });
+
     } catch (err) {
         // Elevamos el error a design.js
+        console.log(err);
         throw(err);
     }
 
@@ -324,13 +335,13 @@ var ThreeMain = function(model, element, canvasElement, opts) {
       
       renderer.clear();
       renderer.render(scene.getScene(), camera);
-      //
+      
       //composer.render();
       renderer.clearDepth();
       renderer.render(hud.getScene(), camera); 
-      
-      
-      
+
+      css2DRenderer.render(scene.getScene(), camera);
+      css2DRenderer.render(hud.getScene(), camera);
     }
     lastRender = Date.now();
   };
@@ -778,21 +789,13 @@ var ThreeMain = function(model, element, canvasElement, opts) {
   }
 
   this.updateHeightNewItemInRoom = function(item) {
-    const floors = floorplan.floors;
-    let floorIter = 0;
-    let found = false;
-
-    while (floorIter < floors.length && !found) {
-      const floor = floors[floorIter];
-      found = item.isItemInRoom(floor);
-
-      if (found) {
-        const roomAltitude = floor.room.altitude;
-        item.setPosition(item.position.x, item.position.y + roomAltitude, item.position.z);
-      }
-
-      floorIter++;
+    const room = getRoomFromItem(item);
+    if (room) {
+      const roomAltitude = room.altitude;
+      item.setPosition(item.position.x, item.position.y + roomAltitude, item.position.z);
     }
+
+    // Si no hay habitacion, algo malo ha ocurrido
   }
 
   this.updateHeightItemsInRooms = function() { // Cuando se actualiza la altura de las habitaciones
@@ -820,6 +823,8 @@ var ThreeMain = function(model, element, canvasElement, opts) {
               item.setPosition(item.position.x, item.position.y + plusAltitude, item.position.z);
           }
         }
+
+        // Si no hay habitacion, algo malo ha ocurrido
       })
   }
 

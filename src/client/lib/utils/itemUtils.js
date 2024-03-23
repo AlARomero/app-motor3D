@@ -2555,7 +2555,7 @@ itemUtils.isItemInRoom = function(item, floor) {
     else { // Item de suelo
 
         const roomFloor = floor.floorPlane;
-        console.log(roomFloor);
+        
         // Convertir la posición del objeto
         const itemPosition = item.position.clone();
 

@@ -1,5 +1,5 @@
 const Blueprint3d = require('./lib/blueprint3d');
-import * as Comensales from './comensales';
+import ComensalListObject from './comensales/comensal_list_object';
 
 /*
  * Camera Buttons
@@ -107,14 +107,25 @@ var CameraButtons = function(blueprint3d) {
       });
 
       $("#add-first-comensal").on('click', () => {
-        Comensales.creaComensal(selectedItem, 'comensales-content');
+        console.log(selectedItem)
+        let comensalListObject = searchOrCreateComensalListObject(selectedItem);
+        comensalListObject.addComensal();
       })
 
       // Se agrega el evento para el boton de guardar edicion de comensales
       $("#save-comensal").on('click', (e) => {
         const id = parseInt($('#comensales-modal-label').text().split(' ')[2]);
-        const params = {id: id, nombre: $("#nombre-comensal").val()};
-        Comensales.modificaComensal(selectedItem, params);
+        const comensalListContainer = ComensalListObject.comensalListFromTable(selectedItem);
+
+        if (comensalListContainer) {
+          const params = {id: id, nombre: $("#nombre-comensal").val()};
+          comensalListContainer.modifyComensal(params);
+        }
+        else{
+          // Si no existe el contenedor de comensales, no se puede modificar ningun comensal
+          console.error('La mesa no tiene comensales');
+        }
+
         $('#close-comensal-modal').trigger('click');
       });
   
@@ -188,14 +199,24 @@ var CameraButtons = function(blueprint3d) {
     function initComensales() {
       if(selectedItem.metadata.isTable) {
         // Si es mesa puede tener comensales, se construye el html y se muestra dentro del contenedor
-        console.log("Es una mesa");
-        Comensales.comensalesToHtml(selectedItem, 'comensales-content');
+        let comensalListObject = searchOrCreateComensalListObject(selectedItem);
+        console.log(comensalListObject) 
+        comensalListObject.selected();
+          
         $("#comensales-container").show();
       }
       else{
         // Si no es una mesa, se esconde el control de comensales
         $("#comensales-container").hide();
       }
+    }
+
+    function searchOrCreateComensalListObject(table) {
+      let comensalListObject = ComensalListObject.comensalListFromTable(table);
+      console.log(comensalListObject)
+      if (!comensalListObject)
+        comensalListObject = new ComensalListObject(table);
+      return comensalListObject;
     }
   
     function resize() {
