@@ -1,10 +1,9 @@
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import * as ComensalUtils from './comensal_utils';
+import * as ComensalHTML from './comensal_drag';
 
 class ComensalListObject {
 
-    static initialId = 1;
-    static sideContainer = 'comensales-content';
     constructor(table) {
 
         // TODO darle mejor formato
@@ -19,19 +18,19 @@ class ComensalListObject {
         this.boundToTable(table);
     }
 
-    selected() {
-        ComensalUtils.comensalesToHtml(this, ComensalListObject.sideContainer);
+    selected(container) {
+        ComensalHTML.comensalesToHtml(this, container);
     }
 
-    addComensal() {
-        const comensal = {
-            id: ComensalListObject.initialId,
-            nombre: `Comensal ${ComensalListObject.initialId}`,
-            listObject: this
-        };
-        ComensalListObject.initialId++;
-
-        ComensalUtils.addComensal(this, comensal, ComensalListObject.sideContainer);
+    addComensal(comensal, container) {
+        const html = document.createElement('li');
+        html.textContent = comensal.nombre;
+        html.id = `comensal-${comensal.id}`;
+        html.className = 'list-group-item';
+        ComensalHTML.addDragEvent(html);
+        this.comensalList.element.appendChild(html);
+        this.comensales.push(comensal);
+        ComensalHTML.comensalToHtml(this, comensal, container);
     }
 
     /**
@@ -39,7 +38,15 @@ class ComensalListObject {
      * @param {key: value} params - Un objeto que contiene los nuevos valores para el comensal.
      */
     modifyComensal(params) {
-        ComensalUtils.modificaComensal(this, params);
+        const comensal = this.comensales.find(c => c.id === params.id);
+        if (comensal) {
+            Object.assign(comensal, params);
+            $(`#comensal-nombre-${comensal.id}`).text(comensal.nombre);
+            const comensalLi = this.comensalList.element.querySelector(`#comensal-${comensal.id}`);
+            comensalLi.textContent = comensal.nombre;
+        }
+        else 
+            console.error('El comensal no existe en esta mesa');
     }
 
     boundToTable(table) {
@@ -50,29 +57,6 @@ class ComensalListObject {
     unBoundComensalList() {
         this.table.unBoundItem(this);
         this.table.remove(this.comensalList);
-    }
-
-    /**
-     * Busca el objeto three de comensales de la mesa
-     * @param {OnFloorItemGroup} table
-     * @returns {ComensalListObject | undefined}
-     */
-    static comensalListFromTable(table) {
-        //TODO hacer bien la busqueda
-        // Se busca el hijo de la mesa que tenga la instancia CSS2DObject (solo la usaré para los comensales)
-        console.log(table.itemsBounded)
-        let childrenIter = 0;
-        while (childrenIter < table.itemsBounded.length && table.itemsBounded[childrenIter].constructor.name !== 'ComensalListObject') {
-            childrenIter++;
-        }
-        if (childrenIter < table.itemsBounded.length) 
-            return table.itemsBounded[childrenIter];
-        return undefined;
-        // Si no se encuentra el contenedor de comensales algo ha ido mal, debería llamarse siempre cuando exista.
-    }
-
-    static hasComensalListObject(table) {
-        return !!ComensalListObject.comensalListFromTable(table);
     }
 }
 

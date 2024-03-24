@@ -1,5 +1,5 @@
 const Blueprint3d = require('./lib/blueprint3d');
-import ComensalListObject from './comensales/comensal_list_object';
+import ComensalUtils from './comensales/comensal_utils';
 
 /*
  * Camera Buttons
@@ -92,8 +92,13 @@ var CameraButtons = function(blueprint3d) {
     var scope = this;
     var selectedItem;
     var three = blueprint3d.three;
+    let comensalUtils;
   
     function init() {
+
+      // Se inicializa el objeto de control de comensales
+      comensalUtils = new ComensalUtils(three.controls, three.getController(), three.getFloorPlan().scene.getItems(), 'comensales-content');
+
       // Se agrega el evento para el boton de borrar objeto
       $("#context-menu-delete").on('click', function(event) {
           selectedItem.remove();
@@ -107,25 +112,14 @@ var CameraButtons = function(blueprint3d) {
       });
 
       $("#add-first-comensal").on('click', () => {
-        console.log(selectedItem)
-        let comensalListObject = searchOrCreateComensalListObject(selectedItem);
-        comensalListObject.addComensal();
+        comensalUtils.addComensal(selectedItem);
       })
 
       // Se agrega el evento para el boton de guardar edicion de comensales
       $("#save-comensal").on('click', (e) => {
         const id = parseInt($('#comensales-modal-label').text().split(' ')[2]);
-        const comensalListContainer = ComensalListObject.comensalListFromTable(selectedItem);
-
-        if (comensalListContainer) {
-          const params = {id: id, nombre: $("#nombre-comensal").val()};
-          comensalListContainer.modifyComensal(params);
-        }
-        else{
-          // Si no existe el contenedor de comensales, no se puede modificar ningun comensal
-          console.error('La mesa no tiene comensales');
-        }
-
+        const params = {id: id, nombre: $("#nombre-comensal").val()};
+        comensalUtils.modificaComensal(selectedItem, params);
         $('#close-comensal-modal').trigger('click');
       });
   
@@ -138,7 +132,6 @@ var CameraButtons = function(blueprint3d) {
           var checked = $(this).prop('checked');
           selectedItem.setFixed(checked);
       });
-
     }
   
     function cmToIn(cm) {
@@ -199,9 +192,7 @@ var CameraButtons = function(blueprint3d) {
     function initComensales() {
       if(selectedItem.metadata.isTable) {
         // Si es mesa puede tener comensales, se construye el html y se muestra dentro del contenedor
-        let comensalListObject = searchOrCreateComensalListObject(selectedItem);
-        console.log(comensalListObject) 
-        comensalListObject.selected();
+        comensalUtils.selected(selectedItem)
           
         $("#comensales-container").show();
       }
@@ -209,14 +200,6 @@ var CameraButtons = function(blueprint3d) {
         // Si no es una mesa, se esconde el control de comensales
         $("#comensales-container").hide();
       }
-    }
-
-    function searchOrCreateComensalListObject(table) {
-      let comensalListObject = ComensalListObject.comensalListFromTable(table);
-      console.log(comensalListObject)
-      if (!comensalListObject)
-        comensalListObject = new ComensalListObject(table);
-      return comensalListObject;
     }
   
     function resize() {
