@@ -19,6 +19,9 @@ class ComensalUtils {
             // Como todas las mesas deben tener una lista de comensales, se crea si no existe.
             comensalListObject = new ComensalListObject(table);
             this.allComensalListObject.push(comensalListObject);
+
+            // Se actualiza la lista de todos los comensales que hay en ComensalDrag.
+            ComensalDrag.setAllComensalListObject(this.allComensalListObject);
         }
         comensalListObject.selected(this.container);
     }
@@ -36,6 +39,8 @@ class ComensalUtils {
                 }
             }
         })
+        // Se actualiza la lista de todos los comensales que hay en ComensalDrag.
+        ComensalDrag.setAllComensalListObject(this.allComensalListObject);
     }
 
     addComensal(table) {
@@ -44,6 +49,8 @@ class ComensalUtils {
             // Como todas las mesas deben tener una lista de comensales, se crea si no existe.
             comensalListObject = new ComensalListObject(table);
             this.allComensalListObject.push(comensalListObject);
+            // Se actualiza la lista de todos los comensales que hay en ComensalDrag.
+            ComensalDrag.setAllComensalListObject(this.allComensalListObject);
         }
         const comensal = {
             id: ComensalUtils.initialId,

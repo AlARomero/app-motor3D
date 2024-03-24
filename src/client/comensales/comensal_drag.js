@@ -4,6 +4,9 @@ let prevComensalListObject = null;
 let allComensalListObject = [];
 let controls;
 let controller;
+let dropX, dropY;
+let dragShadow;
+let selectedComensalListObject;
 
 function setControls(newControls) {
     controls = newControls;
@@ -13,27 +16,60 @@ function setController(newController) {
     controller = newController;
 }
 
+function setAllComensalListObject(newAllComensalListObject) {
+    allComensalListObject = newAllComensalListObject;
+}
+
 function addDragEvent(comensalHTMLElement) {
+    comensalHTMLElement.draggable = true;
     comensalHTMLElement.addEventListener('mousedown', handleMouseDown);
-    comensalHTMLElement.addEventListener('mouseup', handleMouseUp);
+    comensalHTMLElement.addEventListener('dragstart', handleDragStart);
+    comensalHTMLElement.addEventListener('dragend', handleDragEnd);
+    comensalHTMLElement.addEventListener('drag', handleDrag);
 }
 
-function removeDragEvent(comensalHTMLElement) {
-    comensalHTMLElement.removeEventListener('mousedown', handleMouseDown);
-    comensalHTMLElement.removeEventListener('mouseup', handleMouseUp);
-}
-
+// Como el drag no puede realizarse debido a controlls y controller, primero se deshabilitan y ya no se solapan.
 function handleMouseDown(event) {
-    console.log('iniciando')
     controller.enabled = false;
     controls.enabled = false;
-    prevComensalListObject = findComensalListFromHTML(this);
 }
 
-function handleMouseUp(event) {
-    const newComensalListObject = findComensalListFromHTML(this);
+function handleDragStart(event) {
+
+    // Se añade la clase dragging para que el elemento se vea diferente mientras se arrastra.
+    this.classList.add('dragging');
+    // Se busca la lista de comensales en la que se encuentra el elemento.
+    prevComensalListObject = findComensalListFromPoint(event.clientX, event.clientY);
+
+    // Crea una copia del elemento que se está arrastrando
+    dragShadow = this.cloneNode(true);
+    dragShadow.style.position = 'fixed';
+    dragShadow.style.pointerEvents = 'none';
+    document.body.appendChild(dragShadow);
+}
+
+function handleDrag(event) {
+    // Obtiene las nuevas coordenadas del ratón.
+    dropX = event.clientX;
+    dropY = event.clientY;
+
+    // Cambia la posición de la copia
+    dragShadow.style.left = dropX + 'px';
+    dragShadow.style.top = dropY + 'px';
+}
+
+// Una vez que se termina el drag, se habilitan los controles y el controller.
+function handleDragEnd(event) {
+
+    // Ya no se esta arrastrando.
+    this.classList.remove('dragging');
+    document.body.removeChild(dragShadow);
+
+    // Se busca si el punto donde se soltó el elemento está dentro de alguna lista de comensales.
+    const newComensalListObject = findComensalListFromPoint(dropX, dropY);
+
     if (newComensalListObject && prevComensalListObject !== newComensalListObject) {
-        // Si las listas son diferentes, se maneja el cambio de lista.
+        // Si se soltó en una lista y las listas son diferentes, se maneja el cambio de lista.
 
         const comensal = {
             id: parseInt(this.id.split('-')[1]),
@@ -42,33 +78,36 @@ function handleMouseUp(event) {
         }
 
         // Se elimina de la lista anterior.
-        prevComensalListObject.comensales = prevComensalListObject.comensales.filter(c => c.id !== comensal.id);
-        prevComensalListObject.comensalList.element.removeChild(this);
+        deleteComensal(prevComensalListObject, comensal);
 
         // Se añade a la nueva lista.
         newComensalListObject.comensales.push(comensal);
         newComensalListObject.comensalList.element.appendChild(this);
+        // Si la lista esta seleccionada, se añade el comensal al menu lateral.
+        if (newComensalListObject === selectedComensalListObject) {
+            comensalToHtml(newComensalListObject, comensal, 'comensales-content');
+        }
     }
 
+    // Se devuelven los controls y el controller a su estado original y se reinicia la variable de lista previa.
     prevComensalListObject = null;
-    console.log('listo')
     controls.enabled = true;
     controller.enabled = true;
 }
 
-function findComensalListFromHTML(comensalHTML) {
-    // Rectangulo del html del comensal que se está arrastrando.
-    const rect = comensalHTML.getBoundingClientRect();
+function findComensalListFromPoint(x, y) {
     let comensalIter = 0;
 
+    // Se busca en todas las listas de comensales.
     while (comensalIter < allComensalListObject.length) {
-        // Rectangulo del html de la lista de comensales.
-        const css2dRect = allComensalListObject[comensalIter].comensalList.element.getBoundingClientRect();
+        // HTML de la lista de comensales.
+        const comensalListHTML = allComensalListObject[comensalIter].comensalList.element;
 
-        // Si se solapan los rectangulos, se devuelve la lista de comensales.
-        if (rect.left < css2dRect.right && rect.right > css2dRect.left &&
-            rect.top < css2dRect.bottom && rect.bottom > css2dRect.top) {
+        // Obtiene las coordenadas y dimensiones del elemento.
+        const rect = comensalListHTML.getBoundingClientRect();
 
+        // Comprueba si el punto (x, y) está dentro del rectángulo del elemento.
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
             return allComensalListObject[comensalIter];
         }
         comensalIter++;
@@ -95,11 +134,12 @@ function addEvent(comensalListObject, comensal) {
  * @param {Object} comensal - El comensal que se va a borrar.
  */
 function deleteComensal(comensalListObject, comensal) {
-    console.log(comensalListObject.comensales);
+    // Se quita de la lista
     comensalListObject.comensales = comensalListObject.comensales.filter(c => c.id !== comensal.id);
+    // Se elimina del menu lateral del html
     $(`#btn-edit-${comensal.id}`).parent().parent().remove();
+    // Se elimina del html de la mesa
     const comensalLi = comensalListObject.comensalList.element.querySelector(`#comensal-${comensal.id}`);
-    removeDragEvent(comensalLi);
     comensalListObject.comensalList.element.removeChild(comensalLi);
 }
 
@@ -120,7 +160,7 @@ function fillPlaceholder(comensal) {
  */
 
 function comensalesToHtml(comensalListObject, container) {
-
+    selectedComensalListObject = comensalListObject;
     const comensales = comensalListObject.comensales;
     $(`#${container}`).html('');
     comensales.forEach(comensal => {
@@ -161,12 +201,12 @@ function comensalToHtml(comensalListObject, comensal, container) {
 
 export { 
     addDragEvent, 
-    removeDragEvent, 
     addEvent,
     deleteComensal,
     fillPlaceholder,
     comensalToHtml,
     comensalesToHtml,
     setControls,
-    setController
+    setController,
+    setAllComensalListObject
 }
