@@ -2546,7 +2546,6 @@ itemUtils.isWallItem = function(item) {
 
 itemUtils.isItemInRoom = function(item, floor) {
     let contains = false;
-    console.log(item.constructor.name);
     if (this.isWallItem(item)) { // Item de muro
         const room = item.currentWallEdge.room;
 

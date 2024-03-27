@@ -754,6 +754,18 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     let floorIter = 0;
     let found = false;
 
+    /* 
+      Cuando se llama a esta funcion, por si acaso la referencia al edge esta desfasada, se actualiza al edge mas cercano.
+      Esto para todos los itemGroup que sean de tipo Wall.
+    */
+    if (item.isWallItem()) {
+      const closestWallEdge = item.closestWallEdge();
+      item.changeWallEdge(closestWallEdge);
+      return closestWallEdge.room;
+    }
+
+    console.log(floors);
+    // Si son items de suelo se itera por las habitaciones
     while (floorIter < floors.length && !found) {
       const floor = floors[floorIter];
       found = item.isItemInRoom(floor);
@@ -808,24 +820,18 @@ var ThreeMain = function(model, element, canvasElement, opts) {
         if (room && floorplan.floorplan.roomsAltitudeChanged(room)) {
           const newRoomAltitude = roomsAltitude[room.getUuid()]['newAltitude'];
           const oldRoomAltitude = roomsAltitude[room.getUuid()]['oldAltitude'];
-
-          if (item.constructor.name === 'InWallFloorItem' || item.constructor.name === 'InWallFloorItemGroup') {
-              // Item pegado al muro y suelo
               
-              //TODO No funciona el setPosition con item boundToFloor = true;
-              item.setPosition(item.position.x, newRoomAltitude, item.position.z);
-          }
-
-          else {
-              // Item de muro normal o suelo
-              
-              const plusAltitude = newRoomAltitude - oldRoomAltitude;
-              item.setPosition(item.position.x, item.position.y + plusAltitude, item.position.z);
-          }
+          const plusAltitude = newRoomAltitude - oldRoomAltitude;
+          item.setPosition(item.position.x, item.position.y + plusAltitude, item.position.z);
         }
 
-        // Si no hay habitacion, algo malo ha ocurrido
+        else {
+          // Si no hay habitacion, algo malo ha ocurrido
+          console.error('No se ha encontrado la habitacion del item');
+        }
       })
+      // Ya se actualizaron los objetos, la altura antigua no sirve.
+      floorplan.floorplan.equaliceRoomsAltitude();
   }
 
   init();
