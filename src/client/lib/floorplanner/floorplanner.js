@@ -208,8 +208,8 @@ var Floorplanner = function(canvas, model) {
   
   this.intercambioEstadosFloorplan = function(prev_json,curr_json) {
       // El string en json se pasa a objeto para obtener la escena y los items
-      prev = JSON.parse(prev_json);
-      curr = JSON.parse(curr_json);
+      const prev = JSON.parse(prev_json);
+      const curr = JSON.parse(curr_json);
       
       // Se comparan las escenas (comparación en String) 
       if (JSON.stringify(prev.floorplan) != JSON.stringify(curr.floorplan)) {
@@ -217,9 +217,9 @@ var Floorplanner = function(canvas, model) {
          
       } 
       // Se vuelven a añadir las paredes
-      var items_paredes = [];
-      for (var i = 0; i < curr.items.length; i++) {
-          var prev_item = curr.items[i];
+      const items_paredes = [];
+      for (const element of curr.items) {
+          const prev_item = element;
           if (prev_item.item_type == 2 || prev_item.item_type == 3 || 
                   prev_item.item_type == 7) {
                 items_paredes.push(prev_item);

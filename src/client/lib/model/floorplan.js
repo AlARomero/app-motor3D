@@ -245,11 +245,12 @@ var Floorplan = function() {
   // import and export -- cleanup
 
   this.saveFloorplan = function() {
-    var floorplan = {
+    const floorplan = {
       corners: {},
       walls: [],
       wallTextures: [],
-      floorTextures: {}
+      floorTextures: {},
+      roomsAltitude: roomsAltitude
     }
     utils.forEach(corners, function(corner) {
       floorplan.corners[corner.id] = {
@@ -277,13 +278,12 @@ var Floorplan = function() {
     if (floorplan == null || !('corners' in floorplan) || !('walls' in floorplan)) {
       return
     } 
-    // roomsAltitude = floorplan.getRoomsAltitude();
     for (let id in floorplan.corners) {
       const corner = floorplan.corners[id];
       corners[id] = this.newCorner(corner.x, corner.y, id);
     }
     utils.forEach(floorplan.walls, function(wall) {
-      var newWall = scope.newWall(
+      const newWall = scope.newWall(
         corners[wall.corner1], corners[wall.corner2]);
       if (wall.frontTexture) {
         newWall.frontTexture = wall.frontTexture;
@@ -300,6 +300,9 @@ var Floorplan = function() {
       //console.log("Actualizo floorTextures " + floorplan.newFloorTextures);  
       this.floorTextures = floorplan.newFloorTextures;
     }
+
+    if (floorplan.roomsAltitude)
+      this.roomsAltitude = floorplan.roomsAltitude;
 
     this.update();    
     this.roomLoadedCallbacks.fire();
@@ -362,8 +365,8 @@ var Floorplan = function() {
   }
 
   this.reset = function() {
-    var tmpCorners = corners.slice(0);
-    var tmpWalls = walls.slice(0);
+    const tmpCorners = corners.slice(0);
+    const tmpWalls = walls.slice(0);
     utils.forEach(tmpCorners, function(c) {
       c.remove();
     })
