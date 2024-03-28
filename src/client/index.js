@@ -639,9 +639,9 @@ var CameraButtons = function(blueprint3d) {
     }
   
     function saveDesign() {
-      var data = blueprint3d.model.exportSerialized();
-      var a = window.document.createElement('a');
-      var blob = new Blob([data], {type : 'text'});
+      const data = blueprint3d.model.exportSerialized();
+      const a = window.document.createElement('a');
+      const blob = new Blob([data], {type : 'text'});
       a.href = window.URL.createObjectURL(blob);
       a.download = 'design.blueprint3d';
       document.body.appendChild(a)

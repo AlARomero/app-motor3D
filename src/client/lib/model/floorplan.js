@@ -30,7 +30,7 @@ var Floorplan = function() {
   var new_corner_callbacks = JQUERY.Callbacks();
   var redraw_callbacks = JQUERY.Callbacks();
   var updated_rooms = JQUERY.Callbacks();
-  this.roomLoadedCallbacks = JQUERY.Callbacks();
+  this.roomLoadedCallbacks = JQUERY.Callbacks(); // TODO para que sirve?
 
   var defaultTolerance = 10.0;
 
