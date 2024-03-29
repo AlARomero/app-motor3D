@@ -74,7 +74,6 @@ function handleDragEnd(event) {
         const comensal = {
             id: parseInt(this.id.split('-')[1]),
             nombre: this.textContent,
-            listObject: newComensalListObject
         }
 
         // Se elimina de la lista anterior.

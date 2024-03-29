@@ -16,7 +16,7 @@ var Floorplan = function() {
   var corners = [];
   var rooms = [];
 
-  const roomsAltitude = {};  // Room Uuid -> {oldAltitude, newAltitude}
+  let roomsAltitude = {};  // Room Uuid -> {oldAltitude, newAltitude}
   
   // For debug
   var interiorPoints = [];
@@ -145,10 +145,10 @@ var Floorplan = function() {
   }
 
   // // Se revisa cada habitacion en rooms, a ver si alguna cambio su uuid para actualizarlo en roomsAltitude.
-  // function updateRoomsAltitude(newCorner) {
+  // function updateRoomsAltitude(cornerRooms) {
   //   console.log('ACTUALIZANDO ROOMSALTITUDE')
+  //   console.log(roomsAltitude);
   //   let oldUuid;
-  //   let cornerRooms = findRooms(corners);
   //   let found = false;
   //   let cornerRoomIter = 0;
 
@@ -157,30 +157,36 @@ var Floorplan = function() {
   //     // Se revisa cada habitacion en rooms, a ver si alguna cambio su uuid para actualizarlo en roomsAltitude.
   //     // Solo hay una habitacion que cambio su uuid en roomsAltitude seguro, ya que un corner solo puede estar en dos habitaciones y una es nueva.
   //     while (!found && cornerRoomIter < cornerRooms.length) {
-  //       console.log('NUEVA PRUEBA')
   //       // Se obtiene la habitacion
   //       const cornerRoom = cornerRooms[cornerRoomIter];
 
   //       // Se obtiene el uuid de la habitacion
   //       const roomUuid = getUuidByCorners(cornerRoom);
-  //       // Se obtiene el uuid de la habitacion sin el newCorner (si es que tiene el newCorner en su uuid)
-  //       oldUuid = roomUuid.replace(new RegExp('(^|,)' + newCorner.id + '(,|$)'), (match, p1, p2) => {
-  //         if (p1 && p2) {
-  //           return ',';
-  //         }
-  //         return '';
-  //       });
+  //       console.log('NUEVA PRUEBA')
+
+  //       let array1 = uuid.split(',');
+  //       let array2 = roomUuid.split(',');
+
+  //       // Se filtra el nuevo uuid para que no tenga ningun id del array uuid antiguo
+  //       let newCorners = array2.filter( (uuid) => !array1.includes(uuid) );
+
+  //       // Se filtra el antiguo uuid para que no tenga ningun id del array uuid nuevo
+  //       let oldCorners = array1.filter( (uuid) => !newCorners.includes(uuid) );
+
+  //       // Se une el array mediante comas
+  //       oldUuid = oldCorners.join(',');
+
   //       console.log(oldUuid);
-  //       console.log(uuid);
   //       if (oldUuid === uuid) {
+  //         console.log('HAY COINCIDENCIA')
   //         // Si la habitacion tiene añadido un nuevo corner, se actualiza el uuid de roomsAltitude
+  //         console.log(roomUuid)
+  //         console.log(oldUuid)
   //         roomsAltitude[roomUuid] = roomsAltitude[uuid];
-  //         // Se elimina el registro del uuid antiguo
-  //         delete roomsAltitude[uuid];
   //         found = true;
   //       }
-  //       cornerRoomIter++;
   //       console.log('FIN DE PRUEBA')
+  //       cornerRoomIter++;
   //     }
   //     found = false;
   //     cornerRoomIter = 0;
@@ -191,7 +197,6 @@ var Floorplan = function() {
     const corner = new Corner(this, x, y, id, merge, tolerance);
     corners.push(corner);
     corner.fireOnDelete(removeCorner);
-    // updateRoomsAltitude(corner);
     new_corner_callbacks.fire(corner);
     return corner;
   }
@@ -302,7 +307,7 @@ var Floorplan = function() {
     }
 
     if (floorplan.roomsAltitude)
-      this.roomsAltitude = floorplan.roomsAltitude;
+      roomsAltitude = floorplan.roomsAltitude;
 
     this.update();    
     this.roomLoadedCallbacks.fire();
@@ -375,6 +380,7 @@ var Floorplan = function() {
     })
     corners = [];
     walls = [];
+    roomsAltitude = {};
   }
 
   this.changeRoomAltitude = function(uuid, altitude) {
@@ -416,7 +422,11 @@ var Floorplan = function() {
       wall.resetFrontBack();
     });
 
-    var roomCorners = findRooms(corners);
+    const roomCorners = findRooms(corners);
+
+    // Actualiza las alturas de las habitaciones por si se le añadieron nuevas esquinas (corners).
+    // updateRoomsAltitude(roomCorners);
+
     rooms = [];
     utils.forEach(roomCorners, function(corners) {
 

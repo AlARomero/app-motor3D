@@ -337,6 +337,16 @@ var CameraButtons = function(blueprint3d) {
   
       initItems();
   
+      scope.stateChangeCallbacks.add((state) => {
+        console.log('cambio')
+        if (state !== scope.states.DEFAULT) {
+          console.log(state);
+          $('.3d-viewer-control').hide();
+        }
+        else {
+          $('.3d-viewer-control').show();
+        }
+      })
       setCurrentState(scope.states.DEFAULT);
     }
   
@@ -501,7 +511,7 @@ var CameraButtons = function(blueprint3d) {
     function updateWallsHeight() {
       // Obtengo el muro seleccionado (ya que se selecciona un half edge)
       const wall = currentTarget.wall;
-      const floorplan = currentTarget.room.getFloorplan();
+      const floorplan = three.getModel().floorplan;
 
       // Se obtiene la altura que se quiere cambiar desde el boton
       let height = parseFloat($("#actual-wall-height").val());
@@ -640,12 +650,13 @@ var CameraButtons = function(blueprint3d) {
   
     function saveDesign() {
       const data = blueprint3d.model.exportSerialized();
-      const a = window.document.createElement('a');
+      const a = document.createElement('a');
       const blob = new Blob([data], {type : 'text'});
-      a.href = window.URL.createObjectURL(blob);
+      a.href = URL.createObjectURL(blob);
       a.download = 'design.blueprint3d';
       document.body.appendChild(a)
-      a.click();
+      a.style.display = 'block';
+      window.open(a.href);
       document.body.removeChild(a)
     }
   

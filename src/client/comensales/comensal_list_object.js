@@ -14,7 +14,6 @@ class ComensalListObject {
     
         this.comensalList = new CSS2DObject(ul);
         this.comensales = [];
-        this.table = table;
         this.boundToTable(table);
     }
 
@@ -52,11 +51,6 @@ class ComensalListObject {
     boundToTable(table) {
         table.boundItem(this);
         table.add(this.comensalList);
-    }
-
-    unBoundComensalList() {
-        this.table.unBoundItem(this);
-        this.table.remove(this.comensalList);
     }
 }
 

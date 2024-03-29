@@ -54,8 +54,7 @@ class ComensalUtils {
         }
         const comensal = {
             id: ComensalUtils.initialId,
-            nombre: `Comensal ${ComensalUtils.initialId}`,
-            listObject: this
+            nombre: `Comensal ${ComensalUtils.initialId}`
         };
         comensalListObject.addComensal(comensal, this.container);
         ComensalUtils.initialId++;
