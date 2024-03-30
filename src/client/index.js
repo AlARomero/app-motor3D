@@ -655,8 +655,7 @@ var CameraButtons = function(blueprint3d) {
       a.href = URL.createObjectURL(blob);
       a.download = 'design.blueprint3d';
       document.body.appendChild(a)
-      a.style.display = 'block';
-      window.open(a.href);
+      a.click();
       document.body.removeChild(a)
     }
   
