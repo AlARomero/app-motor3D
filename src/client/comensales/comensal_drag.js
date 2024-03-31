@@ -20,6 +20,17 @@ function setAllComensalListObject(newAllComensalListObject) {
     allComensalListObject = newAllComensalListObject;
 }
 
+function addDeactivateControlsEvent(htmlElement) {
+    htmlElement.addEventListener('mousedown', () => {
+        controls.enabled = false;
+        controller.enabled = false;
+    });
+    htmlElement.addEventListener('mouseup', () => {
+        controls.enabled = true;
+        controller.enabled = true;
+    });
+}
+
 function addDragEvent(comensalHTMLElement) {
     comensalHTMLElement.draggable = true;
     comensalHTMLElement.addEventListener('mousedown', handleMouseDown);
@@ -82,7 +93,8 @@ function handleDragEnd(event) {
 
         // Se añade a la nueva lista.
         newComensalListObject.comensales.push(comensal);
-        newComensalListObject.comensalList.element.appendChild(this);
+        console.log($(`#comensales-${newComensalListObject.uuid}`));
+        $(`#comensales-${newComensalListObject.uuid}`).append(this);
         // Si la lista esta seleccionada, se añade el comensal al menu lateral.
         if (newComensalListObject === selectedComensalListObject) {
             comensalToHtml(newComensalListObject, comensal, 'comensales-content');
@@ -139,8 +151,9 @@ function deleteComensal(comensalListObject, comensal) {
     // Se elimina del menu lateral del html
     $(`#btn-edit-${comensal.id}`).parent().parent().remove();
     // Se elimina del html de la mesa
-    const comensalLi = comensalListObject.comensalList.element.querySelector(`#comensal_${comensal.id}`);
-    comensalListObject.comensalList.element.removeChild(comensalLi);
+    const comensalLi = $(`#comensal_${comensal.id}`);
+    $(`#comensales-${comensalListObject.uuid}`).remove(comensalLi);
+    console.log($(`#comensales-${comensalListObject.uuid}`));
 }
 
 /**
@@ -199,6 +212,7 @@ function comensalToHtml(comensalListObject, comensal, container) {
 }
 
 export { 
+    addDeactivateControlsEvent,
     addDragEvent, 
     addEvent,
     deleteComensal,

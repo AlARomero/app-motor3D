@@ -3,7 +3,6 @@ import * as ComensalDrag from './comensal_drag';
 import { v4 as uuid } from 'uuid';
 
 class ComensalUtils {
-    // static sideContainer = 'comensales-content';
     static initialId = 1;
 
     constructor(controls, controller, items, container) {
