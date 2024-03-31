@@ -27,7 +27,7 @@ var Model = function(textureDir) {
     
     this.roomLoadingCallbacks.fire();
 
-    var data = JSON.parse(data_json);
+    const data = JSON.parse(data_json);
     scope.newRoom(
       data.floorplan,
       data.items
@@ -167,9 +167,12 @@ var Model = function(textureDir) {
         scale_y: object.scale.y,
         scale_z: object.scale.z,
         fixed: object.fixed,
-        desfaseAltura: object.desfaseAltura
+        desfaseAltura: object.desfaseAltura,
+        isTable: object.metadata.isTable,
+        itemDescription: object.metadata.itemDescription,
+        itemsBounded: object.itemsBounded
       };
-      
+
       if (tempHistory) {
           //alert("tempHistory: " + object.metadata.allBloques);
           item.allBloques = object.metadata.allBloques;
@@ -470,16 +473,16 @@ var Model = function(textureDir) {
     tempHistory = tempHistory || false;  
     onlyFloor = onlyFloor || false;  
     
-    var items_arr = [];
+    const items_arr = [];
     
     if (!onlyFloor) {
-        var objects = scope.scene.getItems();
-        for ( var i = 0; i < objects.length; i++ ) {
+        const objects = scope.scene.getItems();
+        for ( let i = 0; i < objects.length; i++ ) {
           items_arr[i] = this.exportSerializedItem(objects[i],tempHistory);
         }
     }
     
-    var room = {
+    const room = {
       floorplan: (scope.floorplan.saveFloorplan()),
       items: items_arr
     };
@@ -530,7 +533,7 @@ function generateRandomString(longitud) {
         item.model_url = item.model_url + JS_VARIATION;  
       } 
       console.log("EStoy en newRoom: " + item.model_url);
-      var metadata = {
+      const metadata = {
     	itemId: item.itemId,
         itemName: item.item_name,
         resizable: item.resizable,
@@ -552,10 +555,12 @@ function generateRandomString(longitud) {
         allBloques: item.allBloques,
         allPalabras: item.allPalabras,
         descripcion: item.descripcion,
-        sepPieza: item.sepPieza
-      }
+        sepPieza: item.sepPieza,
+        isTable: item.isTable,
+        itemDescription: item.itemDescription
+      };
       
-      var scale = {
+      const scale = {
         x: item.scale_x,
         y: item.scale_y,
         z: item.scale_z
@@ -574,7 +579,8 @@ function generateRandomString(longitud) {
         position, 
         item.rotation,
         scale,
-        item.fixed);
+        item.fixed,
+        item.itemsBounded);
     });
   }
 }

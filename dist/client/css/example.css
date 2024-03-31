@@ -58,6 +58,11 @@ div {
   padding: 0;
 }
 
+.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
 /*
  * "Loading" modal
  */
@@ -100,9 +105,7 @@ div {
 #main-controls {
   position: absolute;
   top: 20px;
-  left: 20px;
-  margin-left: 22rem; /* Mueve hasta el inicio del 3d el panel de control principal */
-  padding: 0;  
+  margin-left: 1rem;
 }
 
 #camera-controls {

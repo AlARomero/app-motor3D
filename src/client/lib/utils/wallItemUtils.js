@@ -58,9 +58,14 @@ wallItemUtils.updateSize = function(item) {
     item.sizeY = (item.geometry.boundingBox.max.y - item.geometry.boundingBox.min.y) * item.scale.y;
 }
 
+wallItemUtils.getBoundToFloorInitialAltitude = function(item) {
+    return 0.5 * (item.geometry.boundingBox.max.y - item.geometry.boundingBox.min.y) * item.scale.y + 0.01;
+}
+
 wallItemUtils.resized = function(item) {
     if (item.boundToFloor) {
-        item.position.y = 0.5 * (item.geometry.boundingBox.max.y - item.geometry.boundingBox.min.y)  * item.scale.y + 0.01;        
+        // Se le ancla la altura de la habitación para que se vea en el suelo.
+        item.position.y = 0.5 * (item.geometry.boundingBox.max.y - item.geometry.boundingBox.min.y)  * item.scale.y + 0.01 + item.currentWallEdge.room.altitude;      
     } 
     else {
          // MOD. Rafa. Desfase de altura para corregirlo y que se muestre 0
@@ -322,9 +327,9 @@ wallItemUtils.boundMove = function(item, vec3) {
     } else if (vec3.x > (edge.interiorDistance() - item.sizeX / 2.0 - tolerance)) {
         vec3.x = edge.interiorDistance() - item.sizeX / 2.0 - tolerance;
     }
-    //console.log(item.boundToFloor);
     if (item.boundToFloor) {
-        vec3.y = 0.5 * ( item.geometry.boundingBox.max.y - item.geometry.boundingBox.min.y ) * item.scale.y + 0.01;        
+        // Para que se vea bound To Floor al arrastrarse, debe anclarse a la altura del suelo.
+        vec3.y = 0.5 * ( item.geometry.boundingBox.max.y - item.geometry.boundingBox.min.y ) * item.scale.y + 0.01 + item.currentWallEdge.room.altitude;
     } else {
         if (vec3.y < item.sizeY / 2.0 + tolerance) {
             vec3.y = item.sizeY / 2.0 + tolerance;

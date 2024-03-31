@@ -2546,7 +2546,6 @@ itemUtils.isWallItem = function(item) {
 
 itemUtils.isItemInRoom = function(item, floor) {
     let contains = false;
-    console.log(item.constructor.name);
     if (this.isWallItem(item)) { // Item de muro
         const room = item.currentWallEdge.room;
 
@@ -2555,7 +2554,7 @@ itemUtils.isItemInRoom = function(item, floor) {
     else { // Item de suelo
 
         const roomFloor = floor.floorPlane;
-        console.log(roomFloor);
+        
         // Convertir la posición del objeto
         const itemPosition = item.position.clone();
 

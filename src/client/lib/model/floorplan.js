@@ -16,7 +16,7 @@ var Floorplan = function() {
   var corners = [];
   var rooms = [];
 
-  const roomsAltitude = {};  // Room Uuid -> {oldAltitude, newAltitude}
+  let roomsAltitude = {};  // Room Uuid -> {oldAltitude, newAltitude}
   
   // For debug
   var interiorPoints = [];
@@ -30,7 +30,7 @@ var Floorplan = function() {
   var new_corner_callbacks = JQUERY.Callbacks();
   var redraw_callbacks = JQUERY.Callbacks();
   var updated_rooms = JQUERY.Callbacks();
-  this.roomLoadedCallbacks = JQUERY.Callbacks();
+  this.roomLoadedCallbacks = JQUERY.Callbacks(); // TODO para que sirve?
 
   var defaultTolerance = 10.0;
 
@@ -144,8 +144,57 @@ var Floorplan = function() {
     scope.update();
   }
 
+  // // Se revisa cada habitacion en rooms, a ver si alguna cambio su uuid para actualizarlo en roomsAltitude.
+  // function updateRoomsAltitude(cornerRooms) {
+  //   console.log('ACTUALIZANDO ROOMSALTITUDE')
+  //   console.log(roomsAltitude);
+  //   let oldUuid;
+  //   let found = false;
+  //   let cornerRoomIter = 0;
+
+  //   // Para todos los uuid en roomsAltitude
+  //   for (let uuid in roomsAltitude) {
+  //     // Se revisa cada habitacion en rooms, a ver si alguna cambio su uuid para actualizarlo en roomsAltitude.
+  //     // Solo hay una habitacion que cambio su uuid en roomsAltitude seguro, ya que un corner solo puede estar en dos habitaciones y una es nueva.
+  //     while (!found && cornerRoomIter < cornerRooms.length) {
+  //       // Se obtiene la habitacion
+  //       const cornerRoom = cornerRooms[cornerRoomIter];
+
+  //       // Se obtiene el uuid de la habitacion
+  //       const roomUuid = getUuidByCorners(cornerRoom);
+  //       console.log('NUEVA PRUEBA')
+
+  //       let array1 = uuid.split(',');
+  //       let array2 = roomUuid.split(',');
+
+  //       // Se filtra el nuevo uuid para que no tenga ningun id del array uuid antiguo
+  //       let newCorners = array2.filter( (uuid) => !array1.includes(uuid) );
+
+  //       // Se filtra el antiguo uuid para que no tenga ningun id del array uuid nuevo
+  //       let oldCorners = array1.filter( (uuid) => !newCorners.includes(uuid) );
+
+  //       // Se une el array mediante comas
+  //       oldUuid = oldCorners.join(',');
+
+  //       console.log(oldUuid);
+  //       if (oldUuid === uuid) {
+  //         console.log('HAY COINCIDENCIA')
+  //         // Si la habitacion tiene añadido un nuevo corner, se actualiza el uuid de roomsAltitude
+  //         console.log(roomUuid)
+  //         console.log(oldUuid)
+  //         roomsAltitude[roomUuid] = roomsAltitude[uuid];
+  //         found = true;
+  //       }
+  //       console.log('FIN DE PRUEBA')
+  //       cornerRoomIter++;
+  //     }
+  //     found = false;
+  //     cornerRoomIter = 0;
+  //   }
+  // }
+
   this.newCorner = function(x, y, id, merge, tolerance) {
-    var corner = new Corner(this, x, y, id, merge, tolerance);
+    const corner = new Corner(this, x, y, id, merge, tolerance);
     corners.push(corner);
     corner.fireOnDelete(removeCorner);
     new_corner_callbacks.fire(corner);
@@ -201,11 +250,12 @@ var Floorplan = function() {
   // import and export -- cleanup
 
   this.saveFloorplan = function() {
-    var floorplan = {
+    const floorplan = {
       corners: {},
       walls: [],
       wallTextures: [],
-      floorTextures: {}
+      floorTextures: {},
+      roomsAltitude: roomsAltitude
     }
     utils.forEach(corners, function(corner) {
       floorplan.corners[corner.id] = {
@@ -233,12 +283,12 @@ var Floorplan = function() {
     if (floorplan == null || !('corners' in floorplan) || !('walls' in floorplan)) {
       return
     } 
-    for (var id in floorplan.corners) {
-      var corner = floorplan.corners[id];
+    for (let id in floorplan.corners) {
+      const corner = floorplan.corners[id];
       corners[id] = this.newCorner(corner.x, corner.y, id);
     }
     utils.forEach(floorplan.walls, function(wall) {
-      var newWall = scope.newWall(
+      const newWall = scope.newWall(
         corners[wall.corner1], corners[wall.corner2]);
       if (wall.frontTexture) {
         newWall.frontTexture = wall.frontTexture;
@@ -255,6 +305,9 @@ var Floorplan = function() {
       //console.log("Actualizo floorTextures " + floorplan.newFloorTextures);  
       this.floorTextures = floorplan.newFloorTextures;
     }
+
+    if (floorplan.roomsAltitude)
+      roomsAltitude = floorplan.roomsAltitude;
 
     this.update();    
     this.roomLoadedCallbacks.fire();
@@ -317,8 +370,8 @@ var Floorplan = function() {
   }
 
   this.reset = function() {
-    var tmpCorners = corners.slice(0);
-    var tmpWalls = walls.slice(0);
+    const tmpCorners = corners.slice(0);
+    const tmpWalls = walls.slice(0);
     utils.forEach(tmpCorners, function(c) {
       c.remove();
     })
@@ -327,6 +380,7 @@ var Floorplan = function() {
     })
     corners = [];
     walls = [];
+    roomsAltitude = {};
   }
 
   this.changeRoomAltitude = function(uuid, altitude) {
@@ -343,8 +397,18 @@ var Floorplan = function() {
     this.update();
   }
 
+  /*
+     Cuando se han actualizado las alturas de los objetos al cambiar la altura de la habitacion,
+     ya esta se considera que tiene la nueva altura, por lo que se actualiza la antigua altura con la actual (nueva).
+  */
+  this.equaliceRoomsAltitude = function() {
+    for (let uuid in roomsAltitude) {
+      roomsAltitude[uuid]['oldAltitude'] = roomsAltitude[uuid]['newAltitude'];
+    }
+  }
+
   function getUuidByCorners(corners) {
-    var cornerUuids = utils.map(corners, function(c) {
+    const cornerUuids = utils.map(corners, function(c) {
       return c.id;
     });
     cornerUuids.sort();
@@ -358,12 +422,15 @@ var Floorplan = function() {
       wall.resetFrontBack();
     });
 
-    var roomCorners = findRooms(corners);
+    const roomCorners = findRooms(corners);
+
+    // Actualiza las alturas de las habitaciones por si se le añadieron nuevas esquinas (corners).
+    // updateRoomsAltitude(roomCorners);
+
     rooms = [];
     utils.forEach(roomCorners, function(corners) {
 
       let altitude = 0;
-
       if (roomsAltitude.hasOwnProperty(getUuidByCorners(corners))) {
         altitude = roomsAltitude[getUuidByCorners(corners)]['newAltitude'];
       }

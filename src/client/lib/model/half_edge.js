@@ -79,14 +79,22 @@ var HalfEdge = function(room, wall, front, altitude = 0) {
       return new THREE.Vector3(corner.x, 0, corner.y);
     }
 
+    let planeHeight = this.wall.height;
+
+    // Si el plano tiene altura 0
+    if (this.wall.height === 0) {
+      // Para que el muro pueda ser seleccionado aun con altura 0, se le asigna una altura de 5 al plano de intersección
+      planeHeight = 5;
+    }
+
     var v1 = transformCorner(this.interiorStart());
-    v1.y = altitude;
+    v1.y = this.altitude;
     var v2 = transformCorner(this.interiorEnd());
-    v2.y = altitude;
+    v2.y = this.altitude;
     var v3 = v2.clone();
-    v3.y = this.wall.height + this.altitude;
+    v3.y = planeHeight + this.altitude;
     var v4 = v1.clone();
-    v4.y = this.wall.height + this.altitude;
+    v4.y = planeHeight + this.altitude;
 
     // DEPRECATED in r140
     //var geometry = new THREE.Geometry();

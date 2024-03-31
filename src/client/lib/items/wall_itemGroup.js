@@ -45,6 +45,10 @@ class WallItemGroup extends ItemGroup {
         wallItemUtils.redrawWall(this);
     }
 
+    getBoundToFloorInitialAltitude() {
+        return wallItemUtils.getBoundToFloorInitialAltitude(this);
+    }
+
     updateEdgeVisibility(visible, front) {
         wallItemUtils.updateEdgeVisibility(this, visible, front);
     }

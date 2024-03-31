@@ -482,6 +482,10 @@ class ItemGroup extends THREE.Group {
         // handle in sub class
     };
 
+    isWallItem() {
+        return itemUtils.isWallItem(this);
+    }
+
     isItemInRoom(roomFloor) {
         return itemUtils.isItemInRoom(this, roomFloor);
     }

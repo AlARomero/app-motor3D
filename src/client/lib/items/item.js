@@ -408,6 +408,10 @@ class Item extends THREE.Mesh {
         // subclass can define to take action after a resize
     };
 
+    isWallItem() {
+        return itemUtils.isWallItem(this);
+    }
+
     isItemInRoom(roomFloor) {
         return itemUtils.isItemInRoom(this, roomFloor);
     }

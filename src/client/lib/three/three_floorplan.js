@@ -6,7 +6,7 @@ var utils = require('../utils/utils')
 // THREE.Scene, Blueprint.Floorplan
 var ThreeFloorplan = function(scene, floorplan, controls) {
 
-  var scope = this;
+  const scope = this;
 
   this.scene = scene;
   this.floorplan = floorplan;
@@ -31,14 +31,14 @@ var ThreeFloorplan = function(scene, floorplan, controls) {
 
     // draw floors
     utils.forEach(scope.floorplan.getRooms(), function(room) {
-      var threeFloor = new ThreeFloor(scene, room);
+      let threeFloor = new ThreeFloor(scene, room);
       scope.floors.push(threeFloor);
       threeFloor.addToScene();
     });
 
     // draw edges
     utils.forEach(scope.floorplan.wallEdges(), function(edge) { // edge = half-edge
-      var threeEdge = new ThreeEdge(
+      let threeEdge = new ThreeEdge(
         scene, edge, scope.controls); 
       scope.edges.push(threeEdge);
     });

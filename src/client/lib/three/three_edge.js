@@ -345,6 +345,14 @@ var ThreeEdge = function(scene, edge, controls) {
     // add holes for each wall item
     utils.forEach(wall.items, function(item) {
       var pos = item.position.clone();
+
+      /* Si es un InWallItemGroup (como una puerta), la posición en y es la altura inicial para hacer los holes,
+       * ya que la altura al dibujar agujeros se trabaja en 0.  
+       */
+      if (item.constructor.name === 'InWallFloorItemGroup') {
+        pos.y = item.getBoundToFloorInitialAltitude();
+      }
+
       pos.applyMatrix4(transform);
       var halfSize = item.halfSize;
       var min = halfSize.clone().multiplyScalar(-1);
