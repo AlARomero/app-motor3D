@@ -97,6 +97,11 @@ class ComensalListObject {
         table.boundItem(this);
         table.add(this.comensalList);
     }
+
+    remove(table) {
+        table.unboundItem(this)
+        table.remove(this.comensalList);
+    }
 }
 
 export default ComensalListObject;
