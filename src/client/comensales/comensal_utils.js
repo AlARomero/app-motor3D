@@ -1,5 +1,6 @@
 import ComensalListObject from './comensal_list_object';
 import * as ComensalDrag from './comensal_drag';
+import { v4 as uuid } from 'uuid';
 
 class ComensalUtils {
     // static sideContainer = 'comensales-content';
@@ -26,6 +27,10 @@ class ComensalUtils {
         comensalListObject.selected(this.container);
     }
 
+    #getNewComensalId() {
+        return uuid();
+    }
+
     #fillComensalListObjectArray(items) {
         // Funcion extra que puede servir en el futuro para rellenar la lista de comensales.
 
@@ -33,7 +38,7 @@ class ComensalUtils {
 
         items.forEach(item => {
             if (item.metadata.istable){
-                const comensalListObject = ComensalUtils.comensalListFromTable(table);
+                const comensalListObject = ComensalUtils.comensalListFromTable(item);
                 if (comensalListObject) {
                     this.allComensalListObject.push(comensalListObject);
                 }
@@ -43,8 +48,22 @@ class ComensalUtils {
         ComensalDrag.setAllComensalListObject(this.allComensalListObject);
     }
 
-    addComensal(table) {
+    comensalListFromObject(comensalListFromObject, table) {
+        const comensales = comensalListFromObject.comensales;
+
+        comensales.forEach(comensal => {
+            const opts = {
+                id: comensal.id,
+                nombre: comensal.nombre
+            };
+            
+            this.addComensal(table, opts);
+        });
+    }
+
+    addComensal(table, opts = undefined) {
         let comensalListObject = ComensalUtils.comensalListFromTable(table);
+        let idComensal, nameComensal;
         if(!comensalListObject) {
             // Como todas las mesas deben tener una lista de comensales, se crea si no existe.
             comensalListObject = new ComensalListObject(table);
@@ -52,9 +71,17 @@ class ComensalUtils {
             // Se actualiza la lista de todos los comensales que hay en ComensalDrag.
             ComensalDrag.setAllComensalListObject(this.allComensalListObject);
         }
+        if (opts){
+            idComensal = opts.id;
+            nameComensal = opts.nombre;
+        }
+        else {
+            idComensal = this.#getNewComensalId();
+            nameComensal = `Comensal ${ComensalUtils.initialId}`;
+        }
         const comensal = {
-            id: ComensalUtils.initialId,
-            nombre: `Comensal ${ComensalUtils.initialId}`
+            id: idComensal,
+            nombre: nameComensal
         };
         comensalListObject.addComensal(comensal, this.container);
         ComensalUtils.initialId++;

@@ -24,11 +24,12 @@ class ComensalListObject {
     addComensal(comensal, container) {
         const html = document.createElement('li');
         html.textContent = comensal.nombre;
-        html.id = `comensal-${comensal.id}`;
+        html.id = `comensal_${comensal.id}`;
         html.className = 'list-group-item';
         ComensalHTML.addDragEvent(html);
         this.comensalList.element.appendChild(html);
         this.comensales.push(comensal);
+        console.log(comensal)
         ComensalHTML.comensalToHtml(this, comensal, container);
     }
 
@@ -41,7 +42,7 @@ class ComensalListObject {
         if (comensal) {
             Object.assign(comensal, params);
             $(`#comensal-nombre-${comensal.id}`).text(comensal.nombre);
-            const comensalLi = this.comensalList.element.querySelector(`#comensal-${comensal.id}`);
+            const comensalLi = this.comensalList.element.querySelector(`#comensal_${comensal.id}`);
             comensalLi.textContent = comensal.nombre;
         }
         else 

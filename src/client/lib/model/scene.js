@@ -136,6 +136,7 @@ var Scene = function(model, textureDir) {
   this.itemLoadingCallbacks = JQUERY.Callbacks(); 
   this.itemLoadedCallbacks = JQUERY.Callbacks(); // Item
   this.itemRemovedCallbacks = JQUERY.Callbacks(); // Item
+  this.comensalListLoaded = JQUERY.Callbacks(); // Item, Item bounded (ComensalListObject)
 
   this.add = function(mesh) {
     // only use this for non-items
@@ -416,13 +417,6 @@ var Scene = function(model, textureDir) {
         materials,
         position, rotation, scale
       );
-
-      if (itemsBounded) {
-        itemsBounded.forEach( bounded => {
-          item.boundItem(bounded);
-        });
-      }
-      
       
       item.fixed = fixed || false;
       item.textureFill = textureFill;
@@ -630,6 +624,16 @@ var Scene = function(model, textureDir) {
           item.resized();
       }
       
+      // Añadir a los items sus objetos asociados.
+        if (itemsBounded) {
+          itemsBounded.forEach( bounded => {
+            if (bounded.comensalList){
+              scope.comensalListLoaded.fire(item, bounded);
+            }
+            // Si hubiese otro tipo de itemBounded, habria que ponerlo aqui.
+          });
+        }
+
       scope.itemLoadedCallbacks.fire(item);     
       
       var t1 = performance.now();

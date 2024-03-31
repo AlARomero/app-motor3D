@@ -71,8 +71,9 @@ function handleDragEnd(event) {
     if (newComensalListObject && prevComensalListObject !== newComensalListObject) {
         // Si se soltó en una lista y las listas son diferentes, se maneja el cambio de lista.
 
+        // Se obtiene el comensal que se está moviendo a traves de su html.
         const comensal = {
-            id: parseInt(this.id.split('-')[1]),
+            id: this.id.split('_')[1],
             nombre: this.textContent,
         }
 
@@ -138,7 +139,7 @@ function deleteComensal(comensalListObject, comensal) {
     // Se elimina del menu lateral del html
     $(`#btn-edit-${comensal.id}`).parent().parent().remove();
     // Se elimina del html de la mesa
-    const comensalLi = comensalListObject.comensalList.element.querySelector(`#comensal-${comensal.id}`);
+    const comensalLi = comensalListObject.comensalList.element.querySelector(`#comensal_${comensal.id}`);
     comensalListObject.comensalList.element.removeChild(comensalLi);
 }
 
@@ -147,8 +148,8 @@ function deleteComensal(comensalListObject, comensal) {
  * @param {Object} comensal - El comensal cuyo nombre se va a utilizar para rellenar el campo.
  */
 function fillPlaceholder(comensal) {
-    //TODO Busca en el html, no se si seria una buena practica
-    $('#comensales-modal-label').text('Modificar Comensal ' + comensal.id);
+    $('#id-del-comensal-seleccionado').text(comensal.id);
+    $('#comensales-modal-label').text('Rename comensal: ' + comensal.nombre);
     $('#nombre-comensal').val(comensal.nombre);
 }
 
@@ -194,7 +195,6 @@ function comensalToHtml(comensalListObject, comensal, container) {
     `;
 
     $(`#${container}`).append(`\n${html}`);
-    //TODO addEvent ahora esta en el objeto ComensalListObject
     addEvent(comensalListObject, comensal);
 }
 

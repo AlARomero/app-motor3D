@@ -87,17 +87,15 @@ var CameraButtons = function(blueprint3d) {
    * Context menu for selected item
    */ 
   
-  var ContextMenu = function(blueprint3d) {
+  var ContextMenu = function(blueprint3d, comensalUtils) {
   
     var scope = this;
     var selectedItem;
     var three = blueprint3d.three;
-    let comensalUtils;
   
     function init() {
 
       // Se inicializa el objeto de control de comensales
-      comensalUtils = new ComensalUtils(three.controls, three.getController(), three.getFloorPlan().scene.getItems(), 'comensales-content');
 
       // Se agrega el evento para el boton de borrar objeto
       $("#context-menu-delete").on('click', function(event) {
@@ -117,7 +115,7 @@ var CameraButtons = function(blueprint3d) {
 
       // Se agrega el evento para el boton de guardar edicion de comensales
       $("#save-comensal").on('click', (e) => {
-        const id = parseInt($('#comensales-modal-label').text().split(' ')[2]);
+        const id = $('#id-del-comensal-seleccionado').text();
         const params = {id: id, nombre: $("#nombre-comensal").val()};
         comensalUtils.modificaComensal(selectedItem, params);
         $('#close-comensal-modal').trigger('click');
@@ -125,6 +123,7 @@ var CameraButtons = function(blueprint3d) {
   
       three.itemSelectedCallbacks.add(itemSelected);
       three.itemUnselectedCallbacks.add(itemUnselected);
+      three.getScene().comensalListLoaded.add(convertObjectToComensalListAndAddToTable);
   
       initResize();
   
@@ -240,6 +239,10 @@ var CameraButtons = function(blueprint3d) {
       selectedItem = null;
       $("#context-menu").hide();
     }
+
+    function convertObjectToComensalListAndAddToTable(table, comensalList) {
+      comensalUtils.comensalListFromObject(comensalList, table);
+    }
   
     init();
   }
@@ -338,7 +341,6 @@ var CameraButtons = function(blueprint3d) {
       initItems();
   
       scope.stateChangeCallbacks.add((state) => {
-        console.log('cambio')
         if (state !== scope.states.DEFAULT) {
           console.log(state);
           $('.3d-viewer-control').hide();
@@ -631,21 +633,34 @@ var CameraButtons = function(blueprint3d) {
     init();
   }; 
   
-  var mainControls = function(blueprint3d) {
-    var blueprint3d = blueprint3d;
-  
+  var mainControls = function(blueprint3d, comensalUtils) {
+
     function newDesign() {
       blueprint3d.model.loadSerialized('{"floorplan":{"corners":{"f90da5e3-9e0e-eba7-173d-eb0b071e838e":{"x":204.85099999999989,"y":289.052},"da026c08-d76a-a944-8e7b-096b752da9ed":{"x":672.2109999999999,"y":289.052},"4e3d65cb-54c0-0681-28bf-bddcc7bdb571":{"x":672.2109999999999,"y":-178.308},"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2":{"x":204.85099999999989,"y":-178.308}},"walls":[{"corner1":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","corner2":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","corner2":"da026c08-d76a-a944-8e7b-096b752da9ed","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"da026c08-d76a-a944-8e7b-096b752da9ed","corner2":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","corner2":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}}],"wallTextures":[],"floorTextures":{},"newFloorTextures":{}},"items":[]}');
     }
   
     function loadDesign() {
       const files = $("#loadFile").get(0).files;
-      var reader  = new FileReader();
-      reader.onload = function(event) {
-          var data = event.target.result;
-          blueprint3d.model.loadSerialized(data);
-      }
-      reader.readAsText(files[0]);
+      const reader  = new FileReader();
+
+      const data = new Promise((resolve, reject) => {
+        reader.onload = function(event) {
+          const json = event.target.result;
+          blueprint3d.model.loadSerialized(json);
+          resolve();
+        }
+        reader.onerror = reject;
+        reader.readAsText(files[0]);
+        console.log('LOADING DESIGN')
+      })
+      .then(() => {
+        
+        console.log('LOADING NEW DESIGN')
+        console.log(blueprint3d.three.getScene().getItems());  
+      })
+      .catch((error) => {
+        console.error(error);
+      });  
     }
   
     function saveDesign() {
@@ -667,7 +682,7 @@ var CameraButtons = function(blueprint3d) {
   
     init();
   }
-  
+
   /*
    * Initialize!
    */
@@ -675,22 +690,23 @@ var CameraButtons = function(blueprint3d) {
   $(function() {
   
     // main setup
-    var opts = {
+    const opts = {
       floorplannerElement: 'floorplanner-canvas',
       threeElement: '#viewer',
       threeCanvasElement: 'three-canvas',
       textureDir: "models/textures/",
       widget: false
     }
-    var blueprint3d = new Blueprint3d(opts);
+    const blueprint3d = new Blueprint3d(opts);
+    const comensalUtils = new ComensalUtils(blueprint3d.three.controls, blueprint3d.three.getController(), blueprint3d.three.getScene().getItems(), 'comensales-content');
   
-    var modalEffects = new ModalEffects(blueprint3d);
-    var viewerFloorplanner = new ViewerFloorplanner(blueprint3d);
-    var contextMenu = new ContextMenu(blueprint3d);
-    var sideMenu = new SideMenu(blueprint3d, viewerFloorplanner, modalEffects);
-    var wallAndFloorSelector = new WallAndFloorSelector(blueprint3d, sideMenu);        
-    var cameraButtons = new CameraButtons(blueprint3d);
-    mainControls(blueprint3d);
+    const modalEffects = new ModalEffects(blueprint3d);
+    const viewerFloorplanner = new ViewerFloorplanner(blueprint3d);
+    const contextMenu = new ContextMenu(blueprint3d, comensalUtils);
+    const sideMenu = new SideMenu(blueprint3d, viewerFloorplanner, modalEffects);
+    const wallAndFloorSelector = new WallAndFloorSelector(blueprint3d, sideMenu);        
+    const cameraButtons = new CameraButtons(blueprint3d);
+    mainControls(blueprint3d, comensalUtils);
     
     // This serialization format needs work
     // Load a simple rectangle room
