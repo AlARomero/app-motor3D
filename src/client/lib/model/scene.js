@@ -625,16 +625,16 @@ var Scene = function(model, textureDir) {
       }
       
       // Añadir a los items sus objetos asociados.
-        if (itemsBounded) {
-          itemsBounded.forEach( bounded => {
-            if (bounded.comensalList){
-              scope.comensalListLoaded.fire(item, bounded);
-            }
-            // Si hubiese otro tipo de itemBounded, habria que ponerlo aqui.
-          });
-        }
-
-      scope.itemLoadedCallbacks.fire(item);     
+      if (itemsBounded) {
+        itemsBounded.forEach( bounded => {
+          if (bounded.comensalList){
+            scope.comensalListLoaded.fire(item, bounded);
+          }
+          // Si hubiese otro tipo de itemBounded, habria que ponerlo aqui.
+        });
+      }  
+      
+      scope.itemLoadedCallbacks.fire(item);
       
       var t1 = performance.now();
       console.log("[FIN]LoadingCallback " + item.metadata.itemName + ": " + (t1 - t0) + " milliseconds.");
@@ -668,12 +668,6 @@ var Scene = function(model, textureDir) {
         //new THREE.MeshFaceMaterial(materials),
         position, rotation, scale
       );
-
-      if (itemsBounded) {
-        itemsBounded.forEach( bounded => {
-          item.boundItem(bounded);
-        });
-      }
             
       item.fixed = fixed || false;
       items.push(item);
@@ -800,6 +794,15 @@ var Scene = function(model, textureDir) {
 //		  item.material.materials[0].needsUpdate = true;
 //		  item.scene.needsUpdate = true;
 	  }
+      // Añadir a los items sus objetos asociados.
+      if (itemsBounded) {
+        itemsBounded.forEach( bounded => {
+          if (bounded.comensalList){
+            scope.comensalListLoaded.fire(item, bounded);
+          }
+          // Si hubiese otro tipo de itemBounded, habria que ponerlo aqui.
+        });
+      }
       scope.itemLoadedCallbacks.fire(item);     
     }
     

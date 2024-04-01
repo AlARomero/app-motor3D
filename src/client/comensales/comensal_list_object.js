@@ -71,7 +71,7 @@ class ComensalListObject {
         ComensalHTML.addDragEvent(html);
 
         // Añade el elemento li al ul dentro del div de colapso
-        $(`#comensales-${this.uuid}`).append(html);
+        this.comensalList.element.querySelector(`#comensales-${this.uuid}`).appendChild(html);
 
         this.comensales.push(comensal);
         ComensalHTML.comensalToHtml(this, comensal, container);

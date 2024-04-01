@@ -569,7 +569,6 @@ function generateRandomString(longitud) {
       console.log(metadata);
       console.log(scale);
       
-      
       console.log("URL item: " + item.model_url);
       scope.scene.addItem( 
         item.item_type, 

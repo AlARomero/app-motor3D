@@ -246,8 +246,6 @@ var CameraButtons = function(blueprint3d) {
     }
 
     function removeComensalList(item) {
-      console.log(item);
-      console.log(item.itemsBounded)
       if (item.metadata.isTable && item.itemsBounded[0] && item.itemsBounded[0].constructor.name === 'ComensalListObject') {
         const list = item.itemsBounded[0];
         list.remove(item);
@@ -353,7 +351,6 @@ var CameraButtons = function(blueprint3d) {
   
       scope.stateChangeCallbacks.add((state) => {
         if (state !== scope.states.DEFAULT) {
-          console.log(state);
           $('.3d-viewer-control').hide();
         }
         else {
@@ -662,12 +659,9 @@ var CameraButtons = function(blueprint3d) {
         }
         reader.onerror = reject;
         reader.readAsText(files[0]);
-        console.log('LOADING DESIGN')
       })
       .then(() => {
         
-        console.log('LOADING NEW DESIGN')
-        console.log(blueprint3d.three.getScene().getItems());  
       })
       .catch((error) => {
         console.error(error);
