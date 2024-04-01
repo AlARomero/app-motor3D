@@ -86,7 +86,7 @@ class ComensalListObject {
         if (comensal) {
             Object.assign(comensal, params);
             $(`#comensal-nombre-${comensal.id}`).text(comensal.nombre);
-            const comensalLi = $(`#comensal_${comensal.id}`);
+            const comensalLi = this.comensalList.element.querySelector(`#comensal_${comensal.id}`);
             comensalLi.textContent = comensal.nombre;
         }
         else 

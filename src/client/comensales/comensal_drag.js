@@ -151,8 +151,8 @@ function deleteComensal(comensalListObject, comensal) {
     // Se elimina del menu lateral del html
     $(`#btn-edit-${comensal.id}`).parent().parent().remove();
     // Se elimina del html de la mesa
-    const comensalLi = $(`#comensal_${comensal.id}`);
-    $(`#comensales-${comensalListObject.uuid}`).remove(comensalLi);
+    const comensalLi = comensalListObject.comensalList.element.querySelector(`#comensal_${comensal.id}`);
+    comensalListObject.comensalList.element.querySelector(`#comensales-${comensalListObject.uuid}`).removeChild(comensalLi);
     console.log($(`#comensales-${comensalListObject.uuid}`));
 }
 
