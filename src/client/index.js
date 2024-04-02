@@ -641,31 +641,23 @@ var CameraButtons = function(blueprint3d) {
     init();
   }; 
   
-  var mainControls = function(blueprint3d) {
+  var mainControls = function(blueprint3d, comensalUtils) {
 
     function newDesign() {
+      comensalUtils.clearLists();
       blueprint3d.model.loadSerialized('{"floorplan":{"corners":{"f90da5e3-9e0e-eba7-173d-eb0b071e838e":{"x":204.85099999999989,"y":289.052},"da026c08-d76a-a944-8e7b-096b752da9ed":{"x":672.2109999999999,"y":289.052},"4e3d65cb-54c0-0681-28bf-bddcc7bdb571":{"x":672.2109999999999,"y":-178.308},"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2":{"x":204.85099999999989,"y":-178.308}},"walls":[{"corner1":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","corner2":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","corner2":"da026c08-d76a-a944-8e7b-096b752da9ed","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"da026c08-d76a-a944-8e7b-096b752da9ed","corner2":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","corner2":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}}],"wallTextures":[],"floorTextures":{},"newFloorTextures":{}},"items":[]}');
     }
   
     function loadDesign() {
+      comensalUtils.clearLists();
       const files = $("#loadFile").get(0).files;
+      
       const reader  = new FileReader();
-
-      const data = new Promise((resolve, reject) => {
-        reader.onload = function(event) {
-          const json = event.target.result;
-          blueprint3d.model.loadSerialized(json);
-          resolve();
-        }
-        reader.onerror = reject;
-        reader.readAsText(files[0]);
-      })
-      .then(() => {
-        
-      })
-      .catch((error) => {
-        console.error(error);
-      });  
+      reader.onload = function(event) {
+          var data = event.target.result;
+          blueprint3d.model.loadSerialized(data);
+      }
+      reader.readAsText(files[0]);
     }
   
     function saveDesign() {
@@ -703,7 +695,7 @@ var CameraButtons = function(blueprint3d) {
       widget: false
     }
     const blueprint3d = new Blueprint3d(opts);
-    const comensalUtils = new ComensalUtils(blueprint3d.three.controls, blueprint3d.three.getController(), blueprint3d.three.getScene().getItems(), 'comensales-content');
+    const comensalUtils = new ComensalUtils(blueprint3d.three.controls, blueprint3d.three.getController(), blueprint3d.three.getScene(), 'comensales-content');
   
     const modalEffects = new ModalEffects(blueprint3d);
     const viewerFloorplanner = new ViewerFloorplanner(blueprint3d);

@@ -102,8 +102,9 @@ class ComensalListObject {
     }
 
     remove(table) {
-        table.unboundItem(this)
+        console.log(table)
         table.remove(this.comensalList);
+        table.unboundItem(this)
     }
 }
 

@@ -5,11 +5,12 @@ import { v4 as uuid } from 'uuid';
 class ComensalUtils {
     static initialId = 1;
 
-    constructor(controls, controller, items, container) {
+    constructor(controls, controller, scene, container) {
         ComensalDrag.setControls(controls);
         ComensalDrag.setController(controller);
-        this.#fillComensalListObjectArray(items);
+        this.scene = scene;
         this.container = container;
+        this.#fillComensalListObjectArray();
     }
 
 
@@ -30,10 +31,11 @@ class ComensalUtils {
         return uuid();
     }
 
-    #fillComensalListObjectArray(items) {
+    #fillComensalListObjectArray() {
         // Funcion extra que puede servir en el futuro para rellenar la lista de comensales.
 
         this.allComensalListObject = [];
+        const items = this.scene.getItems();
 
         items.forEach(item => {
             if (item.metadata.istable){
@@ -92,6 +94,30 @@ class ComensalUtils {
             comensalListObject.modifyComensal(params);
         else
             console.error('No se ha encontrado la lista de comensales de la mesa');
+    }
+
+    clearLists() {
+        ComensalUtils.initialId = 1;
+        this.allComensalListObject.forEach(comensalListObject => {
+            const table = this.tableFromComensalListObject(comensalListObject);
+            comensalListObject.remove(table);
+        })
+        this.allComensalListObject = [];
+        ComensalDrag.setAllComensalListObject(this.allComensalListObject);
+    }
+
+    tableFromComensalListObject(comensalListObject) {
+        const items = this.scene.getItems();
+        let itemIndex = 0;
+        while (itemIndex < items.length) {
+            if (items[itemIndex].metadata.isTable) {
+                const tableComensalListObject = ComensalUtils.comensalListFromTable(items[itemIndex]);
+                if (tableComensalListObject && tableComensalListObject.uuid === comensalListObject.uuid) 
+                    return items[itemIndex];
+            }
+            itemIndex++;
+        }
+        return undefined;
     }
 
     /**
