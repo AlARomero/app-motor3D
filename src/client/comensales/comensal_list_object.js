@@ -53,6 +53,9 @@ class ComensalListObject {
         // Añade la lista desplegable al div contenedor
         div.appendChild(item);
 
+        // Se elimina el comportamiento por defecto de dragover (chrome no permite el drop en otros elementos por defecto)
+        ComensalHTML.removeDragOverDefault(div);
+
         // Crea el objeto CSS2D
         this.comensalList = new CSS2DObject(div);
         this.comensales = [];

@@ -16,6 +16,12 @@ function setController(newController) {
     controller = newController;
 }
 
+function removeDragOverDefault(html) {
+    html.addEventListener('dragover', (event) => {
+        event.preventDefault();
+    });
+}
+
 function setAllComensalListObject(newAllComensalListObject) {
     allComensalListObject = newAllComensalListObject;
 }
@@ -221,5 +227,6 @@ export {
     comensalesToHtml,
     setControls,
     setController,
-    setAllComensalListObject
+    setAllComensalListObject,
+    removeDragOverDefault
 }
