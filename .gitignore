@@ -104,7 +104,7 @@ out
 .cache
 
 # Docusaurus cache and generated files
-.docusaurus
+.docusauru
 
 # Serverless directories
 .serverless/
@@ -141,3 +141,9 @@ out
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+# Mac files
+.DS_Store
+
+# Too long size files
+Chalet_Bodas_02.gltf

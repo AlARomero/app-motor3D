@@ -128,7 +128,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 	      //renderer.outputEncoding = THREE.sRGBEncoding;
       
         //Carga del entorno (Iluminación o HDR)
-        var skybox = new ThreeSkybox(scene);
+        const skybox = new ThreeSkybox(scene);
 
         scope.controls = new ThreeControls(camera, domElement);
 

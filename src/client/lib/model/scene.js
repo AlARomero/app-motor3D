@@ -73,33 +73,27 @@ var Scene = function(model, textureDir) {
 
     const manager = new THREE.LoadingManager();
     manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-
-            console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-
+      $('#script-loading-screen').show();
+      console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
     };
 
     manager.onLoad = function ( ) {
-
-            console.log( 'Loading complete!');
-            this.needsUpdate = true;
-            if (scope.getCargandoEscena()) {
-                utils.writeDebug('Ha finalizado la carga de la escena');
-                scope.setCargandoEscena(false);
-            }
-
+      $('#script-loading-screen').hide();
+      console.log( 'Loading complete!');
+      this.needsUpdate = true;
+      if (scope.getCargandoEscena()) {
+          utils.writeDebug('Ha finalizado la carga de la escena');
+          scope.setCargandoEscena(false);
+      }
     };
 
 
     manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
-
-            console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-
+      console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
     };
 
     manager.onError = function ( url ) {
-
-            console.log( 'There was an error loading ' + url );
-
+      console.log( 'There was an error loading ' + url );
     };
     
   // init item loader
@@ -189,6 +183,19 @@ var Scene = function(model, textureDir) {
       return sc;
       
       
+  }
+
+  this.loadSkyGltf = function(location) {
+    return new Promise((resolve, reject) => {
+      loaderGLTF.load(location, (gltf) => {
+        const model = gltf.scene;
+        this.add(model);
+        this.needsUpdate = true;
+        resolve(model);
+      }, undefined, function (error) {
+        reject(error);
+      });
+    });
   }
 
   this.getItems = function() {
