@@ -228,5 +228,5 @@ export {
     setControls,
     setController,
     setAllComensalListObject,
-    removeDragOverDefault
+    removeDragOverDefault,
 }

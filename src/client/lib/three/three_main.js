@@ -1,5 +1,5 @@
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
 
 import * as THREE from 'three';
 var JQUERY = require('jquery');
@@ -49,7 +49,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
   var camera;
   var renderer;
-  let css2DRenderer;
+  let css3DRenderer;
   this.lights;
   //var composer;
   
@@ -165,13 +165,13 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
         domElement.appendChild(renderer.domElement);
 
-        /* CSS2DRenderer */
-        css2DRenderer = new CSS2DRenderer();
-        css2DRenderer.setSize(window.innerWidth, window.innerHeight); // Asegúrate de que el tamaño del renderer coincide con el de tu WebGLRenderer
-        css2DRenderer.domElement.style.position = 'absolute'; // Posiciona el elemento DOM del renderer en la esquina superior izquierda de la página
-        css2DRenderer.domElement.style.top = 0;
-        domElement.appendChild(css2DRenderer.domElement); // Agrega el elemento DOM del renderer a tu página HTML
-        /* End CSS2DRenderer */
+        /* CSS3DRenderer */
+        css3DRenderer = new CSS3DRenderer();
+        css3DRenderer.setSize(window.innerWidth, window.innerHeight); // Asegúrate de que el tamaño del renderer coincide con el de tu WebGLRenderer
+        css3DRenderer.domElement.style.position = 'absolute'; // Posiciona el elemento DOM del renderer en la esquina superior izquierda de la página
+        css3DRenderer.domElement.style.top = 0;
+        domElement.appendChild(css3DRenderer.domElement); // Agrega el elemento DOM del renderer a tu página HTML
+        /* End CSS3DRenderer */
 
         // handle window resizing
         scope.updateWindowSize();
@@ -340,8 +340,8 @@ var ThreeMain = function(model, element, canvasElement, opts) {
       renderer.clearDepth();
       renderer.render(hud.getScene(), camera); 
 
-      css2DRenderer.render(scene.getScene(), camera);
-      css2DRenderer.render(hud.getScene(), camera);
+      css3DRenderer.render(scene.getScene(), camera);
+      css3DRenderer.render(hud.getScene(), camera);
     }
     lastRender = Date.now();
   };

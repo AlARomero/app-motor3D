@@ -1,4 +1,4 @@
-import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
+import { CSS3DObject } from "three/examples/jsm/renderers/CSS3DRenderer";
 import * as ComensalHTML from './comensal_drag';
 import { v4 as uuid } from 'uuid';
 
@@ -57,7 +57,7 @@ class ComensalListObject {
         ComensalHTML.removeDragOverDefault(div);
 
         // Crea el objeto CSS2D
-        this.comensalList = new CSS2DObject(div);
+        this.comensalList = new CSS3DObject(div);
         this.comensales = [];
         this.boundToTable(table);
     }

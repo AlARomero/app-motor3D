@@ -10,7 +10,9 @@ class ComensalUtils {
         ComensalDrag.setController(controller);
         this.scene = scene;
         this.container = container;
+        this.controls = controls;
         this.#fillComensalListObjectArray();
+        this.controls.cameraMovedCallbacks.add(() => {this.#positionAllComensalList(controls)});
     }
 
 
@@ -19,12 +21,21 @@ class ComensalUtils {
         if (!comensalListObject) {
             // Como todas las mesas deben tener una lista de comensales, se crea si no existe.
             comensalListObject = new ComensalListObject(table);
+            comensalListObject.comensalList.lookAt(this.controls.object.position);
             this.allComensalListObject.push(comensalListObject);
 
             // Se actualiza la lista de todos los comensales que hay en ComensalDrag.
             ComensalDrag.setAllComensalListObject(this.allComensalListObject);
         }
         comensalListObject.selected(this.container);
+    }
+
+    // Actualiza la posición de todas las listas de comensales para que miren a la cámara.
+    #positionAllComensalList(controls) {
+        this.allComensalListObject.forEach(comensalListObject => {
+            comensalListObject.comensalList.lookAt(controls.object.position);
+            console.log(comensalListObject.comensalList.element.style.transform);
+        });
     }
 
     #getNewComensalId() {
@@ -68,6 +79,7 @@ class ComensalUtils {
         if(!comensalListObject) {
             // Como todas las mesas deben tener una lista de comensales, se crea si no existe.
             comensalListObject = new ComensalListObject(table);
+            comensalListObject.comensalList.lookAt(this.controls.object.position);
             this.allComensalListObject.push(comensalListObject);
             // Se actualiza la lista de todos los comensales que hay en ComensalDrag.
             ComensalDrag.setAllComensalListObject(this.allComensalListObject);
