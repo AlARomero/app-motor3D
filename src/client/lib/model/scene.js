@@ -89,6 +89,7 @@ var Scene = function(model, textureDir) {
 
 
     manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+      $('#progress-bar').val(itemsLoaded / itemsTotal * 100);
       console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
     };
 
@@ -896,7 +897,7 @@ var Scene = function(model, textureDir) {
             //loaderCallback(object.scene.children[0], materials);
             //loaderCallback(object.scene.children[0].geometry, object.scene.children[0].material);
         }, 
-        function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' ); });
+        function ( xhr ) { console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );});
         //function ( error ) { console.log( 'An error happened' ); } );
         
     // LOADING OBJ    

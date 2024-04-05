@@ -178,3 +178,48 @@ div {
 .m-t-0-5 {
   margin-top: 0.5rem;
 }
+
+#script-loading-screen {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-color: #808080; /* Cambia el color de fondo a gris opaco */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#progress-bar {
+  width: 30%;
+  margin-top: 0.5%;
+  height: 2%;
+  background: #ddd; /* Cambia el color de fondo de la barra a gris claro */
+  border: none; /* Elimina el borde predeterminado */
+  border-radius: 3px; /* Añade bordes redondeados */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2); /* Añade un poco de sombra interna para darle profundidad */
+}
+
+#progress-bar::-webkit-progress-bar {
+  background: #ddd; /* Cambia el color de fondo de la barra a gris claro para Webkit */
+  border-radius: 3px
+}
+
+#progress-bar::-webkit-progress-value {
+  background: #4a90e2; /* Cambia el color de la barra de progreso a azul para Webkit */
+  border-radius: 3px;
+}
+
+#progress-bar::-moz-progress-bar {
+  background: #4a90e2; /* Cambia el color de la barra de progreso a azul para Firefox */
+  border-radius: 3px;
+}
+
+#script-loading-screen label{
+  color: white;
+  font-size: 2rem;
+}

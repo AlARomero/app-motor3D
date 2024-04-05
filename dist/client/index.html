@@ -461,11 +461,9 @@
 
   </div>
 
-  <div id="script-loading-screen"
-    style="position: fixed; left: 0; top: 0; width: 100%; height: 100%; background-color: rgb(97, 97, 97); z-index: 9999; display: flex; justify-content: center; align-items: center;">
-    <div class="spinner-border text-primary" style="width: 5rem; height: 5rem;" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
+  <div id="script-loading-screen">
+    <label for="progress-bar">Loading...</label>
+    <progress id="progress-bar" value="0" max="100"></progress>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
