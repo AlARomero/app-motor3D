@@ -87,11 +87,10 @@ var CameraButtons = function(blueprint3d) {
    * Context menu for selected item
    */ 
   
-  var ContextMenu = function(blueprint3d, comensalUtils) {
+  var ContextMenu = function(blueprint3d, comensalUtils, mainMenu) {
   
-    var scope = this;
-    var selectedItem;
-    var three = blueprint3d.three;
+    let selectedItem;
+    let three = blueprint3d.three;
   
     function init() {
 
@@ -146,6 +145,7 @@ var CameraButtons = function(blueprint3d) {
           var checked = $(this).prop('checked');
           selectedItem.setFixed(checked);
       });
+      $("#context-menu").hide();
     }
   
     function cmToIn(cm) {
@@ -195,8 +195,10 @@ var CameraButtons = function(blueprint3d) {
       // Se inicializan los comensales (en el caso de ser una mesa)
       initComensales();
 
-      /*Se muestra el context menu (sin el control de elevacion aunque este esta        */
-      /*  dentro del context menu, se muestra o no segun el tipo de objeto seleccionado)*/
+      /*
+      Se muestra el context menu (sin el control de elevacion aunque este esta
+      dentro del context menu, se muestra o no segun el tipo de objeto seleccionado)
+      */
       $("#context-menu").show();
 
       $("#fixed").prop('checked', item.fixed); //TODO Por que esto esta aqui?
@@ -249,6 +251,7 @@ var CameraButtons = function(blueprint3d) {
       $("#actual-elevation-value").on('change', setNewItemPosition);
     }
   
+    // Se deselecciona el objeto, se oculta el context menu
     function itemUnselected() {
       selectedItem = null;
       $("#context-menu").hide();
@@ -268,44 +271,100 @@ var CameraButtons = function(blueprint3d) {
   
     init();
   }
-  
-  /*
-   * Loading modal for items
-   */
-  
-  var ModalEffects = function(blueprint3d) {
-  
-    var scope = this;
-    var blueprint3d = blueprint3d;
-    var itemsLoading = 0;
-  
-    this.setActiveItem = function(active) {
-      itemSelected = active;
-      update();
+
+  const MainMenu = function(blueprint3d, comensalUtils, sideMenu, mainControls){
+    const scope = this;
+    const three = blueprint3d.three;
+    this.selectedItem = undefined; 
+    this.lastSelectedItem = undefined;
+    
+    this.mainMenuStates = {
+      'CLEAN': 0,
+      'LIST_VIEW_MODE': 1,
+      'LIST_EDIT_MODE': 2
     }
-  
-    function update() {
-      if (itemsLoading > 0) {
-        $("#loading-modal").show();
-      } else {
-        $("#loading-modal").hide();
+    this.actualState = this.mainMenuStates.LIST_EDIT_MODE;
+
+    function init() {
+      
+      $("#main-menu-mode-clean").on('click', () => {changeState(scope.mainMenuStates.CLEAN)});
+      $("#main-menu-mode-list-view").on('click', () => {changeState(scope.mainMenuStates.LIST_VIEW_MODE)});
+      $("#main-menu-mode-list-edit").on('click', () => {changeState(scope.mainMenuStates.LIST_EDIT_MODE)});
+
+
+      // Se agregan a las callbacks cuando debe mostrarse o no el menu principal
+      three.itemSelectedCallbacks.add(hideMenu);
+      three.itemSelectedCallbacks.add(checkSelectedTable);
+      three.itemUnselectedCallbacks.add(checkUnselectedTable);
+      three.nothingClicked.add(showMenu);
+      three.wallClicked.add(hideMenu);
+      three.floorClicked.add(hideMenu);
+      three.getScene().itemLoadedCallbacks.add(checkNewTable);
+      sideMenu.stateChangeCallbacks.add(changeMenuVisibility);
+      mainControls.newModelLoadedCallbacks.add(() => {changeState($("#main-menu-mode-list-edit").trigger('click'))});
+
+      $("#main-menu-mode-list-edit").trigger('click');
+    }
+
+    function changeMenuVisibility(state) {
+      if (state === sideMenu.states.DEFAULT)
+        showMenu();
+      else 
+        hideMenu();
+    }
+
+    function hideMenu() {
+      $("#main-menu").hide();
+    }
+    
+    function showMenu() {
+      $("#main-menu").show();
+    }
+
+    function changeState(newState) {
+      if (scope.actualState === newState)
+        return;
+      switch (newState) {
+        case scope.mainMenuStates.CLEAN:
+          comensalUtils.hideAllLists();
+          scope.actualState = scope.mainMenuStates.CLEAN;
+          break;
+        case scope.mainMenuStates.LIST_VIEW_MODE:
+          comensalUtils.hideAllLists();
+          scope.actualState = scope.mainMenuStates.LIST_VIEW_MODE;
+          break;
+        case scope.mainMenuStates.LIST_EDIT_MODE:
+          comensalUtils.showAllLists();
+          scope.actualState = scope.mainMenuStates.LIST_EDIT_MODE;
+          break;
+      }
+      three.getScene().needsUpdate = true;
+    }
+
+    function checkNewTable(table) {
+      if (table.metadata.isTable && (scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE || scope.actualState === scope.mainMenuStates.CLEAN)) {
+        comensalUtils.hideList(table);
+        three.getScene().needsUpdate = true;
       }
     }
-  
-    function init() {
-      blueprint3d.model.scene.itemLoadingCallbacks.add(function() {
-        itemsLoading += 1;
-        update();
-      });
-  
-       blueprint3d.model.scene.itemLoadedCallbacks.add(function() {
-        itemsLoading -= 1;
-        update();
-      });   
-  
-      update();
+
+    function checkSelectedTable(item) {
+      scope.lastSelectedItem = scope.selectedItem;
+      scope.selectedItem = item;
+      if (scope.lastSelectedItem?.metadata.isTable && scope.selectedItem && scope.lastSelectedItem !== scope.selectedItem && scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE) {
+        comensalUtils.hideList(scope.lastSelectedItem);
+        three.getScene().needsUpdate = true;
+      }
     }
-  
+
+    function checkUnselectedTable() {
+      if (scope.selectedItem?.metadata.isTable && scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE) {
+        comensalUtils.hideList(scope.selectedItem);
+        three.getScene().needsUpdate = true;
+      }
+    }
+
+    // Se inicializa
     init();
   }
   
@@ -313,10 +372,9 @@ var CameraButtons = function(blueprint3d) {
    * Side menu
    */
   
-  var SideMenu = function(blueprint3d, floorplanControls, modalEffects) {
+  var SideMenu = function(blueprint3d, floorplanControls) {
     var blueprint3d = blueprint3d;
     var floorplanControls = floorplanControls;
-    var modalEffects = modalEffects;
   
     const CHECKED = "checked";
   
@@ -654,11 +712,15 @@ var CameraButtons = function(blueprint3d) {
     init();
   }; 
   
-  var mainControls = function(blueprint3d, comensalUtils) {
+  var MainControls = function(blueprint3d, comensalUtils) {
+
+    const scope = this;
+    this.newModelLoadedCallbacks = $.Callbacks();
 
     function newDesign() {
       comensalUtils.clearLists();
       blueprint3d.model.loadSerialized('{"floorplan":{"corners":{"f90da5e3-9e0e-eba7-173d-eb0b071e838e":{"x":204.85099999999989,"y":289.052},"da026c08-d76a-a944-8e7b-096b752da9ed":{"x":672.2109999999999,"y":289.052},"4e3d65cb-54c0-0681-28bf-bddcc7bdb571":{"x":672.2109999999999,"y":-178.308},"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2":{"x":204.85099999999989,"y":-178.308}},"walls":[{"corner1":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","corner2":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","corner2":"da026c08-d76a-a944-8e7b-096b752da9ed","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"da026c08-d76a-a944-8e7b-096b752da9ed","corner2":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","corner2":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}}],"wallTextures":[],"floorTextures":{},"newFloorTextures":{}},"items":[]}');
+      scope.newModelLoadedCallbacks.fire();
     }
   
     function loadDesign() {
@@ -671,6 +733,7 @@ var CameraButtons = function(blueprint3d) {
           blueprint3d.model.loadSerialized(data);
       }
       reader.readAsText(files[0]);
+      scope.newModelLoadedCallbacks.fire();
     }
   
     function saveDesign() {
@@ -710,13 +773,13 @@ var CameraButtons = function(blueprint3d) {
     const blueprint3d = new Blueprint3d(opts);
     const comensalUtils = new ComensalUtils(blueprint3d.three.controls, blueprint3d.three.getController(), blueprint3d.three.getScene(), 'comensales-content');
   
-    const modalEffects = new ModalEffects(blueprint3d);
     const viewerFloorplanner = new ViewerFloorplanner(blueprint3d);
-    const contextMenu = new ContextMenu(blueprint3d, comensalUtils);
-    const sideMenu = new SideMenu(blueprint3d, viewerFloorplanner, modalEffects);
+    const sideMenu = new SideMenu(blueprint3d, viewerFloorplanner);
     const wallAndFloorSelector = new WallAndFloorSelector(blueprint3d, sideMenu);        
     const cameraButtons = new CameraButtons(blueprint3d);
-    mainControls(blueprint3d, comensalUtils);
+    const mainControls = new MainControls(blueprint3d, comensalUtils);
+    const mainMenu = new MainMenu(blueprint3d, comensalUtils, sideMenu, mainControls);
+    const contextMenu = new ContextMenu(blueprint3d, comensalUtils, mainMenu);
     
     // This serialization format needs work
     // Load a simple rectangle room

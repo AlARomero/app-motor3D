@@ -51,6 +51,29 @@
           </label>
         </div>
 
+        <!-- Main Menu -->
+        <div class="row mx-auto" id="main-menu">
+          <div class="mx-auto">
+            <!-- Modos de vista de listas de comensales -->
+            <div class="d-flex">
+              <h5 class="mx-auto">View Mode</h5>
+            </div>
+            <div class="btn-group" role="group" aria-label="main-menu-mode">
+
+              <!-- Modo limpio -->
+              <input type="radio" class="btn-check" name="main-menu-radio" id="main-menu-mode-clean">
+              <label class="btn btn-outline-secondary" for="main-menu-mode-clean">Clean Mode</label>
+
+              <!-- Modo  una sola lista-->
+              <input type="radio" class="btn-check" name="main-menu-radio" id="main-menu-mode-list-view">
+              <label class="btn btn-outline-secondary" for="main-menu-mode-list-view">List View Mode</label>
+
+              <!-- Modo edicion de listas -->
+              <input type="radio" class="btn-check" name="main-menu-radio" id="main-menu-mode-list-edit">
+              <label class="btn btn-outline-secondary" for="main-menu-mode-list-edit">List Edit Mode</label>
+            </div>
+          </div>
+        </div>
         <!-- Context Menu -->
         <div class="row mx-auto" id="context-menu">
           <div class="mx-auto">
@@ -414,10 +437,6 @@
                   d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
               </svg>
             </a>
-          </div>
-
-          <div id="loading-modal">
-            <h1>Loading...</h1>
           </div>
         </div>
 

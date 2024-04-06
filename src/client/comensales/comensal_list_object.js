@@ -72,6 +72,14 @@ class ComensalListObject {
         this.comensalList.element.querySelector(`#btn-${this.uuid}`).textContent = newName;
     }
 
+    hideList() {
+        this.comensalList.visible = false;
+    }
+
+    showList() {
+        this.comensalList.visible = true;
+    }
+
     addComensal(comensal, container) {
         const html = document.createElement('li');
         html.textContent = comensal.nombre;

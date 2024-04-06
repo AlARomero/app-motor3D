@@ -37,6 +37,32 @@ class ComensalUtils {
         comensalListObject.selected(this.container);
     }
 
+    hideAllLists() {
+        this.allComensalListObject.forEach(comensalListObject => {
+            comensalListObject.hideList();
+        });
+    }
+
+    showAllLists() {
+        this.allComensalListObject.forEach(comensalListObject => {
+            comensalListObject.showList();
+        });
+    }
+
+    showList(table) {
+        const comensalListObject = ComensalUtils.comensalListFromTable(table);
+        if (comensalListObject) {
+            comensalListObject.showList();
+        }
+    }
+
+    hideList(table) {
+        const comensalListObject = ComensalUtils.comensalListFromTable(table);
+        if (comensalListObject) {
+            comensalListObject.hideList();
+        }
+    }
+
     // Actualiza la posición de todas las listas de comensales para que miren a la cámara.
     #positionAllComensalList(controls) {
         this.allComensalListObject.forEach(comensalListObject => {
