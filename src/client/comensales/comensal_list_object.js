@@ -60,6 +60,7 @@ class ComensalListObject {
         this.comensalList = new CSS3DObject(div);
         this.comensales = [];
         this.boundToTable(table);
+        this.comensalList.position.set(0, 50, 0);
     }
 
     selected(container) {
@@ -102,7 +103,6 @@ class ComensalListObject {
     }
 
     remove(table) {
-        console.log(table)
         table.remove(this.comensalList);
         table.unboundItem(this)
     }

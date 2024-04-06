@@ -167,7 +167,6 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
         /* CSS3DRenderer */
         css3DRenderer = new CSS3DRenderer();
-        css3DRenderer.setSize(window.innerWidth, window.innerHeight); // Asegúrate de que el tamaño del renderer coincide con el de tu WebGLRenderer
         css3DRenderer.domElement.style.position = 'absolute'; // Posiciona el elemento DOM del renderer en la esquina superior izquierda de la página
         css3DRenderer.domElement.style.top = 0;
         domElement.appendChild(css3DRenderer.domElement); // Agrega el elemento DOM del renderer a tu página HTML
@@ -677,6 +676,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     camera.updateProjectionMatrix();
 
     renderer.setSize(scope.elementWidth, scope.elementHeight);
+    css3DRenderer.setSize(scope.elementWidth, scope.elementHeight);
     //composer.setSize(scope.elementWidth, scope.elementHeight);
     
     needsUpdate = true;
