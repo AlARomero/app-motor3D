@@ -102,10 +102,24 @@ var CameraButtons = function(blueprint3d) {
           selectedItem.remove();
       });
 
-      // Se agrega el evento para el boton de guardar edicion de descripcion
-      $("#save-description").on('click', () => {
+      // Se agrega el evento para el boton de guardar edicion del item
+      $("#save-item-options").on('click', () => {
+
         selectedItem.metadata.itemDescription = $("#description-textarea").val();
-        changeDescriptionOnDisplay();
+        const newName = $("#item-name-input").val();
+
+        // Se verifica si el objeto seleccionado es una mesa, si tiene una lista de comensales y si ha cambiado el nombre
+        if (selectedItem.metadata.isTable) {
+          const comensalListObject = ComensalUtils.comensalListFromTable(selectedItem);
+          if (comensalListObject && selectedItem.metadata.itemName !== newName){
+            // Se modifica su nombre
+            comensalUtils.changeComensalListName(comensalListObject, newName)
+          }
+        }
+
+        // Se terminan de realizar los cambios generales al item
+        selectedItem.metadata.itemName = newName;
+        changeItemOnDisplay();
         $('#close-description-modal').trigger('click');
       });
 
@@ -116,7 +130,7 @@ var CameraButtons = function(blueprint3d) {
       // Se agrega el evento para el boton de guardar edicion de comensales
       $("#save-comensal").on('click', (e) => {
         const id = $('#id-del-comensal-seleccionado').text();
-        const params = {id: id, nombre: $("#nombre-comensal").val()};
+        const params = {id: id, nombre: $("#nombre-comensal").val(), descripcion: $("#descripcion-comensal").val()};
         comensalUtils.modificaComensal(selectedItem, params);
         $('#close-comensal-modal').trigger('click');
       });
@@ -142,18 +156,17 @@ var CameraButtons = function(blueprint3d) {
       return inches * 2.54;
     }
   
-    function changeDescriptionOnDisplay() {
+    function changeItemOnDisplay() {
+      $("#context-menu-name").text(selectedItem.metadata.itemName);
       $("#item-description").text(selectedItem.metadata.itemDescription);
     }
 
     function itemSelected(item) {
       selectedItem = item;
 
-      // Se actualiza el nombre del objeto seleccionado en el context menu
-      $("#context-menu-name").text(item.metadata.itemName);
-
       // Se actualiza la descripcion (tambien la del modal de edicion de descripcion)
-      changeDescriptionOnDisplay();
+      changeItemOnDisplay();
+      $("#item-name-input").val(item.metadata.itemName);
       $("#description-textarea").val(item.metadata.itemDescription);
       
       

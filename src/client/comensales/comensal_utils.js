@@ -15,17 +15,24 @@ class ComensalUtils {
         this.controls.cameraMovedCallbacks.add(() => {this.#positionAllComensalList(controls)});
     }
 
+    #createComensalListObject(table) {
+
+        const comensalListObject = new ComensalListObject(table);
+        this.#positionComensalList(comensalListObject, this.controls);
+        this.allComensalListObject.push(comensalListObject);
+        
+        // Se actualiza la lista de todos los comensales que hay en ComensalDrag.
+        ComensalDrag.setAllComensalListObject(this.allComensalListObject);
+
+        return comensalListObject;
+    }
+
 
     selected(table) {
         let comensalListObject = ComensalUtils.comensalListFromTable(table);
         if (!comensalListObject) {
             // Como todas las mesas deben tener una lista de comensales, se crea si no existe.
-            comensalListObject = new ComensalListObject(table);
-            this.#positionComensalList(comensalListObject, this.controls);
-            this.allComensalListObject.push(comensalListObject);
-
-            // Se actualiza la lista de todos los comensales que hay en ComensalDrag.
-            ComensalDrag.setAllComensalListObject(this.allComensalListObject);
+            comensalListObject = this.#createComensalListObject(table);
         }
         comensalListObject.selected(this.container);
     }
@@ -63,33 +70,45 @@ class ComensalUtils {
         ComensalDrag.setAllComensalListObject(this.allComensalListObject);
     }
 
+    /* 
+    Al cargar un floorplan ya existente, comensalListObject es reconocido como solo Object (json),
+    por lo que se crea una nueva instancia y se transfieren los comensales.
+    */
     comensalListFromObject(comensalListFromObject, table) {
         const comensales = comensalListFromObject.comensales;
 
+        // Si no hay comensales, se crea la lista de comensales vacia y se sale de la funcion.
+        if (comensales.length === 0) {
+            this.#createComensalListObject(table);
+            return;
+        }
+
+        // Si hay comensales se añaden comensales a la mesa (esto crea automaticamente la lista de comensales si esta no existe).
         comensales.forEach(comensal => {
             const opts = {
                 id: comensal.id,
-                nombre: comensal.nombre
+                nombre: comensal.nombre,
+                descripcion: comensal.descripcion
             };
             
             this.addComensal(table, opts);
         });
     }
 
+    changeComensalListName(comensalListObject, newName) {
+        comensalListObject.changeListName(newName);
+    }
+
     addComensal(table, opts = undefined) {
         let comensalListObject = ComensalUtils.comensalListFromTable(table);
-        let idComensal, nameComensal;
+        let idComensal, nameComensal, descripcion;
         if(!comensalListObject) {
-            // Como todas las mesas deben tener una lista de comensales, se crea si no existe.
-            comensalListObject = new ComensalListObject(table);
-            this.#positionComensalList(comensalListObject, this.controls);
-            this.allComensalListObject.push(comensalListObject);
-            // Se actualiza la lista de todos los comensales que hay en ComensalDrag.
-            ComensalDrag.setAllComensalListObject(this.allComensalListObject);
+            comensalListObject = this.#createComensalListObject(table);
         }
         if (opts){
             idComensal = opts.id;
             nameComensal = opts.nombre;
+            descripcion = opts.descripcion;
         }
         else {
             idComensal = this.#getNewComensalId();
@@ -97,7 +116,8 @@ class ComensalUtils {
         }
         const comensal = {
             id: idComensal,
-            nombre: nameComensal
+            nombre: nameComensal,
+            descripcion: descripcion
         };
         comensalListObject.addComensal(comensal, this.container);
         ComensalUtils.initialId++;

@@ -22,11 +22,12 @@ class ComensalListObject {
 
         // Crea el botón para desplegar la lista
         const button = document.createElement('button');
+        button.id = `btn-${this.uuid}`;
         button.className = 'accordion-button collapsed';
         button.type = 'button';
         button.dataset.bsToggle = 'collapse';
         button.dataset.bsTarget = `#collapse-${this.uuid}`;
-        button.textContent = 'Comensales';
+        button.textContent = table.metadata.itemName;
         ComensalHTML.addDeactivateControlsEvent(button);
 
         // Añade el botón al encabezado
@@ -65,6 +66,10 @@ class ComensalListObject {
 
     selected(container) {
         ComensalHTML.comensalesToHtml(this, container);
+    }
+
+    changeListName(newName) {
+        this.comensalList.element.querySelector(`#btn-${this.uuid}`).textContent = newName;
     }
 
     addComensal(comensal, container) {

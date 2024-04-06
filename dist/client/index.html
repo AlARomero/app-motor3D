@@ -62,7 +62,7 @@
                 <p class="mb-3 text-break" id="item-description"></p>
                 <div class="mt-auto align-self-end">
                   <button class="btn btn-secondary float-right" type="button" data-bs-toggle="modal"
-                    data-bs-target="#modal-description">
+                    data-bs-target="#modal-item-options">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                       class="bi bi-pencil-square" viewBox="0 0 16 16">
                       <path
@@ -74,21 +74,30 @@
                 </div>
               </div>
             </div>
-            <!-- MODAL DE DESCRIPCION -->
-            <div class="modal fade" id="modal-description" tabindex="-1" aria-labelledby="modal-description-label"
+            <!-- MODAL DE ITEM -->
+            <div class="modal fade" id="modal-item-options" tabindex="-1" aria-labelledby="modal-item-options-label"
               aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title fs-5" id="modal-description-label">Change Description</h5>
+                    <h5 class="modal-title fs-5" id="modal-item-options">Change Item Options</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"
                       id="close-description-modal"></button>
                   </div>
                   <div class="modal-body">
-                    <textarea class="form-control" id="description-textarea" rows="3"></textarea>
+                    <form onsubmit="false">
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control" placeholder="name" id="item-name-input"></input>
+                        <label for="item-name">Name</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="description" id="description-textarea"></textarea>
+                        <label for="description-textarea">Description</label>
+                      </div>
+                    </form>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="save-description">Save changes</button>
+                    <button type="button" class="btn btn-primary" id="save-item-options">Save changes</button>
                   </div>
                 </div>
               </div>
@@ -198,10 +207,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close-comensal-modal" id="close-comensal-modal"></button>
                   </div>
                   <div class="modal-body">
-                    <form>
-                      <div class="mb-3">
-                        <label for="nombre-comensal" class="col-form-label">Nombre:</label>
-                        <textarea class="form-control" id="nombre-comensal"></textarea>
+                    <form onsubmit="false">
+                      <div class="form-floating mb-3">
+                        <input type="text" class="form-control" placeholder="name" id="nombre-comensal"></input>
+                        <label for="nombre-comensal">Name</label>
+                      </div>
+                      <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="description" id="descripcion-comensal"></textarea>
+                        <label for="description-comensal">Description</label>
                       </div>
                     </form>
                   </div>

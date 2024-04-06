@@ -92,6 +92,7 @@ function handleDragEnd(event) {
         const comensal = {
             id: this.id.split('_')[1],
             nombre: this.textContent,
+            descripcion: prevComensalListObject.comensales.find(c => c.id === this.id.split('_')[1]).descripcion
         }
 
         // Se elimina de la lista anterior.
@@ -170,6 +171,7 @@ function fillPlaceholder(comensal) {
     $('#id-del-comensal-seleccionado').text(comensal.id);
     $('#comensales-modal-label').text('Rename comensal: ' + comensal.nombre);
     $('#nombre-comensal').val(comensal.nombre);
+    $('#descripcion-comensal').val(comensal.descripcion);
 }
 
 /**
