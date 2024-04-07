@@ -306,6 +306,7 @@ var CameraButtons = function(blueprint3d) {
       $("#main-menu-mode-list-edit").trigger('click');
     }
 
+    // Muestra o esconde el menu principal segun deba verse
     function changeMenuVisibility(state) {
       if (state === sideMenu.states.DEFAULT)
         showMenu();
@@ -313,14 +314,17 @@ var CameraButtons = function(blueprint3d) {
         hideMenu();
     }
 
+    // Esconde el menu principal
     function hideMenu() {
       $("#main-menu").hide();
     }
     
+    // Muestra el menu principal
     function showMenu() {
       $("#main-menu").show();
     }
 
+    // Funcion que cambia el estado del menu principal al nuevo indicado
     function changeState(newState) {
       if (scope.actualState === newState)
         return;
@@ -341,6 +345,7 @@ var CameraButtons = function(blueprint3d) {
       three.getScene().needsUpdate = true;
     }
 
+    // Revisa si el nuevo item es una mesa y, si lo es y el actual estado indica que hay que ocultar listas, se oculta la lista de la mesa
     function checkNewTable(table) {
       if (table.metadata.isTable && (scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE || scope.actualState === scope.mainMenuStates.CLEAN)) {
         comensalUtils.hideList(table);
@@ -348,13 +353,26 @@ var CameraButtons = function(blueprint3d) {
       }
     }
 
+    // Funcion que revisa los items seleccionados y esconde o muestra listas segun corresponda
     function checkSelectedTable(item) {
+      // Se actualiza el item seleccionado
       scope.lastSelectedItem = scope.selectedItem;
       scope.selectedItem = item;
-      if (scope.lastSelectedItem?.metadata.isTable && scope.selectedItem && scope.lastSelectedItem !== scope.selectedItem && scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE) {
+      
+      // Si el anterior era una mesa y el actual es una mesa, se oculta la lista del anterior y se muestra la del actual
+      if (scope.lastSelectedItem?.metadata.isTable && scope.selectedItem?.metadata.isTable && scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE) {
         comensalUtils.hideList(scope.lastSelectedItem);
+        comensalUtils.showList(scope.selectedItem);
         three.getScene().needsUpdate = true;
       }
+
+      // Si el anterior no era una mesa pero el actual sí, se muestra la lista del actual.
+      else if (scope.selectedItem?.metadata.isTable && scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE) {
+        comensalUtils.showList(scope.selectedItem);
+        three.getScene().needsUpdate = true;
+      }
+
+      // En los demas casos no se hace nada
     }
 
     function checkUnselectedTable() {

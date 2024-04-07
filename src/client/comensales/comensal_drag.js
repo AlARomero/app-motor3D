@@ -60,8 +60,6 @@ function handleDragStart(event) {
 
     // Crea una copia del elemento que se está arrastrando
     dragShadow = this.cloneNode(true);
-    dragShadow.style.position = 'fixed';
-    dragShadow.style.pointerEvents = 'none';
     document.body.appendChild(dragShadow);
 }
 
@@ -85,7 +83,7 @@ function handleDragEnd(event) {
     // Se busca si el punto donde se soltó el elemento está dentro de alguna lista de comensales.
     const newComensalListObject = findComensalListFromPoint(dropX, dropY);
 
-    if (newComensalListObject && prevComensalListObject !== newComensalListObject) {
+    if (newComensalListObject?.comensalList.visible && prevComensalListObject !== newComensalListObject) {
         // Si se soltó en una lista y las listas son diferentes, se maneja el cambio de lista.
 
         // Se obtiene el comensal que se está moviendo a traves de su html.

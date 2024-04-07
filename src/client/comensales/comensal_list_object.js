@@ -73,10 +73,12 @@ class ComensalListObject {
     }
 
     hideList() {
+        // Para evitar que funcione la api drag and drop, el elemento debe ser invisible, luego se usa para comprarar
         this.comensalList.visible = false;
     }
 
     showList() {
+        // Para que funcione la api drag and drop, el elemento debe estar visible, luego se usa para comprarar
         this.comensalList.visible = true;
     }
 
