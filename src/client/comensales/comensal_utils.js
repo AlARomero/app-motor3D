@@ -8,6 +8,7 @@ class ComensalUtils {
     constructor(controls, controller, scene, container) {
         ComensalDrag.setControls(controls);
         ComensalDrag.setController(controller);
+        ComensalDrag.addDeselectAllSelectedOnOutsideClickEvent();
         this.scene = scene;
         this.container = container;
         this.controls = controls;
@@ -15,6 +16,7 @@ class ComensalUtils {
         this.controls.cameraMovedCallbacks.add(() => {this.#positionAllComensalList(controls)});
     }
 
+    // Crea un comensalListObject y lo añade a la lista de todos los comensalListObject. Además actualiza la lista de comensales en ComensalDrag.
     #createComensalListObject(table) {
 
         const comensalListObject = new ComensalListObject(table);
@@ -28,6 +30,7 @@ class ComensalUtils {
     }
 
 
+    // Selecciona la lista de comensales de la mesa, muestra el side menu de los comensales
     selected(table) {
         let comensalListObject = ComensalUtils.comensalListFromTable(table);
         if (!comensalListObject) {
@@ -37,18 +40,21 @@ class ComensalUtils {
         comensalListObject.selected(this.container);
     }
 
+    // Esconde todos los objetos 3d de las listas de comensales de las mesas.
     hideAllLists() {
         this.allComensalListObject.forEach(comensalListObject => {
             comensalListObject.hideList();
         });
     }
 
+    // Muestra todos los objetos 3d de comensales de las mesas.
     showAllLists() {
         this.allComensalListObject.forEach(comensalListObject => {
             comensalListObject.showList();
         });
     }
 
+    // Muestra el objeto 3d de comensales de la mesa.
     showList(table) {
         const comensalListObject = ComensalUtils.comensalListFromTable(table);
         if (comensalListObject) {
@@ -56,10 +62,65 @@ class ComensalUtils {
         }
     }
 
+    // Esconde el objeto 3d de la lista de comensales de la mesa.
     hideList(table) {
         const comensalListObject = ComensalUtils.comensalListFromTable(table);
         if (comensalListObject) {
             comensalListObject.hideList();
+        }
+    }
+
+    // Si hay un comensal seleccionado en el side menu de comensales, se le sube una posicion en el array de comensales.
+    getComensalSideSelectedUp(table) {
+        const comensalSideSelected = ComensalDrag.getComensalSideSelected();
+
+        if (comensalSideSelected) {
+            /* 
+            Se obtiene el id del comensal seleccionado en el side menu de comensales 
+            (a traves de su elemento html, que esta construido en comensal_drag).
+            */
+            const id = comensalSideSelected.split('_')[2];
+            // Se obtiene la lista de comensales a traves de la mesa.
+            const comensalListObject = ComensalUtils.comensalListFromTable(table);
+            // Se obtiene el indice del comensal en la lista de comensales comparando con el extraido previamente (-1 si no lo encuentra).
+            const index = comensalListObject.comensales.findIndex(c => c.id === id);
+
+            /* 
+            Si existe y no es el primero, se intercambia el comensal seleccionado con 
+            el previo en la lista de comensales y se redibuja el side menu de comensales.
+            */
+            if (index > 0) {
+                let auxVar = comensalListObject.comensales[index];
+                comensalListObject.comensales[index] = comensalListObject.comensales[index - 1];
+                comensalListObject.comensales[index - 1] = auxVar;
+                comensalListObject.selected(this.container);
+            }
+        }
+    }
+
+    // Si hay un comensal seleccionado en el side menu de comensales, se le baja una posicion en el array de comensales.
+    getComensalSideSelectedDown(table) {
+        const comensalSideSelected = ComensalDrag.getComensalSideSelected();
+
+        if (comensalSideSelected) {
+            /* 
+            Se obtiene el id del comensal seleccionado en el side menu de comensales 
+            (a traves de su elemento html, que esta construido en comensal_drag).
+            */
+            const id = comensalSideSelected.split('_')[2];
+            const comensalListObject = ComensalUtils.comensalListFromTable(table);
+            // Se busca el indice (-1 si no lo encuentra)
+            const index = comensalListObject.comensales.findIndex(c => c.id === id);
+            /* 
+            Si existe y no es el ultimo comensal, 
+            se intercambia el comensal seleccionado con el siguiente en la lista de comensales y se redibuja el side menu de comensales.
+            */
+            if (index >= 0 && index < comensalListObject.comensales.length - 1) {
+                let auxVar = comensalListObject.comensales[index + 1];
+                comensalListObject.comensales[index + 1] = comensalListObject.comensales[index];
+                comensalListObject.comensales[index] = auxVar;
+                comensalListObject.selected(this.container);
+            }
         }
     }
 
@@ -70,10 +131,12 @@ class ComensalUtils {
         });
     }
 
+    // Actualiza la posición de la lista de comensales para que mire a la cámara.
     #positionComensalList(comensalListObject, controls) {
         comensalListObject.comensalList.lookAt(controls.object.position);
     }
 
+    // Crea un nuevo uuid para darselo a un comensal
     #getNewComensalId() {
         return uuid();
     }

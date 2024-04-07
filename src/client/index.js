@@ -133,6 +133,13 @@ var CameraButtons = function(blueprint3d) {
         comensalUtils.modificaComensal(selectedItem, params);
         $('#close-comensal-modal').trigger('click');
       });
+
+      $("#up-comensal-side-button").on('click', () => {
+        comensalUtils.getComensalSideSelectedUp(selectedItem);
+      });
+      $("#down-comensal-side-button").on('click', () => {
+        comensalUtils.getComensalSideSelectedDown(selectedItem);
+      });
   
       three.itemSelectedCallbacks.add(itemSelected);
       three.itemUnselectedCallbacks.add(itemUnselected);

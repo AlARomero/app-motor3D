@@ -7,6 +7,7 @@ let controller;
 let dropX, dropY;
 let dragShadow;
 let selectedComensalListObject;
+let comensalSideSelected = null;
 
 function setControls(newControls) {
     controls = newControls;
@@ -14,6 +15,10 @@ function setControls(newControls) {
 
 function setController(newController) {
     controller = newController;
+}
+
+function getComensalSideSelected() {
+    return comensalSideSelected;
 }
 
 function removeDragOverDefault(html) {
@@ -133,6 +138,26 @@ function findComensalListFromPoint(x, y) {
     return undefined;
 }
 
+// Funcion que sirve añadir evento para deseleccionar cualquier cosa seleccionable (que este seleccionado) si se hace clic fuera de ellos.
+function addDeselectAllSelectedOnOutsideClickEvent() {
+    // Si se hace clic fuera del container_comensal seleccionado, se deselecciona.
+    $(document).on('click', function(event) {
+        /* 
+        Si el clic no fue dentro del div seleccionado ni de los botones up/down 
+        (para esto hay que saber los id's de los botones up y down del comensal side menu).
+        Una vez se saben, se mira a ver si el clic fue dentro de alguno de esos elementos
+        o en alguno de sus descendientes o dentro del div (o en sus desdendientes).
+        */
+        if (!$(event.target).closest('.comensal-selected, #up-comensal-side-button, #down-comensal-side-button').length){
+
+            // Elimina la clase de selección
+            $('.comensal-selected').removeClass('comensal-selected');
+            // Actualiza el comensal seleccionado
+            comensalSideSelected = null;
+        }
+    });
+}
+
 /**
  * Añade eventos a los botones de la interfaz de comensales.
  * @param {ComensalListObject} comensalListObject - El objeto que contiene la lista de comensales.
@@ -142,7 +167,28 @@ function addEvent(comensalListObject, comensal) {
 
     $(`#btn-edit-${comensal.id}`).on('click', () => {fillPlaceholder(comensal)});
     $(`#btn-delete-${comensal.id}`).on('click', () => {deleteComensal(comensalListObject, comensal)});
+    $(`#container_comensal_${comensal.id}`).on('click', function() {changeComensalSideSelected(`container_comensal_${comensal.id}`);});
+}
 
+// Cambia el estilo del comensal seleccionado en el side menu de comensales.
+function changeComensalSideSelected(newComensalSideSelected) {
+    const $comensalSideSelected = $(`#${comensalSideSelected}`);
+    const $newComensalSideSelected = $(`#${newComensalSideSelected}`);
+
+    // Se deselecciona el comensal seleccionado (si hay comensal seleccionado).
+    if ($comensalSideSelected)
+        $comensalSideSelected.removeClass('comensal-selected');
+
+    // Si se ha vuelto a seleccionar el mismo comensal no se hace nada mas, no hay nuevo comensal seleccionado.
+    if (comensalSideSelected === newComensalSideSelected) {
+        comensalSideSelected = null;
+    }
+    else { // Si son diferentes, se deselecciona el anterior y se selecciona el nuevo.
+        $comensalSideSelected.removeClass('comensal-selected');
+        $newComensalSideSelected.addClass('comensal-selected');
+        // Se actualiza el comensal seleccionado.
+        comensalSideSelected = newComensalSideSelected;
+    }
 }
 
 /**
@@ -194,8 +240,18 @@ function comensalesToHtml(comensalListObject, container) {
  * @param {string} container - El contenedor donde se van a añadir los comensales.
  */
 function comensalToHtml(comensalListObject, comensal, container) {
+
+    /* 
+    Se añade la clase comensal-selected si el comensal está seleccionado. 
+    Si no, se deja en blanco. Se hace para que se siga viendo seleccionado si antes lo estaba. 
+    */
+    let selectedClass = '';
+    if (comensalSideSelected && comensalSideSelected === `container_comensal_${comensal.id}`)
+        selectedClass = 'comensal-selected';
+
+    // Se crea el html del comensal y se añade al contenedor.
     const html =  `
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center ${selectedClass}" id="container_comensal_${comensal.id}">
             <p id="comensal-nombre-${comensal.id}" >${comensal.nombre}</p>
             <div>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#comensales-modal" class="btn btn-outline-primary btn-sm" id='btn-edit-${comensal.id}'>
@@ -228,5 +284,7 @@ export {
     setControls,
     setController,
     setAllComensalListObject,
-    removeDragOverDefault
+    removeDragOverDefault,
+    getComensalSideSelected,
+    addDeselectAllSelectedOnOutsideClickEvent
 }

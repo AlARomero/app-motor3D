@@ -179,6 +179,14 @@ div {
   margin-top: 0.5rem;
 }
 
+.comensal-selected {
+  background-color: #b3b2b2; /* Cambia el color de fondo del objeto a un gris claro */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Añade una transición suave al cambiar el color de fondo y el sombreado */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Añade un sombreado al objeto */
+  padding: 0.1rem; /* Añade un espacio alrededor del contenido del objeto */
+  border-radius: 0.5rem; /* Redondea las esquinas del objeto */
+}
+
 #script-loading-screen {
   position: absolute;
   left: 50%;
@@ -222,4 +230,21 @@ div {
 #script-loading-screen label{
   color: white;
   font-size: 2rem;
+}
+
+#comensales-side-footer {
+  display: grid; 
+  grid-template-columns: 50% 25% 25%; 
+  gap: 2rem;
+}
+
+#add-first-comensal {
+  grid-column: 1 / 2;
+}
+
+#comensales-side-up-and-down-buttons {
+  grid-column: 2 / 4; 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 2px;
 }
