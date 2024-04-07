@@ -53,8 +53,9 @@
 
         <!-- Main Menu -->
         <div class="row mx-auto" id="main-menu">
-          <div class="mx-auto">
-            <!-- Modos de vista de listas de comensales -->
+
+          <!-- Modos de vista de listas de comensales -->
+          <div class="main-set mx-auto">
             <div class="d-flex">
               <h5 class="mx-auto">View Mode</h5>
             </div>
@@ -71,6 +72,23 @@
               <!-- Modo edicion de listas -->
               <input type="radio" class="btn-check" name="main-menu-radio" id="main-menu-mode-list-edit">
               <label class="btn btn-outline-secondary" for="main-menu-mode-list-edit">List Edit Mode</label>
+            </div>
+          </div>
+
+          <!-- Puntos de vista de camara -->
+          <div class="main-set mx-auto">
+            <div class="d-flex">
+              <h5 class="mx-auto"> Camera View Points</h5>
+            </div>
+            <div class="d-flex gap-2">
+              <div class="btn-group">
+                <button class="btn btn-outline-secondary" id="camera-view-1">1</button>
+                <button class="btn btn-outline-secondary" id="camera-view-2">2</button>
+                <button class="btn btn-outline-secondary" id="camera-view-3">3</button>
+                <button class="btn btn-outline-secondary" id="camera-view-4">4</button>
+                <button class="btn btn-outline-secondary" id="camera-view-5">5</button>
+              </div>
+              <button class="btn btn-primary" id="camera-view-save-btn">Save New Position</button>
             </div>
           </div>
         </div>

@@ -17,6 +17,7 @@ var Floorplan = function() {
   var rooms = [];
 
   let roomsAltitude = {};  // Room Uuid -> {oldAltitude, newAltitude}
+  let viewPoints = new Array(5); // Puntos de vista de la camara, 5 puntos de vista como mucho. Son {Position, Rotation}
   
   // For debug
   var interiorPoints = [];
@@ -30,7 +31,7 @@ var Floorplan = function() {
   var new_corner_callbacks = JQUERY.Callbacks();
   var redraw_callbacks = JQUERY.Callbacks();
   var updated_rooms = JQUERY.Callbacks();
-  this.roomLoadedCallbacks = JQUERY.Callbacks(); // TODO para que sirve?
+  this.roomLoadedCallbacks = JQUERY.Callbacks();
 
   var defaultTolerance = 10.0;
 
@@ -144,60 +145,10 @@ var Floorplan = function() {
     scope.update();
   }
 
-  // // Se revisa cada habitacion en rooms, a ver si alguna cambio su uuid para actualizarlo en roomsAltitude.
-  // function updateRoomsAltitude(cornerRooms) {
-  //   console.log('ACTUALIZANDO ROOMSALTITUDE')
-  //   console.log(roomsAltitude);
-  //   let oldUuid;
-  //   let found = false;
-  //   let cornerRoomIter = 0;
-
-  //   // Para todos los uuid en roomsAltitude
-  //   for (let uuid in roomsAltitude) {
-  //     // Se revisa cada habitacion en rooms, a ver si alguna cambio su uuid para actualizarlo en roomsAltitude.
-  //     // Solo hay una habitacion que cambio su uuid en roomsAltitude seguro, ya que un corner solo puede estar en dos habitaciones y una es nueva.
-  //     while (!found && cornerRoomIter < cornerRooms.length) {
-  //       // Se obtiene la habitacion
-  //       const cornerRoom = cornerRooms[cornerRoomIter];
-
-  //       // Se obtiene el uuid de la habitacion
-  //       const roomUuid = getUuidByCorners(cornerRoom);
-  //       console.log('NUEVA PRUEBA')
-
-  //       let array1 = uuid.split(',');
-  //       let array2 = roomUuid.split(',');
-
-  //       // Se filtra el nuevo uuid para que no tenga ningun id del array uuid antiguo
-  //       let newCorners = array2.filter( (uuid) => !array1.includes(uuid) );
-
-  //       // Se filtra el antiguo uuid para que no tenga ningun id del array uuid nuevo
-  //       let oldCorners = array1.filter( (uuid) => !newCorners.includes(uuid) );
-
-  //       // Se une el array mediante comas
-  //       oldUuid = oldCorners.join(',');
-
-  //       console.log(oldUuid);
-  //       if (oldUuid === uuid) {
-  //         console.log('HAY COINCIDENCIA')
-  //         // Si la habitacion tiene añadido un nuevo corner, se actualiza el uuid de roomsAltitude
-  //         console.log(roomUuid)
-  //         console.log(oldUuid)
-  //         roomsAltitude[roomUuid] = roomsAltitude[uuid];
-  //         found = true;
-  //       }
-  //       console.log('FIN DE PRUEBA')
-  //       cornerRoomIter++;
-  //     }
-  //     found = false;
-  //     cornerRoomIter = 0;
-  //   }
-  // }
-
   this.newCorner = function(x, y, id, merge, tolerance) {
     const corner = new Corner(this, x, y, id, merge, tolerance);
     corners.push(corner);
     corner.fireOnDelete(removeCorner);
-    new_corner_callbacks.fire(corner);
     return corner;
   }
 
@@ -255,7 +206,8 @@ var Floorplan = function() {
       walls: [],
       wallTextures: [],
       floorTextures: {},
-      roomsAltitude: roomsAltitude
+      roomsAltitude: roomsAltitude,
+      viewPoints: viewPoints
     }
     utils.forEach(corners, function(corner) {
       floorplan.corners[corner.id] = {
@@ -306,8 +258,13 @@ var Floorplan = function() {
       this.floorTextures = floorplan.newFloorTextures;
     }
 
+    // Se cargan las alturas de las habitaciones si esta en el archivo
     if (floorplan.roomsAltitude)
       roomsAltitude = floorplan.roomsAltitude;
+
+    // Se cargan los puntos de vista de la camara si esta en el archivo
+    if (floorplan.viewPoints)
+      viewPoints = floorplan.viewPoints;
 
     this.update();    
     this.roomLoadedCallbacks.fire();
@@ -344,6 +301,53 @@ var Floorplan = function() {
 
   this.getRoomsAltitude = function() {
     return roomsAltitude;
+  }
+
+  this.getViewPoints = function() {
+    return viewPoints;
+  }
+
+  this.getViewPoint = function(indexPosition) {
+    // Si se pasa de la longitud del array o el indice es menor que 0, se devuelve undefined
+    if (!checkIndexInBounds(indexPosition, viewPoints.length))
+      return undefined;
+
+    return viewPoints[indexPosition];
+  }
+
+  this.addViewPoint = function(viewPoint, indexPosition) {
+    // Si se pasa de la longitud del array o el indice es menor que 0, no se añade y se devuelve false
+    if (!checkIndexInBounds(indexPosition, viewPoints.length))
+      return false;
+
+    // Se copia la posicion de la camara en la posicion del array
+    viewPoints[indexPosition] = viewPoint;
+    return true;
+  }
+
+  this.removeViewPoint = function(indexPosition) {
+    // Si se pasa de la longitud del array o el indice es menor que 0, no se añade y se devuelve false
+    if (!checkIndexInBounds(indexPosition, viewPoints.length))
+      return false;
+
+    // Se elimina la posicion de la camara en la posicion del array
+    viewPoints[indexPosition] = null;
+    return true;
+  }
+
+  function checkIndexInBounds(index, arrayLength) {
+    // Si se pasa de la longitud del array, no se añade y se devuelve false
+    if (index >= arrayLength){
+      console.error('El indice no puede ser mayor o igual que la longitud del array');
+      return false;
+    }
+        
+    if (index < 0){
+      console.error('El indice no puede ser negativo');
+      return false;
+    }
+
+    return true;
   }
 
   this.roomsAltitudeChanged = function(room) {

@@ -275,21 +275,40 @@ var CameraButtons = function(blueprint3d) {
   const MainMenu = function(blueprint3d, comensalUtils, sideMenu, mainControls){
     const scope = this;
     const three = blueprint3d.three;
+    const camera = three.getCamera();
     this.selectedItem = undefined; 
     this.lastSelectedItem = undefined;
+    this.cameraViewButtons = [];
     
-    this.mainMenuStates = {
+    this.comensalViewStates = {
       'CLEAN': 0,
       'LIST_VIEW_MODE': 1,
       'LIST_EDIT_MODE': 2
     }
-    this.actualState = this.mainMenuStates.LIST_EDIT_MODE;
+    this.cameraViewPointStates = {
+      'SELECTING': 0,
+      'SAVING': 1
+    }
+    this.actualComensalViewState = this.comensalViewStates.LIST_EDIT_MODE;
+    this.actualCameraViewState = this.cameraViewPointStates.SELECTING;
 
     function init() {
       
-      $("#main-menu-mode-clean").on('click', () => {changeState(scope.mainMenuStates.CLEAN)});
-      $("#main-menu-mode-list-view").on('click', () => {changeState(scope.mainMenuStates.LIST_VIEW_MODE)});
-      $("#main-menu-mode-list-edit").on('click', () => {changeState(scope.mainMenuStates.LIST_EDIT_MODE)});
+      $("#main-menu-mode-clean").on('click', () => {changeState(scope.comensalViewStates.CLEAN)});
+      $("#main-menu-mode-list-view").on('click', () => {changeState(scope.comensalViewStates.LIST_VIEW_MODE)});
+      $("#main-menu-mode-list-edit").on('click', () => {changeState(scope.comensalViewStates.LIST_EDIT_MODE)});
+
+      $("#camera-view-save-btn").on('click', savingMode);
+      scope.cameraViewButtons.push($("#camera-view-1"));
+      scope.cameraViewButtons.push($("#camera-view-2"));
+      scope.cameraViewButtons.push($("#camera-view-3"));
+      scope.cameraViewButtons.push($("#camera-view-4"));
+      scope.cameraViewButtons.push($("#camera-view-5"));
+      scope.cameraViewButtons[0].on('click', () => {viewPointClicked(scope.cameraViewButtons[0])});
+      scope.cameraViewButtons[1].on('click', () => {viewPointClicked(scope.cameraViewButtons[1])});
+      scope.cameraViewButtons[2].on('click', () => {viewPointClicked(scope.cameraViewButtons[2])});
+      scope.cameraViewButtons[3].on('click', () => {viewPointClicked(scope.cameraViewButtons[3])});
+      scope.cameraViewButtons[4].on('click', () => {viewPointClicked(scope.cameraViewButtons[4])});
 
 
       // Se agregan a las callbacks cuando debe mostrarse o no el menu principal
@@ -304,6 +323,73 @@ var CameraButtons = function(blueprint3d) {
       mainControls.newModelLoadedCallbacks.add(() => {changeState($("#main-menu-mode-list-edit").trigger('click'))});
 
       $("#main-menu-mode-list-edit").trigger('click');
+    }
+
+    function savingMode() {
+      if (scope.actualCameraViewState === scope.cameraViewPointStates.SELECTING){
+        console.log("Saving mode");
+        scope.actualCameraViewState = scope.cameraViewPointStates.SAVING;
+        addSavingViewPointStyle();
+      }
+      else {
+        console.log("Selecting mode");
+        scope.actualCameraViewState = scope.cameraViewPointStates.SELECTING;
+        removeSavingViewPointStyle();
+      }
+    }
+
+    function viewPointClicked(buttonClicked) {
+      // Si el modo actual es guardar, se guarda el punto de vista actual de la camara
+      if (scope.actualCameraViewState === scope.cameraViewPointStates.SAVING) {
+        const index = scope.cameraViewButtons.indexOf(buttonClicked);
+        const position = camera.position.clone();
+        const rotation = camera.rotation.clone();
+        const viewPoint = {position: position, rotation: rotation};
+        three.getModel().floorplan.addViewPoint(viewPoint, index);
+
+        console.log('guardando');
+        console.log(viewPoint);
+
+        // Si no tenia una posicion guardada anteriormente, se cambia su estilo
+        if (!buttonClicked.hasClass("btn-secondary")){
+          buttonClicked.removeClass("btn-outline-secondary");
+          buttonClicked.addClass("btn-secondary");
+        }
+
+        // Se cambia el estado de la camara a seleccionar
+        removeSavingViewPointStyle();
+        scope.actualCameraViewState = scope.cameraViewPointStates.SELECTING;
+      }
+
+      // Si no, se cambia al punto de vista de la camara, si este contiene un punto de vista guardado
+      else if (scope.actualCameraViewState === scope.cameraViewPointStates.SELECTING){
+        const index = scope.cameraViewButtons.indexOf(buttonClicked);
+        const viewPoint = three.getModel().floorplan.getViewPoint(index);
+        if (viewPoint){
+          camera.position.copy(viewPoint.position);
+          camera.rotation.copy(viewPoint.rotation);
+          three.getScene().needsUpdate = true;
+          three.controls.update();
+        }
+      }
+    }
+
+    function removeSavingViewPointStyle() {
+      scope.cameraViewButtons.forEach((button) => {
+        if (button.hasClass("btn-outline-warning"))
+          button.removeClass("btn-outline-warning");
+        else
+          button.removeClass("btn-warning");
+      });
+    }
+
+    function addSavingViewPointStyle() {
+      scope.cameraViewButtons.forEach((button) => {
+        if (button.hasClass("btn-outline-secondary"))
+          button.addClass("btn-outline-warning");
+        else
+          button.addClass("btn-warning");
+      });
     }
 
     // Muestra o esconde el menu principal segun deba verse
@@ -326,20 +412,20 @@ var CameraButtons = function(blueprint3d) {
 
     // Funcion que cambia el estado del menu principal al nuevo indicado
     function changeState(newState) {
-      if (scope.actualState === newState)
+      if (scope.actualComensalViewState === newState)
         return;
       switch (newState) {
-        case scope.mainMenuStates.CLEAN:
+        case scope.comensalViewStates.CLEAN:
           comensalUtils.hideAllLists();
-          scope.actualState = scope.mainMenuStates.CLEAN;
+          scope.actualComensalViewState = scope.comensalViewStates.CLEAN;
           break;
-        case scope.mainMenuStates.LIST_VIEW_MODE:
+        case scope.comensalViewStates.LIST_VIEW_MODE:
           comensalUtils.hideAllLists();
-          scope.actualState = scope.mainMenuStates.LIST_VIEW_MODE;
+          scope.actualComensalViewState = scope.comensalViewStates.LIST_VIEW_MODE;
           break;
-        case scope.mainMenuStates.LIST_EDIT_MODE:
+        case scope.comensalViewStates.LIST_EDIT_MODE:
           comensalUtils.showAllLists();
-          scope.actualState = scope.mainMenuStates.LIST_EDIT_MODE;
+          scope.actualComensalViewState = scope.comensalViewStates.LIST_EDIT_MODE;
           break;
       }
       three.getScene().needsUpdate = true;
@@ -347,7 +433,7 @@ var CameraButtons = function(blueprint3d) {
 
     // Revisa si el nuevo item es una mesa y, si lo es y el actual estado indica que hay que ocultar listas, se oculta la lista de la mesa
     function checkNewTable(table) {
-      if (table.metadata.isTable && (scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE || scope.actualState === scope.mainMenuStates.CLEAN)) {
+      if (table.metadata.isTable && (scope.actualComensalViewState === scope.comensalViewStates.LIST_VIEW_MODE || scope.actualComensalViewState === scope.comensalViewStates.CLEAN)) {
         comensalUtils.hideList(table);
         three.getScene().needsUpdate = true;
       }
@@ -360,14 +446,14 @@ var CameraButtons = function(blueprint3d) {
       scope.selectedItem = item;
       
       // Si el anterior era una mesa y el actual es una mesa, se oculta la lista del anterior y se muestra la del actual
-      if (scope.lastSelectedItem?.metadata.isTable && scope.selectedItem?.metadata.isTable && scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE) {
+      if (scope.lastSelectedItem?.metadata.isTable && scope.selectedItem?.metadata.isTable && scope.actualComensalViewState === scope.comensalViewStates.LIST_VIEW_MODE) {
         comensalUtils.hideList(scope.lastSelectedItem);
         comensalUtils.showList(scope.selectedItem);
         three.getScene().needsUpdate = true;
       }
 
       // Si el anterior no era una mesa pero el actual sí, se muestra la lista del actual.
-      else if (scope.selectedItem?.metadata.isTable && scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE) {
+      else if (scope.selectedItem?.metadata.isTable && scope.actualComensalViewState === scope.comensalViewStates.LIST_VIEW_MODE) {
         comensalUtils.showList(scope.selectedItem);
         three.getScene().needsUpdate = true;
       }
@@ -376,7 +462,7 @@ var CameraButtons = function(blueprint3d) {
     }
 
     function checkUnselectedTable() {
-      if (scope.selectedItem?.metadata.isTable && scope.actualState === scope.mainMenuStates.LIST_VIEW_MODE) {
+      if (scope.selectedItem?.metadata.isTable && scope.actualComensalViewState === scope.comensalViewStates.LIST_VIEW_MODE) {
         comensalUtils.hideList(scope.selectedItem);
         three.getScene().needsUpdate = true;
       }
