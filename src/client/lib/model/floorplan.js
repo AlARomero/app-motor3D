@@ -261,10 +261,14 @@ var Floorplan = function() {
     // Se cargan las alturas de las habitaciones si esta en el archivo
     if (floorplan.roomsAltitude)
       roomsAltitude = floorplan.roomsAltitude;
+    else
+      roomsAltitude = {};
 
     // Se cargan los puntos de vista de la camara si esta en el archivo
     if (floorplan.viewPoints)
       viewPoints = floorplan.viewPoints;
+    else
+      viewPoints = new Array(5);
 
     this.update();    
     this.roomLoadedCallbacks.fire();

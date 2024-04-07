@@ -320,6 +320,7 @@ var CameraButtons = function(blueprint3d) {
       three.floorClicked.add(hideMenu);
       three.getScene().itemLoadedCallbacks.add(checkNewTable);
       sideMenu.stateChangeCallbacks.add(changeMenuVisibility);
+      mainControls.newModelLoadedCallbacks.add(loadNewFloorplanViewPoints);
       mainControls.newModelLoadedCallbacks.add(() => {changeState($("#main-menu-mode-list-edit").trigger('click'))});
 
       $("#main-menu-mode-list-edit").trigger('click');
@@ -327,12 +328,10 @@ var CameraButtons = function(blueprint3d) {
 
     function savingMode() {
       if (scope.actualCameraViewState === scope.cameraViewPointStates.SELECTING){
-        console.log("Saving mode");
         scope.actualCameraViewState = scope.cameraViewPointStates.SAVING;
         addSavingViewPointStyle();
       }
       else {
-        console.log("Selecting mode");
         scope.actualCameraViewState = scope.cameraViewPointStates.SELECTING;
         removeSavingViewPointStyle();
       }
@@ -357,8 +356,7 @@ var CameraButtons = function(blueprint3d) {
         }
 
         // Se cambia el estado de la camara a seleccionar
-        removeSavingViewPointStyle();
-        scope.actualCameraViewState = scope.cameraViewPointStates.SELECTING;
+        savingMode();
       }
 
       // Si no, se cambia al punto de vista de la camara, si este contiene un punto de vista guardado
@@ -372,6 +370,28 @@ var CameraButtons = function(blueprint3d) {
           three.controls.update();
         }
       }
+    }
+
+    function resetCameraViewButtons() {
+      scope.cameraViewButtons.forEach((button) => {
+        button.removeClass("btn-secondary");
+        button.addClass("btn-outline-secondary");
+      });
+    }
+
+    function loadNewFloorplanViewPoints() {
+      console.log('cargando puntos de vista');
+      resetCameraViewButtons();
+      const viewPoints = three.getModel().floorplan.getViewPoints();
+      console.log(viewPoints);
+      console.log(viewPoints[0]);
+      viewPoints.forEach((viewPoint, index) => {
+        const button = scope.cameraViewButtons[index];
+        if (viewPoint){
+          button.removeClass("btn-outline-secondary");
+          button.addClass("btn-secondary");
+        }
+      });
     }
 
     function removeSavingViewPointStyle() {
@@ -833,11 +853,11 @@ var CameraButtons = function(blueprint3d) {
       
       const reader  = new FileReader();
       reader.onload = function(event) {
-          var data = event.target.result;
+          const data = event.target.result;
           blueprint3d.model.loadSerialized(data);
+          scope.newModelLoadedCallbacks.fire();
       }
       reader.readAsText(files[0]);
-      scope.newModelLoadedCallbacks.fire();
     }
   
     function saveDesign() {
