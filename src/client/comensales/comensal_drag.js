@@ -94,17 +94,22 @@ function handleDragEnd(event) {
         // Se obtiene el comensal que se está moviendo a traves de su html.
         const comensal = {
             id: this.id.split('_')[1],
-            nombre: this.textContent,
-            descripcion: prevComensalListObject.comensales.find(c => c.id === this.id.split('_')[1]).descripcion
+            nombre: this.querySelector('p').textContent,
+            descripcion: prevComensalListObject.comensales.find(c => c.comensal.id === this.id.split('_')[1]).comensal.descripcion
         }
 
         // Se elimina de la lista anterior.
         deleteComensal(prevComensalListObject, comensal);
 
         // Se añade a la nueva lista.
-        newComensalListObject.comensales.push(comensal);
-        console.log($(`#comensales-${newComensalListObject.uuid}`));
+        const comensalJson = {
+            comensal: comensal,
+            html: this
+        }
+        newComensalListObject.comensales.push(comensalJson);
+
         $(`#comensales-${newComensalListObject.uuid}`).append(this);
+
         // Si la lista esta seleccionada, se añade el comensal al menu lateral.
         if (newComensalListObject === selectedComensalListObject) {
             comensalToHtml(newComensalListObject, comensal, 'comensales-content');
@@ -198,13 +203,12 @@ function changeComensalSideSelected(newComensalSideSelected) {
  */
 function deleteComensal(comensalListObject, comensal) {
     // Se quita de la lista
-    comensalListObject.comensales = comensalListObject.comensales.filter(c => c.id !== comensal.id);
+    comensalListObject.comensales = comensalListObject.comensales.filter(c => c.comensal.id !== comensal.id);
     // Se elimina del menu lateral del html
     $(`#btn-edit-${comensal.id}`).parent().parent().remove();
     // Se elimina del html de la mesa
     const comensalLi = comensalListObject.comensalList.element.querySelector(`#comensal_${comensal.id}`);
     comensalListObject.comensalList.element.querySelector(`#comensales-${comensalListObject.uuid}`).removeChild(comensalLi);
-    console.log($(`#comensales-${comensalListObject.uuid}`));
 }
 
 /**
@@ -228,8 +232,8 @@ function comensalesToHtml(comensalListObject, container) {
     selectedComensalListObject = comensalListObject;
     const comensales = comensalListObject.comensales;
     $(`#${container}`).html('');
-    comensales.forEach(comensal => {
-        comensalToHtml(comensalListObject, comensal, container);
+    comensales.forEach(comensalJson => {
+        comensalToHtml(comensalListObject, comensalJson.comensal, container);
     });
 }
 
@@ -249,7 +253,7 @@ function comensalToHtml(comensalListObject, comensal, container) {
     if (comensalSideSelected && comensalSideSelected === `container_comensal_${comensal.id}`)
         selectedClass = 'comensal-selected';
 
-    // Se crea el html del comensal y se añade al contenedor.
+    // Se crea el html comensal del comensal side menu y se añade al contenedor.
     const html =  `
         <div class="d-flex justify-content-between align-items-center ${selectedClass}" id="container_comensal_${comensal.id}">
             <p id="comensal-nombre-${comensal.id}" >${comensal.nombre}</p>
@@ -273,6 +277,24 @@ function comensalToHtml(comensalListObject, comensal, container) {
     addEvent(comensalListObject, comensal);
 }
 
+// Funcion que añade un badge a un li de comensal de la lista 3D.
+function addBadge(comensalLi) {
+    const html = document.createElement('span');
+    html.style.margin = '0';
+    html.classList.add('badge', 'text-bg-secondary');
+    html.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" id="comensal_badge_${comensalLi.id.split('_')[2]}">
+    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+    </svg>`;
+    html.style.marginRight = '1rem';
+    comensalLi.appendChild(html);
+}
+
+// Funcion que elimina un badge de un li de comensal de la lista 3D.
+function removeBadge(comensalLi) {
+    $(`#comensal_badge_${comensalLi.id.split('_')[2]}`).remove();
+}
+
 export { 
     addDeactivateControlsEvent,
     addDragEvent, 
@@ -286,5 +308,7 @@ export {
     setAllComensalListObject,
     removeDragOverDefault,
     getComensalSideSelected,
-    addDeselectAllSelectedOnOutsideClickEvent
+    addDeselectAllSelectedOnOutsideClickEvent,
+    addBadge,
+    removeBadge
 }

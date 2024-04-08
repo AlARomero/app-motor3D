@@ -13,8 +13,8 @@ class ThreeSkybox {
     scene.loadSkyGltf('models/gltf/Chalet_Bodas_02.gltf')
     .then(model => {
       this.model = model;
-      this.model.scale.set(200, 200, 200);
-      this.model.position.set(-3000, 90, 200);
+      this.model.scale.set(100, 100, 100);
+      this.model.position.set(-1530, 40, 200); // TODO ajustar la posición a (0, altura para que el plano se vea en 0, 0)
     }).catch(err => {
       console.log(err);
     });
@@ -30,6 +30,8 @@ class ThreeSkybox {
 
   // Carga un nuevo modelo 3D de fondo y desecha el anterior
   loadNewModel(url) {
+    if (this.model)
+      //TODO borrar el modelo.
     this.scene.loadSkyGltf(url)
     .then(model => {
       this.scene.remove(this.model);

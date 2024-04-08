@@ -84,16 +84,29 @@ class ComensalListObject {
 
     addComensal(comensal, container) {
         const html = document.createElement('li');
-        html.textContent = comensal.nombre;
         html.id = `comensal_${comensal.id}`;
-        html.className = 'list-group-item small';
+        html.className = 'list-group-item small d-flex gap-1';
         ComensalHTML.addDragEvent(html);
+
+        const textHtml = document.createElement('p');
+        textHtml.style.width = 'fit-content';
+        textHtml.style.margin = '0';
+        textHtml.textContent = comensal.nombre;
+        html.appendChild(textHtml);
 
         // Añade el elemento li al ul dentro del div de colapso
         this.comensalList.element.querySelector(`#comensales-${this.uuid}`).appendChild(html);
 
-        this.comensales.push(comensal);
+        const comensalJson = {
+            comensal: comensal,
+            html: html
+        }
+        this.comensales.push(comensalJson);
         ComensalHTML.comensalToHtml(this, comensal, container);
+        
+        // Se añade el badge si tiene descripcion el nuevo comensal
+        if (comensal.descripcion)
+            ComensalHTML.addBadge(comensalJson.html);
     }
 
     /**
@@ -101,12 +114,34 @@ class ComensalListObject {
      * @param {key: value} params - Un objeto que contiene los nuevos valores para el comensal.
      */
     modifyComensal(params) {
-        const comensal = this.comensales.find(c => c.id === params.id);
-        if (comensal) {
+        const comensalJson = this.comensales.find(c => c.comensal.id === params.id);
+        let addBadge = false;
+        let removeBadge = false;
+
+        // Si el comensal existe en la mesa
+        if (comensalJson) {
+            /* 
+            Se mira si se debe añadir un badge (Solo si pasa de no tener descripción a tenerla)
+            o si se le debe quitar (pasa de tenerla a no tenerla).
+            */
+           const comensal = comensalJson.comensal;
+            if (!comensal.descripcion && params.descripcion)
+                addBadge = true;
+            else if (comensal.descripcion && !params.descripcion)
+                removeBadge = true;
+
+            // Se actualiza el comensal
             Object.assign(comensal, params);
+            // Se modifica el html del comensal del comensal side menu
             $(`#comensal-nombre-${comensal.id}`).text(comensal.nombre);
-            const comensalLi = this.comensalList.element.querySelector(`#comensal_${comensal.id}`);
-            comensalLi.textContent = comensal.nombre;
+            // Se actualiza el html de la lista 3D del comensal
+            $(comensalJson.html).find('p').text(comensal.nombre);
+
+            // Se añade o se quita el badge
+            if (addBadge)
+                ComensalHTML.addBadge(comensalJson.html);
+            else if (removeBadge)
+                ComensalHTML.removeBadge(comensalJson.html);
         }
         else 
             console.error('El comensal no existe en esta mesa');

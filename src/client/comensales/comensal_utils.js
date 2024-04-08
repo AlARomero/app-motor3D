@@ -83,7 +83,7 @@ class ComensalUtils {
             // Se obtiene la lista de comensales a traves de la mesa.
             const comensalListObject = ComensalUtils.comensalListFromTable(table);
             // Se obtiene el indice del comensal en la lista de comensales comparando con el extraido previamente (-1 si no lo encuentra).
-            const index = comensalListObject.comensales.findIndex(c => c.id === id);
+            const index = comensalListObject.comensales.findIndex(c => c.comensal.id === id);
 
             /* 
             Si existe y no es el primero, se intercambia el comensal seleccionado con 
@@ -110,7 +110,7 @@ class ComensalUtils {
             const id = comensalSideSelected.split('_')[2];
             const comensalListObject = ComensalUtils.comensalListFromTable(table);
             // Se busca el indice (-1 si no lo encuentra)
-            const index = comensalListObject.comensales.findIndex(c => c.id === id);
+            const index = comensalListObject.comensales.findIndex(c => c.comensal.id === id);
             /* 
             Si existe y no es el ultimo comensal, 
             se intercambia el comensal seleccionado con el siguiente en la lista de comensales y se redibuja el side menu de comensales.
@@ -175,9 +175,9 @@ class ComensalUtils {
         // Si hay comensales se añaden comensales a la mesa (esto crea automaticamente la lista de comensales si esta no existe).
         comensales.forEach(comensal => {
             const opts = {
-                id: comensal.id,
-                nombre: comensal.nombre,
-                descripcion: comensal.descripcion
+                id: comensal.comensal.id,
+                nombre: comensal.comensal.nombre,
+                descripcion: comensal.comensal.descripcion
             };
             
             this.addComensal(table, opts);
