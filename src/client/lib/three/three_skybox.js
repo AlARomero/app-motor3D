@@ -13,6 +13,9 @@ class ThreeSkybox {
     scene.loadSkyGltf('models/gltf/Chalet_Bodas_02.gltf')
     .then(model => {
       this.bgModel = model;
+      // Se le añade una variable metadata si no la tiene para poner que es el background
+      this.bgModel.metadata = this.bgModel.metadata || {};
+      this.bgModel.metadata.isBackground = true;
       this.bgModel.scale.set(100, 100, 100);
       this.bgModel.position.set(-1530, 32, 200); // TODO ajustar la posición a (0, altura para que el plano se vea en 0, 0)
     }).catch(err => {

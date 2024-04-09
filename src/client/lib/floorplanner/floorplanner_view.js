@@ -2,6 +2,7 @@ var JQUERY = require('jquery');
 var utils = require('../utils/utils');
 var Wall = require('../model/wall');
 var Corner = require('../model/corner');
+import * as THREE from 'three';
 
 var FloorplannerView = function(floorplan, viewmodel, canvas, scene) {
 
@@ -69,6 +70,7 @@ var FloorplannerView = function(floorplan, viewmodel, canvas, scene) {
     //console.log("Estoy en draw");  
     context.clearRect(0, 0, canvasElement.width, canvasElement.height);
     drawGrid();
+    drawSkyBoxLines();
     lineasOutsideMuros = [];
     utils.forEach(floorplan.getRooms(), drawRoom);
     utils.forEach(floorplan.getWalls(), drawWall);
@@ -1378,16 +1380,50 @@ function drawPolygonRotated(xArr, yArr, fillColor,rotation) {
   }
 
   function drawGrid() {
-    var offsetX = calculateGridOffset(-viewmodel.originX);
-    var offsetY = calculateGridOffset(-viewmodel.originY);
-    var width = canvasElement.width;
-    var height = canvasElement.height;
-    for (var x=0; x <= (width / gridSpacing); x++) {
+    const offsetX = calculateGridOffset(-viewmodel.originX);
+    const offsetY = calculateGridOffset(-viewmodel.originY);
+    const width = canvasElement.width;
+    const height = canvasElement.height;
+    for (let x=0; x <= (width / gridSpacing); x++) {
       drawLine(gridSpacing * x + offsetX, 0, gridSpacing*x + offsetX, height, gridWidth, gridColor);
     }
-    for (var y=0; y <= (height / gridSpacing); y++) {
+    for (let y=0; y <= (height / gridSpacing); y++) {
       drawLine(0, gridSpacing*y + offsetY, width, gridSpacing*y + offsetY, gridWidth, gridColor);
     }
+  }
+
+  function drawSkyBoxLines() {
+    const skyBox = getSkyBoxModel();
+    console.log(skyBox)
+
+    if (skyBox) {
+      // Calcula el bounding box del modelo
+      const boundingBox = new THREE.Box3().setFromObject(skyBox);
+
+      // Obtiene las coordenadas de las esquinas del bounding box
+      const min = new THREE.Vector2(viewmodel.convertX(boundingBox.min.x), viewmodel.convertY(boundingBox.min.z));
+      const max = new THREE.Vector2(viewmodel.convertX(boundingBox.max.x), viewmodel.convertY(boundingBox.max.z));
+
+
+      // Dibuja las líneas del bounding box en el grid
+      drawLine(min.x, min.y, max.x, min.y, 2, '#77dd77');
+      drawLine(max.x, min.y, max.x, max.y, 2, '#77dd77');
+      drawLine(max.x, max.y, min.x, max.y, 2, '#77dd77');
+      drawLine(min.x, max.y, min.x, min.y, 2, '#77dd77');
+    }
+  }
+
+  // Función para obtener el modelo mesh del skybox
+  function getSkyBoxModel() {
+    // Se hace a través de la función traverse de la escene
+    let skyBox;
+    
+    scene.getScene().traverse(function(node) {
+      if (node.metadata?.isBackground === true)
+        skyBox = node;
+    });
+
+    return skyBox;
   }
 
   init();
