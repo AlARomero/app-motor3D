@@ -148,14 +148,14 @@ var ThreeControls = function (object, domElement) {
 	// right and down are positive
 	this.pan = function ( delta ) {
 
-		var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+		const element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
 		if ( scope.object.fov !== undefined ) {
 
 			// perspective
-			var position = scope.object.position;
-			var offset = position.clone().sub( scope.target );
-			var targetDistance = offset.length();
+			const position = scope.object.position;
+			const offset = position.clone().sub( scope.target );
+			let targetDistance = offset.length();
 
 			// half of the fov is center to top of screen
 			targetDistance *= Math.tan( (scope.object.fov/2) * Math.PI / 180.0 );

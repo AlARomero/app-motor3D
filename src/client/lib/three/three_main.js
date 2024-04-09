@@ -107,7 +107,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
         THREE.ImageUtils.crossOrigin = "";
 
         domElement = scope.element.get(0); // Container
-        camera = new THREE.PerspectiveCamera(45, 1, 1, 10000);
+        camera = new THREE.PerspectiveCamera(45, 1, 1, 15000);
         scene.add(camera);
         renderer = new THREE.WebGLRenderer({
           antialias: true,
@@ -137,8 +137,6 @@ var ThreeMain = function(model, element, canvasElement, opts) {
         if (touchMode) {
             hud.setTouchTolerance();
         }
-
-        //scene.getScene().background = new THREE.Color(1,0,0);
 
         // Seleccionado el entorno de iluminación de interior
         const environment = new RoomEnvironment( renderer );

@@ -17,7 +17,7 @@ var Floorplan = function() {
   var rooms = [];
 
   let roomsAltitude = {};  // Room Uuid -> {oldAltitude, newAltitude}
-  let viewPoints = new Array(5); // Puntos de vista de la camara, 5 puntos de vista como mucho. Son {Position, Rotation}
+  let viewPoints = new Array(5); // Puntos de vista de la camara, 5 puntos de vista como mucho. Son {Position, Rotation, Target}
   
   // For debug
   var interiorPoints = [];

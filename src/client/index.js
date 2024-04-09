@@ -1,5 +1,6 @@
 const Blueprint3d = require('./lib/blueprint3d');
 import ComensalUtils from './comensales/comensal_utils';
+import gsap from 'gsap';
 
 /*
  * Camera Buttons
@@ -347,14 +348,17 @@ var CameraButtons = function(blueprint3d) {
     function viewPointClicked(buttonClicked) {
       // Si el modo actual es guardar, se guarda el punto de vista actual de la camara
       if (scope.actualCameraViewState === scope.cameraViewPointStates.SAVING) {
+        // Se consigue el indice del boton pulsado
         const index = scope.cameraViewButtons.indexOf(buttonClicked);
+
+        // Se obtienen las coordenadas de la camara y se guarda el punto de vista
         const position = camera.position.clone();
         const rotation = camera.rotation.clone();
-        const viewPoint = {position: position, rotation: rotation};
-        three.getModel().floorplan.addViewPoint(viewPoint, index);
+        const target = three.controls.target.clone();
 
-        console.log('guardando');
-        console.log(viewPoint);
+        // Se guarda el punto de vista
+        const viewPoint = {position: position, rotation: rotation, target: target};
+        three.getModel().floorplan.addViewPoint(viewPoint, index);
 
         // Si no tenia una posicion guardada anteriormente, se cambia su estilo
         if (!buttonClicked.hasClass("btn-secondary")){
@@ -371,12 +375,34 @@ var CameraButtons = function(blueprint3d) {
         const index = scope.cameraViewButtons.indexOf(buttonClicked);
         const viewPoint = three.getModel().floorplan.getViewPoint(index);
         if (viewPoint){
-          camera.position.copy(viewPoint.position);
-          camera.rotation.copy(viewPoint.rotation);
-          three.getScene().needsUpdate = true;
-          three.controls.update();
+          // Se cambia la camara a la posicion guardada con una animacion gsap
+          moveCamera(viewPoint.position, viewPoint.rotation, viewPoint.target);
         }
       }
+    }
+
+    // GSAP Animation para mover la cámara
+    function moveCamera(position, rotation, target) {
+      // Mientras se realizan las animaciones, se actualiza la escena y los controls
+
+      // Position Animation
+      gsap.to(camera.position, {
+        duration: 1.5, x: position.x, y: position.y, z: position.z, ease: "power2.inOut",
+        onUpdate: () => {three.getScene().needsUpdate = true; three.controls.update();},
+        onComplete: () => {three.getScene().needsUpdate = true; three.controls.update();}
+      });
+      // Rotation Animation
+      gsap.to(camera.rotation, 
+        { duration: 1.5, x: rotation.x, y: rotation.y, z: rotation.z,  ease: "power2.inOut",
+          onUpdate: () => {three.getScene().needsUpdate = true; three.controls.update();},
+          onComplete: () => {three.getScene().needsUpdate = true; three.controls.update();}
+        });
+      // TargetPosition Animation
+      gsap.to(three.controls.target,
+        { duration: 1.5, x: target.x, y: target.y, z: target.z,  ease: "power2.inOut",
+          onUpdate: () => {three.getScene().needsUpdate = true; three.controls.update();},
+          onComplete: () => {three.getScene().needsUpdate = true; three.controls.update();}
+        });
     }
 
     function resetCameraViewButtons() {

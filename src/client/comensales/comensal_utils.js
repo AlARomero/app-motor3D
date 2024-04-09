@@ -93,7 +93,8 @@ class ComensalUtils {
                 let auxVar = comensalListObject.comensales[index];
                 comensalListObject.comensales[index] = comensalListObject.comensales[index - 1];
                 comensalListObject.comensales[index - 1] = auxVar;
-                comensalListObject.selected(this.container);
+                // Se reordenan las listas en el html.
+                comensalListObject.reorderComensals(this.container);
             }
         }
     }
@@ -119,7 +120,8 @@ class ComensalUtils {
                 let auxVar = comensalListObject.comensales[index + 1];
                 comensalListObject.comensales[index + 1] = comensalListObject.comensales[index];
                 comensalListObject.comensales[index] = auxVar;
-                comensalListObject.selected(this.container);
+                // Se reordenan las listas en el html.
+                comensalListObject.reorderComensals(this.container);
             }
         }
     }

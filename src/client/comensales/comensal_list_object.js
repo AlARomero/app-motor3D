@@ -147,6 +147,21 @@ class ComensalListObject {
             console.error('El comensal no existe en esta mesa');
     }
 
+    // Reordena las listas tanto del comensal side menu como de la mesa
+    reorderComensals(container) {
+        // Selected hace que se rehaga la lista de comensales en el side menu
+        this.selected(container);
+
+        // Se borra la lista de comensales de la mesa
+        const ul = this.comensalList.element.querySelector(`#comensales-${this.uuid}`);
+        ul.innerHTML = '';
+
+        // Se rehace en el orden correcto
+        this.comensales.forEach(comensalJson => {
+            ul.appendChild(comensalJson.html);
+        });
+    }
+
     boundToTable(table) {
         table.boundItem(this);
         table.add(this.comensalList);
