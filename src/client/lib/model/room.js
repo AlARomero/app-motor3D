@@ -10,7 +10,7 @@ var utils = require('../utils/utils')
 
 var HalfEdge = require('./half_edge')
 
-var Room = function(floorplan, corners, altitude = 0) {
+var Room = function(floorplan, corners, altitude = 0, transparence = false) {
  
   var scope = this;
 
@@ -22,6 +22,7 @@ var Room = function(floorplan, corners, altitude = 0) {
   this.edgePointer = null;
 
   this.altitude = altitude;
+  this.transparence = transparence;
   
   // floor plane for intersection testing
   this.floorPlane = null;

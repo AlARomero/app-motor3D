@@ -284,14 +284,24 @@
 
         <!-- Floor textures -->
         <div id="floorTexturesDiv" style="display:none; padding: 0 20px">
-          <div class="d-flex justify-content-center align-items-center">
+
+          <div class="d-flex gap-2">
+
             <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
               data-bs-target="#floor-textures-collapse" aria-expanded="false"
               aria-controls="floor-textures-collapse">Adjust Floor</button>
+
               <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
               data-bs-target="#structure-floor-height" aria-expanded="false"
               aria-controls="structure-floor-height">Floor Height</button>
+
           </div>
+
+          <div class="m-t-0-5">
+            <input class="btn-check" type="checkbox" autocomplete="off" id="transparent-floor"></input>
+            <label for="transparent-floor" class="btn btn-outline-secondary">Transparent</label>            
+          </div>
+
           <div class="collapse" id="floor-textures-collapse" style="margin-top: 0.5rem;">
             <ul class="list-group" style="color: #333333">
               <li class="list-group-item">

@@ -10,6 +10,7 @@ var ThreeFloor = function(scene, room) {
   this.room = room;
   var scene = scene;
   const altitude = room.altitude;
+  const transparence = room.transparence;
   this.floorPlane = null;
   var roofPlane = null;
   
@@ -178,7 +179,11 @@ var ThreeFloor = function(scene, room) {
             scene.gui.add(floor.material, 'aoMapIntensity').min(0).max(1).step(0.0001).name("aoMapIntensity");
         }*/
         
-        
+        if (transparence) {
+          floor.material.transparent = true;
+          floor.material.opacity = 0;
+        }
+
         floor.material.needsUpdate = true;	
         floor.needsUpdate = true;
         scene.needsUpdate = true;

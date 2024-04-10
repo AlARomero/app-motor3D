@@ -1394,7 +1394,6 @@ function drawPolygonRotated(xArr, yArr, fillColor,rotation) {
 
   function drawSkyBoxLines() {
     const skyBox = getSkyBoxModel();
-    console.log(skyBox)
 
     if (skyBox) {
       // Calcula el bounding box del modelo

@@ -1,6 +1,7 @@
 const Blueprint3d = require('./lib/blueprint3d');
 import ComensalUtils from './comensales/comensal_utils';
 import gsap from 'gsap';
+import * as THREE from 'three';
 
 /*
  * Camera Buttons
@@ -413,11 +414,8 @@ var CameraButtons = function(blueprint3d) {
     }
 
     function loadNewFloorplanViewPoints() {
-      console.log('cargando puntos de vista');
       resetCameraViewButtons();
       const viewPoints = three.getModel().floorplan.getViewPoints();
-      console.log(viewPoints);
-      console.log(viewPoints[0]);
       viewPoints.forEach((viewPoint, index) => {
         const button = scope.cameraViewButtons[index];
         if (viewPoint){
@@ -721,6 +719,7 @@ var CameraButtons = function(blueprint3d) {
       //Se agrega el evento para el control de altura de los muros
       $("#actual-wall-height").on('change', updateWallsHeight);
       $("#actual-floor-height").on('change', updateFloorHeight);
+      $("#transparent-floor").on('change', transparent);
 
       initSelectors();
     }
@@ -735,9 +734,21 @@ var CameraButtons = function(blueprint3d) {
   
     function floorClicked(room) {
       currentTarget = room;
+      $("#transparent-floor").prop('checked', room.transparence);
       $("#wallTextures").hide(); 
       $("#actual-floor-height").val(room.altitude); 
       $("#floorTexturesDiv").show();  
+    }
+
+    // Si el suelo es visible lo vuelve transparente, si no, lo vuelve opaco para que vuelva a ser visible
+    function transparent() {
+      const room = currentTarget;
+      const floorplan = three.getModel().floorplan;
+
+      // Cambia la transparencia de el suelo de la habitacion
+      floorplan.changeRoomTransparency(room);
+      // Actualiza el plano
+      floorplan.update();
     }
   
     function reset() {
@@ -874,9 +885,41 @@ var CameraButtons = function(blueprint3d) {
     const scope = this;
     this.newModelLoadedCallbacks = $.Callbacks();
 
-    function newDesign() {
+    function newDesign(skyBox) {
+
       comensalUtils.clearLists();
-      blueprint3d.model.loadSerialized('{"floorplan":{"corners":{"f90da5e3-9e0e-eba7-173d-eb0b071e838e":{"x":204.85099999999989,"y":289.052},"da026c08-d76a-a944-8e7b-096b752da9ed":{"x":672.2109999999999,"y":289.052},"4e3d65cb-54c0-0681-28bf-bddcc7bdb571":{"x":672.2109999999999,"y":-178.308},"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2":{"x":204.85099999999989,"y":-178.308}},"walls":[{"corner1":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","corner2":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","corner2":"da026c08-d76a-a944-8e7b-096b752da9ed","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"da026c08-d76a-a944-8e7b-096b752da9ed","corner2":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","corner2":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}}],"wallTextures":[],"floorTextures":{},"newFloorTextures":{}},"items":[]}');
+
+      // Se mira si se le ha pasado un skybox o se usa el por defecto
+      let usedSkyBox = skyBox || blueprint3d.three.skyBox;
+    
+      // Calcula el bounding box de skyBox
+      const boundingBox = new THREE.Box3().setFromObject(usedSkyBox);
+    
+      // Obtiene las coordenadas de las esquinas del bounding box
+      const min = boundingBox.min;
+      const max = boundingBox.max;
+    
+      // Crea un objeto con las posiciones de las esquinas
+      const corners = {
+        "f90da5e3-9e0e-eba7-173d-eb0b071e838e": { x: min.x, y: max.z },
+        "da026c08-d76a-a944-8e7b-096b752da9ed": { x: max.x, y: max.z },
+        "4e3d65cb-54c0-0681-28bf-bddcc7bdb571": { x: max.x, y: min.z },
+        "71d4f128-ae80-3d58-9bd2-711c6ce6cdf2": { x: min.x, y: min.z }
+      };
+    
+      // Carga el modelo con las nuevas posiciones de las esquinas
+      blueprint3d.model.loadSerialized(JSON.stringify({
+        "floorplan": {
+          "corners": corners,
+          "walls": [{"corner1":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2", "corner2":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}, "height": 0},{"corner1":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","corner2":"da026c08-d76a-a944-8e7b-096b752da9ed","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}, "height": 0},{"corner1":"da026c08-d76a-a944-8e7b-096b752da9ed","corner2":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}, "height": 0},{"corner1":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","corner2":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}, "height": 0}],
+          "wallTextures":[],
+          "floorTextures":{},
+          "newFloorTextures":{},
+          "roomsTransparence": {"4e3d65cb-54c0-0681-28bf-bddcc7bdb571,71d4f128-ae80-3d58-9bd2-711c6ce6cdf2,da026c08-d76a-a944-8e7b-096b752da9ed,f90da5e3-9e0e-eba7-173d-eb0b071e838e": true}
+          },
+        "items": [],
+      }));
+
       scope.newModelLoadedCallbacks.fire();
     }
   
@@ -908,6 +951,7 @@ var CameraButtons = function(blueprint3d) {
       $("#new").on('click', newDesign);
       $("#loadFile").on('change', loadDesign);
       $("#saveFile").on('click', saveDesign);
+      blueprint3d.three.skyBox.onSkyBoxLoad(newDesign)
     }
   
     init();
@@ -937,10 +981,5 @@ var CameraButtons = function(blueprint3d) {
     const mainControls = new MainControls(blueprint3d, comensalUtils);
     const mainMenu = new MainMenu(blueprint3d, comensalUtils, sideMenu, mainControls);
     const contextMenu = new ContextMenu(blueprint3d, comensalUtils, mainMenu);
-    
-    // This serialization format needs work
-    // Load a simple rectangle room
-   blueprint3d.model.loadSerialized('{"floorplan":{"corners":{"f90da5e3-9e0e-eba7-173d-eb0b071e838e":{"x":-104.0130000000003,"y":331.7239999999996},"da026c08-d76a-a944-8e7b-096b752da9ed":{"x":406.0189999999998,"y":331.7239999999996},"4e3d65cb-54c0-0681-28bf-bddcc7bdb571":{"x":406.0189999999998,"y":-178.308},"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2":{"x":-104.0130000000003,"y":-178.308}},"walls":[{"corner1":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","corner2":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"f90da5e3-9e0e-eba7-173d-eb0b071e838e","corner2":"da026c08-d76a-a944-8e7b-096b752da9ed","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"da026c08-d76a-a944-8e7b-096b752da9ed","corner2":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}},{"corner1":"4e3d65cb-54c0-0681-28bf-bddcc7bdb571","corner2":"71d4f128-ae80-3d58-9bd2-711c6ce6cdf2","frontTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0},"backTexture":{"url":"rooms/textures/wallmap.png","stretch":true,"scale":0}}],"wallTextures":[],"floorTextures":{},"newFloorTextures":{}},"items":[]}');
-          
   });
   

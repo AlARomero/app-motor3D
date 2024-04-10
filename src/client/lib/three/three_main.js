@@ -51,6 +51,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
   var renderer;
   let css3DRenderer;
   this.lights;
+  this.skyBox;
   //var composer;
   
   // Variable para guardar el estado de los elementos
@@ -128,7 +129,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 	      //renderer.outputEncoding = THREE.sRGBEncoding;
       
         //Carga del entorno (Iluminación o HDR)
-        const skybox = new ThreeSkybox(scene);
+        scope.skyBox = new ThreeSkybox(scene);
 
         scope.controls = new ThreeControls(camera, domElement);
 

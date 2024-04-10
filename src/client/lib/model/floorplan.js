@@ -17,6 +17,7 @@ var Floorplan = function() {
   var rooms = [];
 
   let roomsAltitude = {};  // Room Uuid -> {oldAltitude, newAltitude}
+  let roomsTransparence = {};  // Room Uuid -> boolean
   let viewPoints = new Array(5); // Puntos de vista de la camara, 5 puntos de vista como mucho. Son {Position, Rotation, Target}
   
   // For debug
@@ -86,7 +87,7 @@ var Floorplan = function() {
   }
 
   this.newWall = function(start, end) {
-    var wall = new Wall(start, end);
+    const wall = new Wall(start, end);
     walls.push(wall);
     wall.fireOnDelete(removeWall);
     new_wall_callbacks.fire(wall);
@@ -207,7 +208,8 @@ var Floorplan = function() {
       wallTextures: [],
       floorTextures: {},
       roomsAltitude: roomsAltitude,
-      viewPoints: viewPoints
+      viewPoints: viewPoints,
+      roomsTransparence: roomsTransparence
     }
     utils.forEach(corners, function(corner) {
       floorplan.corners[corner.id] = {
@@ -248,7 +250,7 @@ var Floorplan = function() {
       if (wall.backTexture) {
         newWall.backTexture = wall.backTexture;
       }
-      if (wall.height) {
+      if (wall.height !== undefined) {
           newWall.height = parseFloat(wall.height);
       }
     });
@@ -269,6 +271,12 @@ var Floorplan = function() {
       viewPoints = floorplan.viewPoints;
     else
       viewPoints = new Array(5);
+
+    // Se cargan las transparencias de las habitaciones si esta en el archivo
+    if (floorplan.roomsTransparence)
+      roomsTransparence = floorplan.roomsTransparence;
+    else
+      roomsTransparence = {};
 
     this.update();    
     this.roomLoadedCallbacks.fire();
@@ -305,6 +313,10 @@ var Floorplan = function() {
 
   this.getRoomsAltitude = function() {
     return roomsAltitude;
+  }
+
+  this.getRoomTransparence = function(room) {
+    return roomsTransparence[room.getUuid()];
   }
 
   this.getViewPoints = function() {
@@ -363,6 +375,16 @@ var Floorplan = function() {
     }
     // Si no hay registro, no ha cambiado la altura de la habitación
     return false
+  }
+
+  // Cambia la transparencia de una habitación, que por defecto es false
+  this.changeRoomTransparency = function(room) {
+    if (roomsTransparence.hasOwnProperty(room.getUuid())) 
+      roomsTransparence[room.getUuid()] = !roomsTransparence[room.getUuid()];
+    // Como por defecto es false, si no existe registro se cambia a true
+    else 
+      roomsTransparence[room.getUuid()] = true;
+    // Si no hay registro,
   }
 
   // clear out obsolete floor textures
@@ -432,18 +454,21 @@ var Floorplan = function() {
 
     const roomCorners = findRooms(corners);
 
-    // Actualiza las alturas de las habitaciones por si se le añadieron nuevas esquinas (corners).
-    // updateRoomsAltitude(roomCorners);
-
     rooms = [];
     utils.forEach(roomCorners, function(corners) {
 
       let altitude = 0;
-      if (roomsAltitude.hasOwnProperty(getUuidByCorners(corners))) {
-        altitude = roomsAltitude[getUuidByCorners(corners)]['newAltitude'];
-      }
+      let transparece = false;
 
-      const newRoom = new Room(scope, corners, altitude);
+      // Si la habitacion tiene altura registrada
+      if (roomsAltitude.hasOwnProperty(getUuidByCorners(corners))) 
+        altitude = roomsAltitude[getUuidByCorners(corners)]['newAltitude'];
+
+      // Si la habitacion tiene transparencia registrada
+      if (roomsTransparence.hasOwnProperty(getUuidByCorners(corners)))
+        transparece = roomsTransparence[getUuidByCorners(corners)];
+
+      const newRoom = new Room(scope, corners, altitude, transparece);
       rooms.push(newRoom);
     });
     assignOrphanEdges();
