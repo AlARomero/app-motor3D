@@ -36,7 +36,7 @@ function addDeactivateControlsEvent(htmlElement) {
         controls.enabled = false;
         controller.enabled = false;
     });
-    htmlElement.addEventListener('mouseup', () => {
+    htmlElement.addEventListener('mouseleave', () => {
         controls.enabled = true;
         controller.enabled = true;
     });
