@@ -15,6 +15,9 @@ function setControls(newControls) {
 
 function setController(newController) {
     controller = newController;
+    // Cuando se mueven los items no interesa tener el evento mouseleave activo ya que puede habilitar los controls.
+    controller.itemStartDragCallbacks.add(unableMouseLeaveEvent);
+    controller.itemDraggedCallbacks.add(ableMouseLeaveEvent);
 }
 
 function getComensalSideSelected() {
@@ -32,14 +35,33 @@ function setAllComensalListObject(newAllComensalListObject) {
 }
 
 function addDeactivateControlsEvent(htmlElement) {
-    htmlElement.addEventListener('mousedown', () => {
+    $(htmlElement).on('mousedown', () => {
         controls.enabled = false;
         controller.enabled = false;
     });
-    htmlElement.addEventListener('mouseleave', () => {
+    $(htmlElement).on('mouseleave', () => {
         controls.enabled = true;
         controller.enabled = true;
     });
+}
+
+// Deshabilita el evento mouseleave de todos los comensales.
+function unableMouseLeaveEvent() {
+    console.log('unableMouseLeaveEvent')
+    allComensalListObject.forEach(comensalListObject => {
+        console.log($(`#btn-${comensalListObject.uuid}`));
+        $(`#btn-${comensalListObject.uuid}`).off('mousedown');
+        $(`#btn-${comensalListObject.uuid}`).off('mouseleave');
+    })
+}
+
+// Habilita el evento mouseleave de todos los comensales.
+function ableMouseLeaveEvent() {
+    console.log('ableMouseLeaveEvent')
+    allComensalListObject.forEach(comensalListObject => {
+        $(`#btn-${comensalListObject.uuid}`).on('mousedown');
+        $(`#btn-${comensalListObject.uuid}`).on('mouseleave');
+    })
 }
 
 function addDragEvent(comensalHTMLElement) {

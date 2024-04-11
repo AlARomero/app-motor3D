@@ -2,6 +2,8 @@ const Blueprint3d = require('./lib/blueprint3d');
 import ComensalUtils from './comensales/comensal_utils';
 import gsap from 'gsap';
 import * as THREE from 'three';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 /*
  * Camera Buttons
@@ -951,11 +953,47 @@ var CameraButtons = function(blueprint3d) {
       a.click();
       document.body.removeChild(a)
     }
+
+    function downloadComensalPDF() {
+
+      // Crea un nuevo documento PDF
+      const doc = new jsPDF();
+
+      // Establece el estilo del texto
+      doc.setFont('helvetica');
+      doc.setFontSize(14);
+      doc.setTextColor(40);
+      // Añade el titulo
+      doc.text('Lista de Comensales', 10, 10);
+
+      // Crea una matriz de objetos para la tabla
+      const tableData = [];
+      comensalUtils.getAllComensals().forEach(comensal => {
+        const data = [ comensal.nombre, comensal.descripcion ];
+        console.log(data);
+        tableData.push(data);
+      });
+
+      // Añade la tabla al PDF
+      autoTable(doc, {
+        head: [['Nombre', 'Descripción']],
+        body: tableData,
+        startY: 20,
+      });
+
+      // Guarda el PDF
+      doc.save('comensales.pdf');
+    }
   
     function init() {
       $("#new").on('click', newDesign);
       $("#loadFile").on('change', loadDesign);
       $("#saveFile").on('click', saveDesign);
+      $("#download-comensal-pdf").on('click', downloadComensalPDF);
+      // Cuando se pulsa un elemento del dropdown de categorias, se cambia el texto del boton de dropdown
+      $("#category-dropdown-menu").find(".dropdown-item").on('click', function() {
+        $("#category-dropdown").text($(this).text());
+      });
       blueprint3d.three.skyBox.onSkyBoxLoad(newDesign)
     }
   

@@ -91,6 +91,35 @@
               <button class="btn btn-primary" id="camera-view-save-btn">Save New Position</button>
             </div>
           </div>
+
+          <!-- Control para abrir el offcanvas de listado completo de comensales + offCanvas -->
+          <button class="btn btn-secondary m-t-0-5 w-50"  type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-comensal-list" aria-controls="offcanvas-comensal-list">Lista de comensales</button>
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-comensal-list" aria-labelledby="offcanvas-comensal-title">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvas-comensal-title">Comensales</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+
+              <!-- Los siguientes dos botones van en fila -->
+              <div class="d-flex gap-2">
+                <!-- Categoria seleccionada con un dropdown -->
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="category-dropdown">Todos los comensales</button>
+                  <ul class="dropdown-menu" id="category-dropdown-menu">
+                    <!-- Aquí van todas las categorías de los comensales inyectadas por js y la genérica, todas-->
+                    <li><a class="dropdown-item" href="#">Todos los comensales</a></li>
+                  </ul>
+                </div>
+                <!-- Botón para descargar un pdf con el contenido de la lista actual de comensales -->
+                <button class="btn btn-primary" id="download-comensal-pdf">Descargar PDF</button>
+              </div>
+
+              Aquí va una lista de comensales
+
+            </div>
+          </div>
+
         </div>
         <!-- Context Menu -->
         <div class="row mx-auto" id="context-menu">

@@ -40,6 +40,18 @@ class ComensalUtils {
         comensalListObject.selected(this.container);
     }
 
+    // Devuelve una lista con todos los comensales que hay en el diseño
+    getAllComensals() {
+        const comensals = [];
+
+        this.allComensalListObject.forEach(comensalListObject => {
+            comensalListObject.comensales.forEach(comensal => {
+                comensals.push(comensal.comensal);
+            });            
+        })
+        return comensals;
+    }
+
     // Esconde todos los objetos 3d de las listas de comensales de las mesas.
     hideAllLists() {
         this.allComensalListObject.forEach(comensalListObject => {
