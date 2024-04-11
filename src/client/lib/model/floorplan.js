@@ -137,8 +137,8 @@ var Floorplan = function() {
     }         
   }
   
-  this.getHeightWall = function() {
-    return walls[0].getHeight();
+  this.getDefaultHeightWall = function() {
+    return 270;
   }
 
   function removeWall(wall) {
@@ -250,8 +250,9 @@ var Floorplan = function() {
       if (wall.backTexture) {
         newWall.backTexture = wall.backTexture;
       }
+      // Como JS interpreta el 0 como undefined o null, se comprueba si es -1 para cuando se necesita una altura 0
       if (wall.height !== undefined) {
-          newWall.height = parseFloat(wall.height);
+        newWall.height = parseFloat(wall.height);
       }
     });
 

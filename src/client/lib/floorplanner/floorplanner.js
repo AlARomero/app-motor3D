@@ -790,7 +790,7 @@ var Floorplanner = function(canvas, model) {
         var corner = floorplan.newCorner(scope.targetX, scope.targetY,undefined,1,toleranceCornerTouch);
         if (scope.lastNode != null) {
           var nWall = floorplan.newWall(scope.lastNode, corner);  
-          nWall.setWallHeight(floorplan.getHeightWall());
+          nWall.setWallHeight(floorplan.getDefaultHeightWall());
           //console.log("he creado muro");
         }
         
@@ -875,7 +875,7 @@ var Floorplanner = function(canvas, model) {
             var corner = floorplan.newCorner(scope.targetX, scope.targetY);
             if (scope.lastNode != null) {
               var nWall = floorplan.newWall(scope.lastNode, corner);  
-              nWall.setWallHeight(floorplan.getHeightWall());
+              nWall.setWallHeight(floorplan.getDefaultHeightWall());
               //console.log("he creado muro");
             }
         } else {
@@ -889,7 +889,7 @@ var Floorplanner = function(canvas, model) {
                 var corner = floorplan.newCorner(p.x, p.y);
                 var nWall = floorplan.newWall(scope.lastNode, corner);
                 nWall.setFixedInteriorDistance(dif);
-                nWall.setWallHeight(floorplan.getHeightWall());
+                nWall.setWallHeight(floorplan.getDefaultHeightWall());
             }
             enterActivated = false;
             mouseDown = false;
@@ -965,7 +965,7 @@ var Floorplanner = function(canvas, model) {
               
               
               var nWall = floorplan.newWall(scope.lastNode, corner);  
-              nWall.setWallHeight(floorplan.getHeightWall());
+              nWall.setWallHeight(floorplan.getDefaultHeightWall());
               nWall.addInteriorPoint(old_corner);
               nWall.addInteriorPoint(old_lastNode);
               floorplan.mergeWallsWithCommonInteriorPoints(nWall);
@@ -989,7 +989,7 @@ var Floorplanner = function(canvas, model) {
                 var corner = floorplan.newCorner(p.x, p.y);
                 var nWall = floorplan.newWall(scope.lastNode, corner);
                 nWall.setFixedInteriorDistance(dif);
-                nWall.setWallHeight(floorplan.getHeightWall());
+                nWall.setWallHeight(floorplan.getDefaultHeightWall());
             }
             enterActivated = false;
             mouseDown = false;

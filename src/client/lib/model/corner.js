@@ -226,7 +226,7 @@ var Corner = function(floorplan, x, y, id, merge, tolerance) {
         // merge this corner into wall by breaking wall into two parts
         var nWall = floorplan.newWall(   
           this, obj.getEnd());
-        nWall.setWallHeight(floorplan.getHeightWall());
+        nWall.setWallHeight(floorplan.getDefaultHeightWall());
           
         obj.setEnd(this); 
         floorplan.update();
