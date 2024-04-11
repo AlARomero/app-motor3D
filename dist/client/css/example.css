@@ -118,11 +118,8 @@ div {
 
 #floorplanner-controls {
   position: absolute;
-  left: 0;
-  top: 0;
-  margin: 1rem 0 0 20rem; /* Mueve hasta el inicio del 3d el panel de control de muros */
-  padding: 0 3rem; 
-  width: 100%;
+  top: 20px;
+  margin-left: 1rem;
 }
 
 #draw-walls-hint {
