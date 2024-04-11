@@ -889,9 +889,14 @@ var CameraButtons = function(blueprint3d) {
 
       comensalUtils.clearLists();
 
-      // Se mira si se le ha pasado un skybox o se usa el por defecto
-      let usedSkyBox = skyBox || blueprint3d.three.skyBox;
-    
+      let usedSkyBox = skyBox;
+
+      // Se mira si se le ha pasado un skybox o se usa el por defecto (llamada a traves de evento jquery)
+      if (!(usedSkyBox instanceof THREE.Object3D))
+        usedSkyBox = blueprint3d.three.skyBox.getModel();
+
+      console.log(usedSkyBox)
+
       // Calcula el bounding box de skyBox
       const boundingBox = new THREE.Box3().setFromObject(usedSkyBox);
     

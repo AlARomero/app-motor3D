@@ -763,7 +763,6 @@ var ThreeMain = function(model, element, canvasElement, opts) {
       return closestWallEdge.room;
     }
 
-    console.log(floors);
     // Si son items de suelo se itera por las habitaciones
     while (floorIter < floors.length && !found) {
       const floor = floors[floorIter];
