@@ -93,8 +93,8 @@
           </div>
 
           <!-- Control para abrir el offcanvas de listado completo de comensales + offCanvas -->
-          <button class="btn btn-secondary m-t-0-5 w-50"  type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-comensal-list" aria-controls="offcanvas-comensal-list">Lista de comensales</button>
-          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-comensal-list" aria-labelledby="offcanvas-comensal-title">
+          <button class="btn btn-secondary m-t-0-5 w-50" id="offcanvas-conmensal-button"  type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-comensal-container" aria-controls="offcanvas-comensal-container">Lista de comensales</button>
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-comensal-container" aria-labelledby="offcanvas-comensal-title">
             <div class="offcanvas-header">
               <h5 class="offcanvas-title" id="offcanvas-comensal-title">Comensales</h5>
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -114,8 +114,10 @@
                 <!-- Botón para descargar un pdf con el contenido de la lista actual de comensales -->
                 <button class="btn btn-primary" id="download-comensal-pdf">Descargar PDF</button>
               </div>
-
-              Aquí va una lista de comensales
+              
+              <ul class="list-group" id="offcanvas-comensal-list">
+                <!-- Aquí van los comensales inyectados por js -->
+              </ul>
 
             </div>
           </div>

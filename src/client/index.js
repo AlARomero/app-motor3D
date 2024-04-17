@@ -95,6 +95,9 @@ var CameraButtons = function(blueprint3d) {
   
     let selectedItem;
     let three = blueprint3d.three;
+
+    /* The flag that determines whether the wheel event is supported. */
+    let supportsWheel = false;
   
     function init() {
 
@@ -149,7 +152,12 @@ var CameraButtons = function(blueprint3d) {
       three.itemUnselectedCallbacks.add(itemUnselected);
       three.getScene().itemRemovedCallbacks.add(removeComensalList);
       three.getScene().comensalListLoaded.add(convertObjectToComensalListAndAddToTable);
-  
+
+      //Add the event listeners for each event of mousewheel (for floorplanner zooming).
+      document.addEventListener('wheel', doSomething);
+      document.addEventListener('mousewheel', doSomething);
+      document.addEventListener('DOMMouseScroll', doSomething); 
+      
       initResize();
   
       $("#fixed").on('click', function() {
@@ -157,6 +165,26 @@ var CameraButtons = function(blueprint3d) {
           selectedItem.setFixed(checked);
       });
       $("#context-menu").hide();
+    }
+
+    /* The function that will run when the events are triggered. */
+    function doSomething (e) {
+      /* Check whether the wheel event is supported. */
+      if ($('#floorplan_tab').is(':checked')) {
+    
+        if (e.type == "wheel") supportsWheel = true;
+        else if (supportsWheel) return;
+    
+        /* Determine the direction of the scroll (< 0 → up, > 0 → down). */
+        const delta = ((e.deltaY || -e.wheelDelta || e.detail) >> 10) || 1;
+    
+        /* ... */
+        if (delta > 0) {
+            blueprint3d.floorplanner.zoomOut(1.05);
+        } else {
+            blueprint3d.floorplanner.zoomIn(1.05);
+        }
+      }
     }
   
     function cmToIn(cm) {
@@ -212,7 +240,7 @@ var CameraButtons = function(blueprint3d) {
       */
       $("#context-menu").show();
 
-      $("#fixed").prop('checked', item.fixed); //TODO Por que esto esta aqui?
+      $("#fixed").prop('checked', item.fixed);
     }
 
     function initComensales() {
@@ -333,6 +361,15 @@ var CameraButtons = function(blueprint3d) {
       sideMenu.stateChangeCallbacks.add(changeMenuVisibility);
       mainControls.newModelLoadedCallbacks.add(loadNewFloorplanViewPoints);
       mainControls.newModelLoadedCallbacks.add(() => {changeState($("#main-menu-mode-list-edit").trigger('click'))});
+
+      $("#offcanvas-comensal-button").on('click', getComensalOffCanvasList);
+
+      // Se agregan los eventos para los botones de descarga de pdf del modal de lista de comensales
+      $("#download-comensal-pdf").on('click', downloadComensalPDF);
+      // Cuando se pulsa un elemento del dropdown de categorias del modal de lista de comensales, se cambia el texto del boton de dropdown
+      $("#category-dropdown-menu").find(".dropdown-item").on('click', function() {
+        $("#category-dropdown").text($(this).text());
+      });
 
       $("#main-menu-mode-list-edit").trigger('click');
     }
@@ -519,6 +556,42 @@ var CameraButtons = function(blueprint3d) {
         comensalUtils.hideList(scope.selectedItem);
         three.getScene().needsUpdate = true;
       }
+    }
+
+    function getComensalOffCanvasList() {
+      //TODO
+    }
+
+    // Crea un pdf con una tabla que contiene a la lista actual de comensales y lo descarga
+    function downloadComensalPDF() {
+
+      // Crea un nuevo documento PDF
+      const doc = new jsPDF();
+
+      // Establece el estilo del texto
+      doc.setFont('helvetica');
+      doc.setFontSize(14);
+      doc.setTextColor(40);
+      // Añade el titulo
+      doc.text('Lista de Comensales', 10, 10);
+
+      // Crea una matriz de objetos para la tabla
+      const tableData = [];
+      comensalUtils.getAllComensals().forEach(comensal => {
+        const data = [ comensal.nombre, comensal.descripcion ];
+        console.log(data);
+        tableData.push(data);
+      });
+
+      // Añade la tabla al PDF
+      autoTable(doc, {
+        head: [['Nombre', 'Descripción']],
+        body: tableData,
+        startY: 20,
+      });
+
+      // Guarda el PDF
+      doc.save('comensales.pdf');
     }
 
     // Se inicializa
@@ -953,47 +1026,11 @@ var CameraButtons = function(blueprint3d) {
       a.click();
       document.body.removeChild(a)
     }
-
-    function downloadComensalPDF() {
-
-      // Crea un nuevo documento PDF
-      const doc = new jsPDF();
-
-      // Establece el estilo del texto
-      doc.setFont('helvetica');
-      doc.setFontSize(14);
-      doc.setTextColor(40);
-      // Añade el titulo
-      doc.text('Lista de Comensales', 10, 10);
-
-      // Crea una matriz de objetos para la tabla
-      const tableData = [];
-      comensalUtils.getAllComensals().forEach(comensal => {
-        const data = [ comensal.nombre, comensal.descripcion ];
-        console.log(data);
-        tableData.push(data);
-      });
-
-      // Añade la tabla al PDF
-      autoTable(doc, {
-        head: [['Nombre', 'Descripción']],
-        body: tableData,
-        startY: 20,
-      });
-
-      // Guarda el PDF
-      doc.save('comensales.pdf');
-    }
   
     function init() {
       $("#new").on('click', newDesign);
       $("#loadFile").on('change', loadDesign);
       $("#saveFile").on('click', saveDesign);
-      $("#download-comensal-pdf").on('click', downloadComensalPDF);
-      // Cuando se pulsa un elemento del dropdown de categorias, se cambia el texto del boton de dropdown
-      $("#category-dropdown-menu").find(".dropdown-item").on('click', function() {
-        $("#category-dropdown").text($(this).text());
-      });
       blueprint3d.three.skyBox.onSkyBoxLoad(newDesign)
     }
   
