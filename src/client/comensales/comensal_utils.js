@@ -9,6 +9,7 @@ class ComensalUtils {
         ComensalDrag.setControls(controls);
         ComensalDrag.setController(controller);
         ComensalDrag.addDeselectAllSelectedOnOutsideClickEvent();
+        this.categories = [];
         this.scene = scene;
         this.container = container;
         this.controls = controls;
@@ -49,6 +50,20 @@ class ComensalUtils {
                 comensals.push(comensal.comensal);
             });            
         })
+        return comensals;
+    }
+
+    getAllComensalsByCategory(category) {
+        let comensals = [];
+        if (this.categories.includes(category)) {
+            this.allComensalListObject.forEach(comensalListObject => {
+                comensalListObject.comensales.forEach(comensal => {
+                    if (comensal.comensal.categoria === category) {
+                        comensals.push(comensal.comensal);
+                    }
+                });
+            });
+        }
         return comensals;
     }
 

@@ -362,13 +362,25 @@ var CameraButtons = function(blueprint3d) {
       mainControls.newModelLoadedCallbacks.add(loadNewFloorplanViewPoints);
       mainControls.newModelLoadedCallbacks.add(() => {changeState($("#main-menu-mode-list-edit").trigger('click'))});
 
+      // Evento para generar la lista de comensales en el offcanvas de lista de comensales
       $("#offcanvas-comensal-button").on('click', getComensalOffCanvasList);
 
       // Se agregan los eventos para los botones de descarga de pdf del modal de lista de comensales
-      $("#download-comensal-pdf").on('click', downloadComensalPDF);
-      // Cuando se pulsa un elemento del dropdown de categorias del modal de lista de comensales, se cambia el texto del boton de dropdown
+      $("#download-comensal-pdf").on('click', () => {
+        const category = $("#category-dropdown").text();
+        if (category !== 'Todos los comensales')
+          downloadComensalPDF(category)
+        else
+          downloadComensalPDF();
+      });
+
+      /* 
+      Cuando se pulsa un elemento del dropdown de categorias del modal de lista de comensales, 
+      se cambia el texto del boton de dropdown y se filtra la lista por la categoria
+      */
       $("#category-dropdown-menu").find(".dropdown-item").on('click', function() {
         $("#category-dropdown").text($(this).text());
+        getComensalOffCanvasList();
       });
 
       $("#main-menu-mode-list-edit").trigger('click');
@@ -558,12 +570,40 @@ var CameraButtons = function(blueprint3d) {
       }
     }
 
-    function getComensalOffCanvasList() {
-      //TODO
+    // Funcion que genera la lista de comensales. Si se le pasa una categoria, filtra la lista por esa categoria
+    function getAllComensals(category = undefined) {
+      let comensals;
+      // Si la categoria existe, se filtra por categoria
+      if (category)
+        comensals = comensalUtils.getComensalsByCategory(category);
+      else
+        comensals = comensalUtils.getAllComensals();
+      return comensals;
     }
 
+    // Funcion que genera la lista de comensales del offcanvas
+    function getComensalOffCanvasList(category = undefined) {
+      const comensals = getAllComensals(category);
+
+      let html = '';
+      // Si no hay comensales se devuelve un mensaje
+      if (comensals.length === 0)
+        html = '<li class="list-group-item"> Aun no hay comensales en esta categoria </li>';
+      else {
+        comensals.forEach(comensal => {
+          html += `<li class="list-group-item"> ${comensal.nombre} </li>`;
+        });
+      }
+
+      // Se reemplaza la lista con la nueva
+      $("#offcanvas-comensal-list").html(html);
+
+
+    }
+
+
     // Crea un pdf con una tabla que contiene a la lista actual de comensales y lo descarga
-    function downloadComensalPDF() {
+    function downloadComensalPDF(category = undefined) {
 
       // Crea un nuevo documento PDF
       const doc = new jsPDF();
@@ -577,7 +617,7 @@ var CameraButtons = function(blueprint3d) {
 
       // Crea una matriz de objetos para la tabla
       const tableData = [];
-      comensalUtils.getAllComensals().forEach(comensal => {
+      getAllComensals(category).forEach(comensal => {
         const data = [ comensal.nombre, comensal.descripcion ];
         console.log(data);
         tableData.push(data);
