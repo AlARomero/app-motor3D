@@ -365,11 +365,31 @@ var CameraButtons = function(blueprint3d) {
       // Evento para generar la lista de comensales en el offcanvas de lista de comensales
       $("#offcanvas-comensal-button").on('click', getComensalOffCanvasList);
 
+      // Evento de guardado de nueva categoria
+      $("#save-new-category").on('click', () => {
+        const name = $("#new-category-name").val();
+        const color = $("#new-category-color").val();
+        comensalUtils.crearCategoria(name, color);
+        $("#close-new-category-modal").trigger('click');
+      });
+
+      // Evento de guardado de edicion de categoria
+      $("#save-edit-category").on('click', () => {
+        const name = $("#edit-category-name").val();
+        const newColor = $("#edit-category-color").val();
+        const category = comensalUtils.getCategoryByName(name);
+        comensalUtils.modificarCategoria(category, newColor);
+        $("#close-edit-category-modal").trigger('click');
+      });
+
       // Se agregan los eventos para los botones de descarga de pdf del modal de lista de comensales
       $("#download-comensal-pdf").on('click', () => {
-        const category = $("#category-dropdown").text();
-        if (category !== 'Todos los comensales')
-          downloadComensalPDF(category)
+        const categoryName = $("#category-dropdown").text();
+        const category = comensalUtils.getCategoryByName(categoryName);
+
+        // Si la categoria no es la de por defecto (Todos, esta categoria no es guardada), se descarga filtrando por categoria
+        if (category)
+          downloadComensalPDF(category);
         else
           downloadComensalPDF();
       });
@@ -378,10 +398,13 @@ var CameraButtons = function(blueprint3d) {
       Cuando se pulsa un elemento del dropdown de categorias del modal de lista de comensales, 
       se cambia el texto del boton de dropdown y se filtra la lista por la categoria
       */
-      $("#category-dropdown-menu").find(".dropdown-item").on('click', function() {
-        $("#category-dropdown").text($(this).text());
-        getComensalOffCanvasList();
-      });
+      $("#category-offcanvas-selector").on('change', () => {
+        const categoryName = $(this).val();
+        const category = comensalUtils.getCategoryByName(categoryName);
+
+        // Se filtran los comensales de esa categoria
+        getComensalOffCanvasList(category);
+      })
 
       $("#main-menu-mode-list-edit").trigger('click');
     }
@@ -575,7 +598,7 @@ var CameraButtons = function(blueprint3d) {
       let comensals;
       // Si la categoria existe, se filtra por categoria
       if (category)
-        comensals = comensalUtils.getComensalsByCategory(category);
+        comensals = comensalUtils.getAllComensalsByCategory(category);
       else
         comensals = comensalUtils.getAllComensals();
       return comensals;

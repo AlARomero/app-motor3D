@@ -147,6 +147,47 @@ class ComensalListObject {
             console.error('El comensal no existe en esta mesa');
     }
 
+    getComensal(comensalId) {
+        return this.comensales.find(c => c.comensal.id === comensalId);
+    }
+
+    // Elimina una categoria de un comensal de esta lista
+    removeComensalCategory(comensalId, category) {
+        const comensal = getComensal(comensalId);
+        // Si existe el comensal
+        if (comensal && category) {
+            // Si el comensal contiene esta categoria, se elimina y se quita de su html de la lista de la mesa
+            if (comensal.comensal.categorias.includes(category)) {
+                comensal.comensal.categorias.splice(index, 1);
+                // Quita el html de la categoria del comensal
+                ComensalHTML.removeCategoryFromComensal(comensal.html, category);
+            }
+            else
+                console.error('El comensal no tiene la categoria');
+        }
+        else 
+            console.error("El comensal o la categoria no existen");
+    }
+
+    // Añade una categoria a un comensal de esta lista
+    addComensalCategory(comensalId, category) {
+        const comensal = getComensal(comensalId);
+        // Si existe el comensal
+        if (comensal && category) {
+            // Si este no tiene todavia esa categoria se añade y se añade al html de la lista de la mesa
+            if (!comensal.comensal.categorias.includes(category)) {
+                comensal.comensal.categorias.push(category);
+                // Añade el html de la categoria al comensal
+                ComensalHTML.addCategoryToComensal(comensal.html, category);
+            }
+            else
+                console.error('El comensal ya tiene la categoria');
+        
+        }
+        else
+            console.error("El comensal o la categoria no existen");
+    }
+
     // Reordena las listas tanto del comensal side menu como de la mesa
     reorderComensals(container) {
         // Selected hace que se rehaga la lista de comensales en el side menu

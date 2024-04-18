@@ -92,8 +92,24 @@
             </div>
           </div>
 
-          <!-- Control para abrir el offcanvas de listado completo de comensales + offCanvas -->
-          <button class="btn btn-secondary m-t-0-5 w-50" id="offcanvas-conmensal-button"  type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-comensal-container" aria-controls="offcanvas-comensal-container">Lista de comensales</button>
+          <!-- Lista de Categorias -->
+          <div class="card m-t-0-5" style="padding: 0;">
+            <div class="card-header">Categorias</div>
+            <div class="card-body">
+              <div id="category-list-side-menu-container">
+                <!-- Aquí van las categorías inyectadas por js -->
+              </div>
+            </div>
+            <div class="card-footer">
+              <!-- Control para abrir el offcanvas de listado completo de comensales y boton para abrir el modal de creacion de categoria -->
+              <div class="d-flex gap-2">
+                <button class="btn btn-secondary" id="offcanvas-conmensal-button"  type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-comensal-container" aria-controls="offcanvas-comensal-container">Lista de comensales</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#new-category-modal" id="add-new-category"> Nueva Categoria </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- OffCanvas de listado de comensales -->
           <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-comensal-container" aria-labelledby="offcanvas-comensal-title">
             <div class="offcanvas-header">
               <h5 class="offcanvas-title" id="offcanvas-comensal-title">Comensales</h5>
@@ -104,22 +120,79 @@
               <!-- Los siguientes dos botones van en fila -->
               <div class="d-flex gap-2">
                 <!-- Categoria seleccionada con un dropdown -->
-                <div class="dropdown">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="category-dropdown">Todos los comensales</button>
-                  <ul class="dropdown-menu" id="category-dropdown-menu">
-                    <!-- Aquí van todas las categorías de los comensales inyectadas por js y la genérica, todas-->
-                    <li><a class="dropdown-item" href="#">Todos los comensales</a></li>
-                  </ul>
-                </div>
+                <select class="form-select" aria-label="Category OffCanvas Selector" id="category-offcanvas-selector">
+                  <!-- Aquí van todas las categorías de los comensales inyectadas por js y la genérica ya añadida-->
+                  <option value="todos los comensales">Todos los comensales</option>
+                </select>
                 <!-- Botón para descargar un pdf con el contenido de la lista actual de comensales -->
                 <button class="btn btn-primary" id="download-comensal-pdf">Descargar PDF</button>
               </div>
               
-              <ul class="list-group" id="offcanvas-comensal-list">
+              <ul class="list-group list-group-flush" id="offcanvas-comensal-list">
                 <!-- Aquí van los comensales inyectados por js -->
               </ul>
 
             </div>
+          </div>
+
+          <div class="modal fade" id="new-category-modal" tabindex="-1" aria-labelledby="new-category-modal-label" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title fs-5" id="new-category-modal-label">
+                    Nueva Categoria
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close-new-category-modal" id="close-new-category-modal"></button>
+                </div>
+                <div class="modal-body">
+
+                  <!-- Formulario de una linea, onsubmit es false para que no se reinicie el programa, la logica se hace a traves de eventos -->
+                  <div class="row">
+                    <div class="col">
+                      <input type="text" class="form-control" placeholder="Nombre" id="new-category-name"></input>
+                    </div>
+                  
+                    <div class="col">
+                      <input type="color" class="form-control form-control-color" id="new-category-color" value="#563d7c" title="Selecciona Color">
+                    </div>
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" id="save-new-category">Guardar</button>
+                </div>
+              </div>
+            </div>  
+          </div>
+
+          <div class="modal fade" id="edit-category-modal" tabindex="-1" aria-labelledby="edit-category-modal-label" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title fs-5" id="edit-category-modal-label">
+                    Editar Categoria
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close-edit-category-modal" id="close-edit-category-modal"></button>
+                </div>
+                <div class="modal-body">
+
+                  <!-- Formulario de una linea, onsubmit es false para que no se reinicie el programa, la logica se hace a traves de eventos -->
+                  <div class="row">
+                    <div class="col">
+                      <input type="text" class="form-control" placeholder="Nombre" id="edit-category-name" disabled></input>
+                    </div>
+                  
+                    <div class="col">
+                      <input type="color" class="form-control form-control-color" id="edit-category-color" value="#563d7c" title="Selecciona Color">
+                    </div>
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" id="save-edit-category">Guardar</button>
+                </div>
+              </div>
+            </div>  
           </div>
 
         </div>
@@ -283,25 +356,25 @@
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <div id="id-del-comensal-seleccionado" style="display: none;">
-                      
-                    </div>
+                    <!-- Div para saber que comensal esta siendo modificado -->
+                    <div id="id-del-comensal-seleccionado" style="display: none;"></div>
                     <h5 class="modal-title fs-5" id="comensales-modal-label">
                       Comensal
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close-comensal-modal" id="close-comensal-modal"></button>
                   </div>
                   <div class="modal-body">
-                    <form onsubmit="false">
-                      <div class="form-floating mb-3">
-                        <input type="text" class="form-control" placeholder="name" id="nombre-comensal"></input>
-                        <label for="nombre-comensal">Name</label>
-                      </div>
-                      <div class="form-floating mb-3">
-                        <textarea class="form-control" placeholder="description" id="descripcion-comensal"></textarea>
-                        <label for="description-comensal">Description</label>
-                      </div>
-                    </form>
+
+                    <!-- Formulario -->
+                    <div class="form-floating mb-3">
+                      <input type="text" class="form-control" placeholder="name" id="nombre-comensal"></input>
+                      <label for="nombre-comensal">Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <textarea class="form-control" placeholder="description" id="descripcion-comensal"></textarea>
+                      <label for="description-comensal">Description</label>
+                    </div>
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="save-comensal">Save</button>

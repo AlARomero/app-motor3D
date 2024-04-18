@@ -309,12 +309,73 @@ function addBadge(comensalLi) {
     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
     </svg>`;
     html.style.marginRight = '1rem';
-    comensalLi.appendChild(html);
+    comensalLi.querySelector('p').appendChild(html);
 }
 
 // Funcion que elimina un badge de un li de comensal de la lista 3D.
 function removeBadge(comensalLi) {
     $(`#comensal_badge_${comensalLi.id.split('_')[2]}`).remove();
+}
+
+function addCategoryToComensal(comensalLi, category) {
+    const span = generateCircleSpan(category.color);
+    span.id = `${comensalLi.id.split('_')[2]}_category_badge_${category.name}`;
+
+    comensalLi.querySelector('p').appendChild(html);
+}
+
+// La categoria ha sido modificada, por lo que cambia el color de la etiqueta (es la unica opcion modificable).
+function modifyCategoryFromComensal(comensal, category) {
+    $(`#${comensal.id}_category_badge_${category.name}`).css('background-color', category.color);
+}
+
+function removeCategoryFromComensal(comensalLi, category) {
+    $(`#${comensalLi.id.split('_')[2]}_category_badge_${category.name}`).remove();
+}
+
+function createCategorySideItemHtml(category) {
+    // Se crea el html comensal del comensal side menu y se añade al contenedor.
+    const circle = generateCircleSpan(category.color);
+    circle.id = `category-badge-${category.name}`;
+    const html =  `
+        <div class="d-flex justify-content-between align-items-center" id="container-category-${category.name}">
+            <p id="category-nombre-${category.name}" >${category.name} ${circle.outerHTML} </p>
+            <div>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#edit-category-modal" class="btn btn-outline-primary btn-sm" id='btn-edit-${category.name}'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                    </svg>
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-sm" id='btn-delete-${category.name}'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `;
+    
+
+    return html;
+}
+
+function generateCircleSpan(color) {
+    const html = document.createElement('span');
+    html.style.backgroundColor = color; // Establece el color de fondo
+    html.style.display = 'inline-block'; // Permite que el span tenga un ancho y una altura
+    html.style.width = '20px'; // Establece el ancho
+    html.style.height = '20px'; // Establece la altura
+    html.style.borderRadius = '50%'; // Hace que el span sea un círculo
+
+    return html;
+}
+
+function createCategorySelectorItemHtml(category) {
+    const html = `
+        <option value="${category.name}" id="offcanvas-option-${category.name}">${category.name}</option>
+    `;
+    return html;
 }
 
 export { 
@@ -332,5 +393,10 @@ export {
     getComensalSideSelected,
     addDeselectAllSelectedOnOutsideClickEvent,
     addBadge,
-    removeBadge
+    removeBadge,
+    addCategoryToComensal,
+    removeCategoryFromComensal,
+    createCategorySideItemHtml,
+    createCategorySelectorItemHtml,
+    modifyCategoryFromComensal
 }

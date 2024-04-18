@@ -9,7 +9,7 @@ class ComensalUtils {
         ComensalDrag.setControls(controls);
         ComensalDrag.setController(controller);
         ComensalDrag.addDeselectAllSelectedOnOutsideClickEvent();
-        this.categories = [];
+        this.categories = []; // Una categoria es un json con un nombre y un color hexadecimal.
         this.scene = scene;
         this.container = container;
         this.controls = controls;
@@ -41,6 +41,10 @@ class ComensalUtils {
         comensalListObject.selected(this.container);
     }
 
+    getCategoryByName(categoryName) {
+        return this.categories.find(c => c.name === categoryName);
+    }
+
     // Devuelve una lista con todos los comensales que hay en el diseño
     getAllComensals() {
         const comensals = [];
@@ -53,17 +57,23 @@ class ComensalUtils {
         return comensals;
     }
 
+    // Devuelve un array con todos los comensales que pertenezcan a la categoria pasada por parametro
     getAllComensalsByCategory(category) {
         let comensals = [];
-        if (this.categories.includes(category)) {
+        // Si la categoria existe
+        if (this.categories.some(c => c.name === category.name)) {
+            // Se busca en todas las listas
             this.allComensalListObject.forEach(comensalListObject => {
+                // Se buscan los comensales de la categoria
                 comensalListObject.comensales.forEach(comensal => {
-                    if (comensal.comensal.categoria === category) {
+                    if (comensal.comensal.categoria.name === category.name) {
                         comensals.push(comensal.comensal);
                     }
                 });
             });
         }
+        else
+            console.error('La categoria no existe');
         return comensals;
     }
 
@@ -219,7 +229,7 @@ class ComensalUtils {
 
     addComensal(table, opts = undefined) {
         let comensalListObject = ComensalUtils.comensalListFromTable(table);
-        let idComensal, nameComensal, descripcion;
+        let idComensal, nameComensal, descripcion, categorias;
         if(!comensalListObject) {
             comensalListObject = this.#createComensalListObject(table);
         }
@@ -227,18 +237,114 @@ class ComensalUtils {
             idComensal = opts.id;
             nameComensal = opts.nombre;
             descripcion = opts.descripcion;
+            categorias = opts.categorias;
         }
         else {
             idComensal = this.#getNewComensalId();
             nameComensal = `Comensal ${ComensalUtils.initialId}`;
+            categorias = [];
         }
         const comensal = {
             id: idComensal,
             nombre: nameComensal,
-            descripcion: descripcion
+            descripcion: descripcion,
+            categorias: categorias
         };
         comensalListObject.addComensal(comensal, this.container);
         ComensalUtils.initialId++;
+    }
+
+    // Crea una categoria nueva si no existe
+    crearCategoria(categoriaName, categoriaColor) {
+        let toLowerName = categoriaName.toLowerCase();
+
+        // Si el nombre de la categoria tiene guiones, no se permite crearla
+        if (toLowerName.includes('-')) {
+            alert('El nombre de la categoria no puede contener guiones');
+            console.error('El nombre de la categoria no puede contener guiones');
+            return;
+        }
+
+        // Si no existe la categoria, se crea
+        if (!this.categories.some(c => c.name === toLowerName)){
+            const categoria = {
+                name: toLowerName,
+                color: categoriaColor
+            }
+            this.categories.push(categoria);
+
+            const sideHtml = ComensalDrag.createCategorySideItemHtml(categoria);
+            const selectorHtml = ComensalDrag.createCategorySelectorItemHtml(categoria);
+
+            // Los elementos HTML se añaden al documento
+            $('#category-list-side-menu-container').append(sideHtml);
+            $('#category-offcanvas-selector').append(selectorHtml);
+
+            // Se añaden los eventos (se añaden aqui ya que facilita llamar a la funcion de eliminar categoria)
+
+            // Evento del boton de eliminacion de categoria
+            $(`#btn-delete-${categoria.name}`).on('click', () => {
+                this.eliminarCategoria(categoria);
+            });
+            // Evento del boton de edicion de categoria
+            $(`#btn-edit-${categoria.name}`).on('click', function() {
+                $(`#edit-category-name`).val(categoria.name);
+                $(`#edit-category-color`).val(categoria.color);
+            });
+        }
+        else
+            console.error('La categoria ya existe');
+    }
+
+    eliminarCategoria(categoria) {
+        let index;
+        // Se quita la categoria de cada comensal
+        this.getAllComensalsByCategory(categoria).forEach(comensal => {
+            index = comensal.categorias.findIndex(c => c.name === categoria.name);
+            comensal.categorias.splice(index, 1)
+            ComensalDrag.removeCategoryFromComensal(comensal.html, categoria);
+            
+        });
+
+        // Se elimina de la lista de categorias
+        index = this.categories.findIndex(c => c.name === categoria.name);
+        if (index >= 0) {
+            this.categories.splice(index, 1);
+        }
+
+        // Se elimina del dropdown de la lista y la lista lateral de categorias
+        $(`#container-category-${categoria.name}`).remove();
+        $(`#offcanvas-option-${categoria.name}`).remove();
+    }
+
+    modificarCategoria(categoria, newColor) {
+        const index = this.categories.indexOf(categoria);
+        if (index >= 0) {
+            this.categories[index].color = newColor;
+            $(`#category-badge-${categoria.name}`).css('background-color', newColor);
+
+            this.getAllComensalsByCategory(categoria).forEach(comensal => {
+                ComensalDrag.modifyCategoryFromComensal(categoria, comensal);
+            })
+        }
+    }
+
+    sumarCategoriaComensal(table, comensalId, categoria) {
+        const comensalListObject = ComensalUtils.comensalListFromTable(table);
+        if (comensalListObject){
+            comensalListObject.addComensalCategory(comensalId, categoria);
+        }
+        else
+            console.error('No se ha encontrado la lista de comensales de la mesa');
+    }
+
+    restarCategoriaComensal(table, comensalId, categoria) {
+        const comensalListObject = ComensalUtils.comensalListFromTable(table);
+        if (comensalListObject){
+            comensalListObject.removeComensalCategory(comensalId, categoria);
+        }
+        else
+            console.error('No se ha encontrado la lista de comensales de la mesa');
     }
 
     modificaComensal(table, params) {
