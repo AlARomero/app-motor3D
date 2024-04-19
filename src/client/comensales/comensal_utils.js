@@ -305,8 +305,6 @@ class ComensalUtils {
         this.getAllComensalsByCategory(categoria).forEach(comensal => {
             index = comensal.categorias.indexOf(categoria);
             comensal.categorias.splice(index, 1);
-            console.log(comensal);
-            console.log(categoria)
             ComensalDrag.removeCategoryFromComensal(comensal.id, categoria);
             
         });
@@ -330,7 +328,7 @@ class ComensalUtils {
             $(`#category-badge-${categoria.name}`).css('background-color', newColor);
 
             this.getAllComensalsByCategory(categoria).forEach(comensal => {
-                ComensalDrag.modifyCategoryFromComensal(categoria, comensal);
+                ComensalDrag.modifyCategoryFromComensal(comensal, categoria);
             })
         }
     }

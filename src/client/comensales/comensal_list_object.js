@@ -142,10 +142,6 @@ class ComensalListObject {
                 ComensalHTML.addBadge(comensalJson.html);
             else if (removeBadge)
                 ComensalHTML.removeBadge(comensalJson.html);
-
-            comensal.categorias.forEach(category => {
-                ComensalHTML.addCategoryToComensal(comensalJson.html, category);
-            });
         }
         else 
             console.error('El comensal no existe en esta mesa');
@@ -166,7 +162,7 @@ class ComensalListObject {
                 let index = comensal.comensal.categorias.indexOf(category);
                 comensal.comensal.categorias.splice(index, 1);
                 // Quita el html de la categoria del comensal
-                ComensalHTML.removeCategoryFromComensal(comensal.html, category);
+                ComensalHTML.removeCategoryFromComensal(comensal.html.id.split('_')[1], category);
             }
             else {
                 alert('El comensal no tiene la categoria')
@@ -185,6 +181,8 @@ class ComensalListObject {
             // Si este no tiene todavia esa categoria se añade
             if (!comensal.comensal.categorias.includes(category)) {
                 comensal.comensal.categorias.push(category);
+                
+                ComensalHTML.addCategoryToComensal(comensal.html, category);
             }
             else {
                 alert('El comensal ya tiene la categoria');

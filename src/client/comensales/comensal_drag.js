@@ -114,27 +114,19 @@ function handleDragEnd(event) {
         // Si se soltó en una lista y las listas son diferentes, se maneja el cambio de lista.
 
         // Se obtiene el comensal que se está moviendo a traves de su html.
-        const comensal = {
-            id: this.id.split('_')[1],
-            nombre: this.querySelector('p').textContent,
-            descripcion: prevComensalListObject.comensales.find(c => c.comensal.id === this.id.split('_')[1]).comensal.descripcion
-        }
+        const comensalJson = prevComensalListObject.comensales.find(c => c.comensal.id === this.id.split('_')[1]);
 
         // Se elimina de la lista anterior.
-        deleteComensal(prevComensalListObject, comensal);
+        deleteComensal(prevComensalListObject, comensalJson);
 
         // Se añade a la nueva lista.
-        const comensalJson = {
-            comensal: comensal,
-            html: this
-        }
         newComensalListObject.comensales.push(comensalJson);
 
         $(`#comensales-${newComensalListObject.uuid}`).append(this);
 
         // Si la lista esta seleccionada, se añade el comensal al menu lateral.
         if (newComensalListObject === selectedComensalListObject) {
-            comensalToHtml(newComensalListObject, comensal, 'comensales-content');
+            comensalToHtml(newComensalListObject, comensalJson.comensal, 'comensales-content');
         }
     }
 
@@ -190,11 +182,11 @@ function addDeselectAllSelectedOnOutsideClickEvent() {
  * @param {ComensalListObject} comensalListObject - El objeto que contiene la lista de comensales.
  * @param {Object} comensal - El comensal a cuyos botones se les van a añadir eventos.
  */
-function addEvent(comensalListObject, comensal) {
+function addEvent(comensalListObject, comensalJson) {
 
-    $(`#btn-edit-${comensal.id}`).on('click', () => {fillPlaceholder(comensal)});
-    $(`#btn-delete-${comensal.id}`).on('click', () => {deleteComensal(comensalListObject, comensal)});
-    $(`#container_comensal_${comensal.id}`).on('click', function() {changeComensalSideSelected(`container_comensal_${comensal.id}`);});
+    $(`#btn-edit-${comensalJson.comensal.id}`).on('click', () => {fillPlaceholder(comensalJson.comensal)});
+    $(`#btn-delete-${comensalJson.comensal.id}`).on('click', () => {deleteComensal(comensalListObject, comensalJson)});
+    $(`#container_comensal_${comensalJson.comensal.id}`).on('click', function() {changeComensalSideSelected(`container_comensal_${comensalJson.comensal.id}`);});
 }
 
 // Cambia el estilo del comensal seleccionado en el side menu de comensales.
@@ -225,12 +217,12 @@ function changeComensalSideSelected(newComensalSideSelected) {
  */
 function deleteComensal(comensalListObject, comensal) {
     // Se quita de la lista
-    comensalListObject.comensales = comensalListObject.comensales.filter(c => c.comensal.id !== comensal.id);
+    comensalListObject.comensales = comensalListObject.comensales.filter(c => c.comensal.id !== comensal.comensal.id);
     // Se elimina del menu lateral del html
-    $(`#btn-edit-${comensal.id}`).parent().parent().remove();
+    $(`#btn-edit-${comensal.comensal.id}`).parent().parent().remove();
     // Se elimina del html de la mesa
-    const comensalLi = comensalListObject.comensalList.element.querySelector(`#comensal_${comensal.id}`);
-    comensalListObject.comensalList.element.querySelector(`#comensales-${comensalListObject.uuid}`).removeChild(comensalLi);
+
+    comensalListObject.comensalList.element.querySelector(`#comensales-${comensalListObject.uuid}`).removeChild(comensal.html);
 }
 
 /**
@@ -279,7 +271,11 @@ function comensalToHtml(comensalListObject, comensal, container) {
     const html =  `
         <div class="d-flex justify-content-between align-items-center ${selectedClass}" id="container_comensal_${comensal.id}">
             <div class="d-flex justify-content-between" id="container_nombre_comensal_${comensal.id}">
-                <p id="comensal-nombre-${comensal.id}" style="margin: 0">${comensal.nombre}</p>
+                <div class="d-flex justify-content-between" id="comensal-badge-container-${comensal.id}">
+                    <p id="comensal-nombre-${comensal.id}" style="margin: 0;">
+                        ${comensal.nombre}
+                    </p>
+                </div>
             </div>
             
             <div>
@@ -299,41 +295,69 @@ function comensalToHtml(comensalListObject, comensal, container) {
     `;
 
     $(`#${container}`).append(`\n${html}`);
-    addEvent(comensalListObject, comensal);
+
+    const comensalJson = comensalListObject.getComensal(comensal.id);
+    addEvent(comensalListObject, comensalJson);
+
+    // Si el comensal tiene descripcion, se añade un badge.
+    if (comensal.descripcion)
+        addBadge(comensalJson.html, false);
+
+    // Si el comensal tiene categorias, se añaden
+    comensal.categorias.forEach(category => {
+        addCategoryToComensal(comensalJson.html, category, false);
+    });
 }
 
-// Funcion que añade un badge a un li de comensal de la lista 3D.
-function addBadge(comensalLi) {
+// Funcion que añade un badge a un li de comensal de la lista 3D y a la lista side.
+function addBadge(comensalLi, both = true) {
     const html = document.createElement('span');
     html.style.margin = '0';
     html.classList.add('badge', 'text-bg-secondary');
-    html.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16" id="comensal_badge_${comensalLi.id.split('_')[2]}">
+    html.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
     </svg>`;
     html.style.marginRight = '1rem';
+    html.style.marginLeft = '1rem';
+
+    const clone = html.cloneNode(true);
+
+    clone.id = `comensal_side_badge_${comensalLi.id.split('_')[1]}`;
+    html.id = `comensal_badge_${comensalLi.id.split('_')[1]}`
+
+    if (both)
     comensalLi.querySelector('p').appendChild(html);
+    $(`#comensal-nombre-${comensalLi.id.split('_')[1]}`).append(clone);
 }
 
 // Funcion que elimina un badge de un li de comensal de la lista 3D.
 function removeBadge(comensalLi) {
-    $(`#comensal_badge_${comensalLi.id.split('_')[2]}`).remove();
+    $(`#comensal_badge_${comensalLi.id.split('_')[1]}`).remove();
+    $(`#comensal_side_badge_${comensalLi.id.split('_')[1]}`).remove();
 }
 
-function addCategoryToComensal(comensalLi, category) {
+function addCategoryToComensal(comensalLi, category, both = true) {
     const span = generateCircleSpan(category.color);
-    span.id = `${comensalLi.id.split('_')[2]}_category_badge_${category.name}`;
-    console.log(span);
-    comensalLi.appendChild(span);
+    span.id = `${comensalLi.id.split('_')[1]}_category_badge_${category.name}`;
+    if (both)
+        comensalLi.appendChild(span);
+    
+    const clone = span.cloneNode(true);
+    clone.id = `${comensalLi.id.split('_')[1]}_side_category_badge_${category.name}`;
+    $(`#comensal-badge-container-${comensalLi.id.split('_')[1]}`).append(clone);
 }
 
 // La categoria ha sido modificada, por lo que cambia el color de la etiqueta (es la unica opcion modificable).
 function modifyCategoryFromComensal(comensal, category) {
+    console.log(comensal);
     $(`#${comensal.id}_category_badge_${category.name}`).css('background-color', category.color);
+    $(`#${comensal.id}_side_category_badge_${category.name}`).css('background-color', category.color);
 }
 
 function removeCategoryFromComensal(comensalId, category) {
-    $(`#${comensalId.split('_')[2]}_category_badge_${category.name}`).remove();
+    $(`#${comensalId}_category_badge_${category.name}`).remove();
+    $(`#${comensalId}_side_category_badge_${category.name}`).remove();
 }
 
 function createCategorySideItemHtml(category) {
