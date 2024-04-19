@@ -257,7 +257,7 @@ class ComensalUtils {
     crearCategoria(categoriaName, categoriaColor) {
         let toLowerName = categoriaName.toLowerCase();
         // Expresion regular que indica cualquier cosa que no sea un numero o letra
-        const regex = /[^a-z0-9]/;
+        const regex = /[^a-z0-9ñ]/;
 
         // Si el nombre de la categoria tiene guiones, no se permite crearla
         if (toLowerName.length < 1 || regex.test(toLowerName)) {
