@@ -66,9 +66,8 @@ class ComensalUtils {
             this.allComensalListObject.forEach(comensalListObject => {
                 // Se buscan los comensales de la categoria
                 comensalListObject.comensales.forEach(comensal => {
-                    if (comensal.comensal.categoria.name === category.name) {
+                    if (comensal.comensal.categorias.includes(category))
                         comensals.push(comensal.comensal);
-                    }
                 });
             });
         }
@@ -257,11 +256,13 @@ class ComensalUtils {
     // Crea una categoria nueva si no existe
     crearCategoria(categoriaName, categoriaColor) {
         let toLowerName = categoriaName.toLowerCase();
+        // Expresion regular que indica cualquier cosa que no sea un numero o letra
+        const regex = /[^a-z0-9]/;
 
         // Si el nombre de la categoria tiene guiones, no se permite crearla
-        if (toLowerName.includes('-')) {
-            alert('El nombre de la categoria no puede contener guiones');
-            console.error('El nombre de la categoria no puede contener guiones');
+        if (toLowerName.length < 1 || regex.test(toLowerName)) {
+            alert("El nombre solo puede contener letras y numeros, no puede estar vacio");
+            console.error("El nombre solo puede contener letras, numeros y no puede estar vacio");
             return;
         }
 
@@ -274,11 +275,13 @@ class ComensalUtils {
             this.categories.push(categoria);
 
             const sideHtml = ComensalDrag.createCategorySideItemHtml(categoria);
-            const selectorHtml = ComensalDrag.createCategorySelectorItemHtml(categoria);
+            const listSelectorHtml = ComensalDrag.createCategoryListSelectorItemHtml(categoria);
+            const comensalMenuSelectorHtml = ComensalDrag.createCategoryComensalSelectorItemHtml(categoria, true);
 
             // Los elementos HTML se añaden al documento
             $('#category-list-side-menu-container').append(sideHtml);
-            $('#category-offcanvas-selector').append(selectorHtml);
+            $('#category-offcanvas-selector').append(listSelectorHtml);
+            $('#comensal-category-selector').append(comensalMenuSelectorHtml);
 
             // Se añaden los eventos (se añaden aqui ya que facilita llamar a la funcion de eliminar categoria)
 
@@ -300,9 +303,11 @@ class ComensalUtils {
         let index;
         // Se quita la categoria de cada comensal
         this.getAllComensalsByCategory(categoria).forEach(comensal => {
-            index = comensal.categorias.findIndex(c => c.name === categoria.name);
-            comensal.categorias.splice(index, 1)
-            ComensalDrag.removeCategoryFromComensal(comensal.html, categoria);
+            index = comensal.categorias.indexOf(categoria);
+            comensal.categorias.splice(index, 1);
+            console.log(comensal);
+            console.log(categoria)
+            ComensalDrag.removeCategoryFromComensal(comensal.id, categoria);
             
         });
 
@@ -314,7 +319,8 @@ class ComensalUtils {
 
         // Se elimina del dropdown de la lista y la lista lateral de categorias
         $(`#container-category-${categoria.name}`).remove();
-        $(`#offcanvas-option-${categoria.name}`).remove();
+        $(`#category-offcanvas-option-${categoria.name}`).remove();
+        $(`#category-comensal-option-${categoria.name}`).remove();
     }
 
     modificarCategoria(categoria, newColor) {

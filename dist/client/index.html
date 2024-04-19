@@ -135,6 +135,7 @@
             </div>
           </div>
 
+          <!-- Modal creacion de categorias -->
           <div class="modal fade" id="new-category-modal" tabindex="-1" aria-labelledby="new-category-modal-label" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -165,6 +166,7 @@
             </div>  
           </div>
 
+          <!-- Modal de edicion de categorias -->
           <div class="modal fade" id="edit-category-modal" tabindex="-1" aria-labelledby="edit-category-modal-label" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -368,17 +370,50 @@
                     <!-- Formulario -->
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" placeholder="name" id="nombre-comensal"></input>
-                      <label for="nombre-comensal">Name</label>
+                      <label for="nombre-comensal">Nombre</label>
                     </div>
                     <div class="form-floating mb-3">
                       <textarea class="form-control" placeholder="description" id="descripcion-comensal"></textarea>
-                      <label for="description-comensal">Description</label>
+                      <label for="description-comensal">Descripcion</label>
+                    </div>
+                    <div class="input-group">
+                      <select class="form-select" aria-label="Comensal Category Selector" id="comensal-category-selector">
+                        <!-- Aquí van todas las categorias inyectadas por JS -->
+                        <option value="NA">Selecciona Categoria</option>
+                      </select>
+                      <button class="btn btn-primary" id="btn-add-category-from-comensal">Añadir</button>
+                      <button class="btn btn-danger" id="btn-remove-category-from-comensal">Eliminar</button>
                     </div>
 
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="save-comensal">Save</button>
+                    <button type="button" class="btn btn-primary" id="save-comensal">Guardar Cambios</button>
                   </div>
+                </div>
+              </div>
+            </div>
+            <!-- Toasts de adicion y borrado de categorias -->
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+              <!-- Adicion -->
+              <div id="addition-category-toast" class="toast" role="alert" aria-live="polite" aria-atomic="true" data-bs-delay="3000">
+                <div class="toast-header">
+                  <div class="rounded" style="width: 15px; height: 15px; background-color: darkseagreen;"></div>
+                  <strong class="me-auto">¡Perfecto!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  La categoría se agregará al guardar los cambios.
+                </div>
+              </div>
+              <!-- Borrado -->
+              <div id="deletion-category-toast" class="toast" role="alert" aria-live="polite" aria-atomic="true" data-bs-delay="3000">
+                <div class="toast-header">
+                  <div class="rounded" style="width: 15px; height: 15px; background-color: lightcoral;"></div>
+                  <strong class="me-auto">¡Perfecto!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  La categoría se borrará al guardar los cambios.
                 </div>
               </div>
             </div>

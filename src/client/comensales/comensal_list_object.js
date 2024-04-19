@@ -142,6 +142,10 @@ class ComensalListObject {
                 ComensalHTML.addBadge(comensalJson.html);
             else if (removeBadge)
                 ComensalHTML.removeBadge(comensalJson.html);
+
+            comensal.categorias.forEach(category => {
+                ComensalHTML.addCategoryToComensal(comensalJson.html, category);
+            });
         }
         else 
             console.error('El comensal no existe en esta mesa');
@@ -153,17 +157,21 @@ class ComensalListObject {
 
     // Elimina una categoria de un comensal de esta lista
     removeComensalCategory(comensalId, category) {
-        const comensal = getComensal(comensalId);
+        const comensal = this.getComensal(comensalId);
         // Si existe el comensal
         if (comensal && category) {
             // Si el comensal contiene esta categoria, se elimina y se quita de su html de la lista de la mesa
             if (comensal.comensal.categorias.includes(category)) {
+                // Se obtiene su indice y se borra
+                let index = comensal.comensal.categorias.indexOf(category);
                 comensal.comensal.categorias.splice(index, 1);
                 // Quita el html de la categoria del comensal
                 ComensalHTML.removeCategoryFromComensal(comensal.html, category);
             }
-            else
+            else {
+                alert('El comensal no tiene la categoria')
                 console.error('El comensal no tiene la categoria');
+            }
         }
         else 
             console.error("El comensal o la categoria no existen");
@@ -171,17 +179,17 @@ class ComensalListObject {
 
     // Añade una categoria a un comensal de esta lista
     addComensalCategory(comensalId, category) {
-        const comensal = getComensal(comensalId);
+        const comensal = this.getComensal(comensalId);
         // Si existe el comensal
         if (comensal && category) {
-            // Si este no tiene todavia esa categoria se añade y se añade al html de la lista de la mesa
+            // Si este no tiene todavia esa categoria se añade
             if (!comensal.comensal.categorias.includes(category)) {
                 comensal.comensal.categorias.push(category);
-                // Añade el html de la categoria al comensal
-                ComensalHTML.addCategoryToComensal(comensal.html, category);
             }
-            else
+            else {
+                alert('El comensal ya tiene la categoria');
                 console.error('El comensal ya tiene la categoria');
+            }
         
         }
         else

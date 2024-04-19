@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import * as THREE from 'three';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { add } from 'three/examples/jsm/libs/tween.module.js';
 
 /*
  * Camera Buttons
@@ -96,6 +97,9 @@ var CameraButtons = function(blueprint3d) {
     let selectedItem;
     let three = blueprint3d.three;
 
+    // Sirve para saber que categorias que quieren añadir o borrar de un comensal y cuantas veces se ha pulsado.
+    let categoryStack = []; // Contiene [{categoryName, addTimes, removeTimes}]
+
     /* The flag that determines whether the wheel event is supported. */
     let supportsWheel = false;
   
@@ -129,16 +133,88 @@ var CameraButtons = function(blueprint3d) {
         $('#close-description-modal').trigger('click');
       });
 
+      // Añadir comensales
       $("#add-first-comensal").on('click', () => {
         comensalUtils.addComensal(selectedItem);
+      })
+
+
+      // Evento del boton que agrega categoria a comensales (dentro del modal de edicion)
+      $("#btn-add-category-from-comensal").on('click', () => {
+        const categoryName = $("#comensal-category-selector").val();
+
+        // NA se refiere a la opcion de selector por defecto, no es una categoria
+        if (categoryName && categoryName === 'NA')
+          return;
+
+        if (categoryStack.some(element => element.categoryName === categoryName)){
+          // Se aumenta en uno el contador de veces que se ha pulsado el boton de añadir
+          let index = categoryStack.findIndex(element => element.categoryName === categoryName);
+          categoryStack[index].addTimes++;
+        }
+        else {
+          // Si no existe, se crea
+          categoryStack.push({categoryName: categoryName, addTimes: 1, removeTimes: 0});
+        }
+
+        // Se muestra el toast de adicion de categoria
+        const additionToast = document.getElementById('addition-category-toast');
+        const toastBoostrap1 = bootstrap.Toast.getOrCreateInstance(additionToast);
+        toastBoostrap1.show();
+
+      })
+
+      // Evento del boton que borra categoria a comensales (dentro del modal de edicion)
+      $("#btn-remove-category-from-comensal").on('click', () => {
+        const categoryName = $("#comensal-category-selector").val();
+
+        // NA se refiere a la opcion de selector por defecto, no es una categoria
+        if (categoryName && categoryName === 'NA')
+          return;
+
+        // Si ya se ha pulsado alguno de los botones, el elemento ya tiene json en el array. 
+        if (categoryStack.some(element => element.categoryName === categoryName)){
+          // Se aumenta en uno el contador de veces que se ha pulsado el boton de borrar
+          let index = categoryStack.findIndex(element => element.categoryName === categoryName);
+          categoryStack[index].removeTimes++;
+        }
+        else {
+          // Si no existe, se crea
+          categoryStack.push({categoryName: categoryName, addTimes: 0, removeTimes: 1});
+        }
+
+
+        // Se muestra el toast de borrado de categoria
+        const deletionToast = document.getElementById('deletion-category-toast');
+        const toastBoostrap2 = bootstrap.Toast.getOrCreateInstance(deletionToast);
+        toastBoostrap2.show();
+        
       })
 
       // Se agrega el evento para el boton de guardar edicion de comensales
       $("#save-comensal").on('click', (e) => {
         const id = $('#id-del-comensal-seleccionado').text();
         const params = {id: id, nombre: $("#nombre-comensal").val(), descripcion: $("#descripcion-comensal").val()};
+
+        // Se añaden las categorias que se quieren añadir y se borran las demas.
+        categoryStack.forEach((element) => {
+          // Se restan las veces que se le ha dado al boton de añadir con las veces dadas al boton de borrar del mismo elemento
+          const rest = element.addTimes - element.removeTimes;
+
+          // Si es mayor, se añade. Si es menor, se resta ya que se le habria dado mas veces al boton de borrar
+          if (rest > 0)
+            addCategoryToComensal(element.categoryName);
+          else if (rest < 0)
+            removeCategoryFromComensal(element.categoryName);
+
+          // Si el resto es 0, la categoria ni se añade ni se borra.
+        });
+
         comensalUtils.modificaComensal(selectedItem, params);
         $('#close-comensal-modal').trigger('click');
+
+        // Se reinician el stack de categorias ya que se quita el modal.
+        categoryStack = [];
       });
 
       $("#up-comensal-side-button").on('click', () => {
@@ -307,6 +383,24 @@ var CameraButtons = function(blueprint3d) {
         list.comensalList.element.parentNode.removeChild(list.comensalList.element);
       }
     }
+
+    // Funcion para añadir una categoria de un comensal
+    function addCategoryToComensal(categoryName) {
+        const category = comensalUtils.getCategoryByName(categoryName);
+        const id = $('#id-del-comensal-seleccionado').text();
+        const table = selectedItem;
+
+        comensalUtils.sumarCategoriaComensal(table, id, category);
+    }
+
+    // Funcion para borrar una categoria de un comensal
+    function removeCategoryFromComensal(categoryName) {
+        const category = comensalUtils.getCategoryByName(categoryName);
+        const id = $('#id-del-comensal-seleccionado').text();
+        const table = selectedItem;
+
+        comensalUtils.restarCategoriaComensal(table, id, category);
+    }
   
     init();
   }
@@ -363,7 +457,25 @@ var CameraButtons = function(blueprint3d) {
       mainControls.newModelLoadedCallbacks.add(() => {changeState($("#main-menu-mode-list-edit").trigger('click'))});
 
       // Evento para generar la lista de comensales en el offcanvas de lista de comensales
-      $("#offcanvas-comensal-button").on('click', getComensalOffCanvasList);
+      $("#offcanvas-conmensal-button").on('click', () => {
+        // Obtengo la primera opcion del select
+        let firstOptionValue = $('#category-offcanvas-selector option:first').val();
+
+        // Si el selector no tiene la primera opcion puesta, se pulsa con la opcion predeterminada, la primera
+        if ($('#category-offcanvas-selector').val() !== firstOptionValue){
+          $('#category-offcanvas-selector').prop('selectedIndex', 0).trigger('change');
+        }
+        // Si no, se obtiene la lista
+        else
+          getComensalOffCanvasList();
+
+      });
+
+      // Evento para borrar el contenido del modal de nueva categoria
+      $('#add-new-category').on('click', () => {
+        $("#new-category-name").val('');
+        $("#new-category-color").val('#cccccc');
+      })
 
       // Evento de guardado de nueva categoria
       $("#save-new-category").on('click', () => {
@@ -384,9 +496,8 @@ var CameraButtons = function(blueprint3d) {
 
       // Se agregan los eventos para los botones de descarga de pdf del modal de lista de comensales
       $("#download-comensal-pdf").on('click', () => {
-        const categoryName = $("#category-dropdown").text();
+        const categoryName = $("#category-offcanvas-selector").val();
         const category = comensalUtils.getCategoryByName(categoryName);
-
         // Si la categoria no es la de por defecto (Todos, esta categoria no es guardada), se descarga filtrando por categoria
         if (category)
           downloadComensalPDF(category);
@@ -398,7 +509,7 @@ var CameraButtons = function(blueprint3d) {
       Cuando se pulsa un elemento del dropdown de categorias del modal de lista de comensales, 
       se cambia el texto del boton de dropdown y se filtra la lista por la categoria
       */
-      $("#category-offcanvas-selector").on('change', () => {
+      $("#category-offcanvas-selector").on('change', function() {
         const categoryName = $(this).val();
         const category = comensalUtils.getCategoryByName(categoryName);
 

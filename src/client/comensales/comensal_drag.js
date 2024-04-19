@@ -320,8 +320,8 @@ function removeBadge(comensalLi) {
 function addCategoryToComensal(comensalLi, category) {
     const span = generateCircleSpan(category.color);
     span.id = `${comensalLi.id.split('_')[2]}_category_badge_${category.name}`;
-
-    comensalLi.querySelector('p').appendChild(html);
+    console.log(span);
+    comensalLi.querySelector('p').appendChild(span);
 }
 
 // La categoria ha sido modificada, por lo que cambia el color de la etiqueta (es la unica opcion modificable).
@@ -329,8 +329,8 @@ function modifyCategoryFromComensal(comensal, category) {
     $(`#${comensal.id}_category_badge_${category.name}`).css('background-color', category.color);
 }
 
-function removeCategoryFromComensal(comensalLi, category) {
-    $(`#${comensalLi.id.split('_')[2]}_category_badge_${category.name}`).remove();
+function removeCategoryFromComensal(comensalId, category) {
+    $(`#${comensalId.split('_')[2]}_category_badge_${category.name}`).remove();
 }
 
 function createCategorySideItemHtml(category) {
@@ -371,9 +371,16 @@ function generateCircleSpan(color) {
     return html;
 }
 
-function createCategorySelectorItemHtml(category) {
+function createCategoryListSelectorItemHtml(category) {
     const html = `
-        <option value="${category.name}" id="offcanvas-option-${category.name}">${category.name}</option>
+        <option value="${category.name}" id="category-offcanvas-option-${category.name}">${category.name}</option>
+    `;
+    return html;
+}
+
+function createCategoryComensalSelectorItemHtml(category) {
+    const html = `
+        <option value="${category.name}" id="category-comensal-option-${category.name}">${category.name}</option>
     `;
     return html;
 }
@@ -397,6 +404,7 @@ export {
     addCategoryToComensal,
     removeCategoryFromComensal,
     createCategorySideItemHtml,
-    createCategorySelectorItemHtml,
+    createCategoryListSelectorItemHtml,
+    createCategoryComensalSelectorItemHtml,
     modifyCategoryFromComensal
 }
