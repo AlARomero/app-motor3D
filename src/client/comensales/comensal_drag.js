@@ -278,7 +278,10 @@ function comensalToHtml(comensalListObject, comensal, container) {
     // Se crea el html comensal del comensal side menu y se añade al contenedor.
     const html =  `
         <div class="d-flex justify-content-between align-items-center ${selectedClass}" id="container_comensal_${comensal.id}">
-            <p id="comensal-nombre-${comensal.id}" >${comensal.nombre}</p>
+            <div class="d-flex justify-content-between" id="container_nombre_comensal_${comensal.id}">
+                <p id="comensal-nombre-${comensal.id}" style="margin: 0">${comensal.nombre}</p>
+            </div>
+            
             <div>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#comensales-modal" class="btn btn-outline-primary btn-sm" id='btn-edit-${comensal.id}'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -321,7 +324,7 @@ function addCategoryToComensal(comensalLi, category) {
     const span = generateCircleSpan(category.color);
     span.id = `${comensalLi.id.split('_')[2]}_category_badge_${category.name}`;
     console.log(span);
-    comensalLi.querySelector('p').appendChild(span);
+    comensalLi.appendChild(span);
 }
 
 // La categoria ha sido modificada, por lo que cambia el color de la etiqueta (es la unica opcion modificable).
@@ -338,8 +341,11 @@ function createCategorySideItemHtml(category) {
     const circle = generateCircleSpan(category.color);
     circle.id = `category-badge-${category.name}`;
     const html =  `
-        <div class="d-flex justify-content-between align-items-center" id="container-category-${category.name}">
-            <p id="category-nombre-${category.name}" >${category.name} ${circle.outerHTML} </p>
+        <div class="d-flex justify-content-between" id="container-category-${category.name}">
+            <div class="d-flex justify-content-between">
+                <p id="category-nombre-${category.name}" style="margin: 0">${category.name} </p>
+                ${circle.outerHTML}
+            </div>
             <div>
                 <button type="button" data-bs-toggle="modal" data-bs-target="#edit-category-modal" class="btn btn-outline-primary btn-sm" id='btn-edit-${category.name}'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -361,12 +367,15 @@ function createCategorySideItemHtml(category) {
 }
 
 function generateCircleSpan(color) {
-    const html = document.createElement('span');
-    html.style.backgroundColor = color; // Establece el color de fondo
-    html.style.display = 'inline-block'; // Permite que el span tenga un ancho y una altura
-    html.style.width = '20px'; // Establece el ancho
-    html.style.height = '20px'; // Establece la altura
-    html.style.borderRadius = '50%'; // Hace que el span sea un círculo
+    // <div class="rounded" style="width: 15px; height: 15px; background-color: darkseagreen;"></div>
+    const html = document.createElement('div');
+    html.setAttribute('class', 'rounded');
+    html.style.width = '15px';
+    html.style.height = '15px';
+    html.style.backgroundColor = color;
+    html.style.display = 'inline-block';
+    html.style.alignSelf = 'center';
+
 
     return html;
 }
