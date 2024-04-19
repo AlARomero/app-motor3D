@@ -234,6 +234,7 @@ function fillPlaceholder(comensal) {
     $('#comensales-modal-label').text('Rename comensal: ' + comensal.nombre);
     $('#nombre-comensal').val(comensal.nombre);
     $('#descripcion-comensal').val(comensal.descripcion);
+    $('#comensal-category-selector').prop('selectedIndex', 0).trigger('change');
 }
 
 /**
