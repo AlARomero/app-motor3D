@@ -1000,7 +1000,7 @@ var CameraButtons = function(blueprint3d) {
   
     function floorClicked(room) {
       currentTarget = room;
-      $("#transparent-floor").prop('checked', room.transparence);
+      $("#transparent-floor").val(room.transparence);
       $("#wallTextures").hide(); 
       $("#actual-floor-height").val(room.altitude); 
       $("#floorTexturesDiv").show();  
@@ -1011,8 +1011,10 @@ var CameraButtons = function(blueprint3d) {
       const room = currentTarget;
       const floorplan = three.getModel().floorplan;
 
+      const transparence = $("#transparent-floor").val();
+
       // Cambia la transparencia de el suelo de la habitacion
-      floorplan.changeRoomTransparency(room);
+      floorplan.changeRoomTransparency(room, transparence);
       // Actualiza el plano
       floorplan.update();
     }
@@ -1148,8 +1150,6 @@ var CameraButtons = function(blueprint3d) {
       if (!(usedSkyBox instanceof THREE.Object3D))
         usedSkyBox = blueprint3d.three.skyBox.getModel();
 
-      console.log(usedSkyBox)
-
       // Calcula el bounding box de skyBox
       const boundingBox = new THREE.Box3().setFromObject(usedSkyBox);
     
@@ -1173,7 +1173,7 @@ var CameraButtons = function(blueprint3d) {
           "wallTextures":[],
           "floorTextures":{},
           "newFloorTextures":{},
-          "roomsTransparence": {"4e3d65cb-54c0-0681-28bf-bddcc7bdb571,71d4f128-ae80-3d58-9bd2-711c6ce6cdf2,da026c08-d76a-a944-8e7b-096b752da9ed,f90da5e3-9e0e-eba7-173d-eb0b071e838e": true}
+          "roomsTransparence": {"4e3d65cb-54c0-0681-28bf-bddcc7bdb571,71d4f128-ae80-3d58-9bd2-711c6ce6cdf2,da026c08-d76a-a944-8e7b-096b752da9ed,f90da5e3-9e0e-eba7-173d-eb0b071e838e": 0}
           },
         "items": [],
         "categories": [],

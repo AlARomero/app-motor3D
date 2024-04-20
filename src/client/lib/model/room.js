@@ -10,7 +10,7 @@ var utils = require('../utils/utils')
 
 var HalfEdge = require('./half_edge')
 
-var Room = function(floorplan, corners, altitude = 0, transparence = false) {
+var Room = function(floorplan, corners, altitude = 0, transparence = 1) {
  
   var scope = this;
 

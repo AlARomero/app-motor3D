@@ -17,7 +17,7 @@ var Floorplan = function() {
   var rooms = [];
 
   let roomsAltitude = {};  // Room Uuid -> {oldAltitude, newAltitude}
-  let roomsTransparence = {};  // Room Uuid -> boolean
+  let roomsTransparence = {};  // Room Uuid -> int
   let viewPoints = new Array(5); // Puntos de vista de la camara, 5 puntos de vista como mucho. Son {Position, Rotation, Target}
   
   // For debug
@@ -378,14 +378,9 @@ var Floorplan = function() {
     return false
   }
 
-  // Cambia la transparencia de una habitación, que por defecto es false
-  this.changeRoomTransparency = function(room) {
-    if (roomsTransparence.hasOwnProperty(room.getUuid())) 
-      roomsTransparence[room.getUuid()] = !roomsTransparence[room.getUuid()];
-    // Como por defecto es false, si no existe registro se cambia a true
-    else 
-      roomsTransparence[room.getUuid()] = true;
-    // Si no hay registro,
+  // Cambia la transparencia de una habitación, que por defecto es 0
+  this.changeRoomTransparency = function(room, transparence) {
+    roomsTransparence[room.getUuid()] = transparence;
   }
 
   // clear out obsolete floor textures
@@ -393,7 +388,7 @@ var Floorplan = function() {
     var uuids = utils.map(rooms, function(room) {
       return room.getUuid();
     });
-    for (var uuid in scope.floorTextures) {
+    for (let uuid in scope.floorTextures) {
       if (!utils.hasValue(uuids, uuid)) {
         delete scope.floorTextures[uuid]
       }
@@ -459,7 +454,7 @@ var Floorplan = function() {
     utils.forEach(roomCorners, function(corners) {
 
       let altitude = 0;
-      let transparece = false;
+      let transparece = 1;
 
       // Si la habitacion tiene altura registrada
       if (roomsAltitude.hasOwnProperty(getUuidByCorners(corners))) 
