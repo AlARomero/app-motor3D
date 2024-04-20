@@ -342,15 +342,9 @@ var CameraButtons = function(blueprint3d) {
 
     //Funcion que actualiza la posicion del objeto seleccionado
     function setNewItemPosition() {
-      let x = selectedItem.position.x; //TODO Posicion x del objeto se cambia arrastrandolo, necesario tambien un control?
+      let x = selectedItem.position.x;
       let y = $("#actual-elevation-value").val();
-      let z = selectedItem.position.z; //TODO Posicion z del objeto se cambia arrastrandolo, necesario tambien un control?
-
-      //Control de valores minimos y maximos
-      if(y > 300) // Maximo
-        y = 300;
-      else if(y < 0)  //Minimo
-        y = 0;
+      let z = selectedItem.position.z;
       
       y = (parseFloat(y)+ parseFloat(selectedItem.desfaseAltura));
       
@@ -1042,10 +1036,6 @@ var CameraButtons = function(blueprint3d) {
         height = 0;
         $("#actual-wall-height").val(0);
       }
-      else if (height > 700) {
-        height = 700;
-        $("#actual-wall-height").val(700);
-      }
 
       // Se cambia la altura a los half edges que tenga el muro
       if(wall.frontEdge)
@@ -1066,15 +1056,6 @@ var CameraButtons = function(blueprint3d) {
       
       let altitude = parseFloat($("#actual-floor-height").val());
 
-      if (altitude < 0) { 
-        altitude = 0;
-        $("#actual-floor-height").val(0);
-      }
-      else if (altitude > 700) {
-        altitude = 700;
-        $("#actual-floor-height").val(700);
-      }
-      
       floorplan.changeRoomAltitude(room.getUuid(), altitude);
     }
   
