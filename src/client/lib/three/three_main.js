@@ -11,6 +11,7 @@ const ThreeSkybox = require('./three_skybox');
 const ThreeControls = require('./three_controls');
 // var ThreeCanvas = require('./three_canvas')
 const ThreeHUD = require('./three_hud.js');
+const FloorItemUtils = require('../utils/floorItemUtils.js');
 
 
 //var utils = require('../utils/utils');
@@ -784,17 +785,18 @@ var ThreeMain = function(model, element, canvasElement, opts) {
 
   }
 
-  this.updateItemDraggedHeight = function(item) {
+  this.updateItemDraggedHeight = function(item) { // Cuando se arrastra un item
     const room = getRoomFromItem(item);
-    const roomAltitude = room.altitude;
+    let roomAltitude;
 
     if (startDragRoom) {
       // Si se ha movido de habitacion o se reconoce la habitacion inicial
+      roomAltitude = room.altitude;
       const oldRoomAltitude = startDragRoom.altitude;
 
       item.setPosition(item.position.x, item.position.y + (roomAltitude - oldRoomAltitude), item.position.z);
     }
-    // Si no se reconoce la habitacion inicial, no se hace nada (no deberia pasar)
+    // Si no se reconoce la habitacion inicial, no se hace nada (no deberia pasar, hot fix)
 
   }
 
@@ -823,10 +825,8 @@ var ThreeMain = function(model, element, canvasElement, opts) {
           item.setPosition(item.position.x, item.position.y + plusAltitude, item.position.z);
         }
 
-        else {
-          // Si no hay habitacion, algo malo ha ocurrido
-          console.error('No se ha encontrado la habitacion del item');
-        }
+        // Si no hay habitacion algo va mal, posiblemente se haya borrado
+
       })
       // Ya se actualizaron los objetos, la altura antigua no sirve.
       floorplan.floorplan.equaliceRoomsAltitude();

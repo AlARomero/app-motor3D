@@ -767,7 +767,10 @@ var CameraButtons = function(blueprint3d) {
       doc.setFontSize(14);
       doc.setTextColor(40);
       // Añade el titulo
-      doc.text('Lista de Comensales', 10, 10);
+      let title = 'Lista de Comensales';
+      if (category)
+        title += ' - ' + category.name;
+      doc.text(title, 10, 10);
 
       // Crea una matriz de objetos para la tabla
       const tableData = [];
