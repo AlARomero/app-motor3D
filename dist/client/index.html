@@ -24,7 +24,7 @@
           style="margin-bottom: 0.5rem;">
           <input type="radio" class="btn-check" name="floorplan_tab" id="floorplan_tab" autocomplete="off">
           <label class="btn btn-outline-primary" for="floorplan_tab">
-            Edit Floorplan
+            Editar Plano
             <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
               class="bi bi-chevron-right" viewBox="0 0 16 16">
               <path fill-rule="evenodd"
@@ -33,7 +33,7 @@
           </label>
           <input type="radio" class="btn-check" name="design_tab" id="design_tab" autocomplete="off">
           <label class="btn btn-outline-primary" for="design_tab">
-            Design
+            Diseño
             <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
               class="bi bi-chevron-right" viewBox="0 0 16 16">
               <path fill-rule="evenodd"
@@ -42,7 +42,7 @@
           </label>
           <input type="radio" class="btn-check" name="items_tab" id="items_tab" autocomplete="off">
           <label class="btn btn-outline-primary" for="items_tab">
-            Add Items
+            Añadir Objetos
             <svg class="float-end" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
               class="bi bi-chevron-right" viewBox="0 0 16 16">
               <path fill-rule="evenodd"
@@ -57,28 +57,28 @@
           <!-- Modos de vista de listas de comensales -->
           <div class="main-set mx-auto">
             <div class="d-flex">
-              <h5 class="mx-auto">View Mode</h5>
+              <h5 class="mx-auto">Modo de vista</h5>
             </div>
             <div class="btn-group" role="group" aria-label="main-menu-mode">
 
               <!-- Modo limpio -->
               <input type="radio" class="btn-check" name="main-menu-radio" id="main-menu-mode-clean">
-              <label class="btn btn-outline-secondary" for="main-menu-mode-clean">Clean Mode</label>
+              <label class="btn btn-outline-secondary" for="main-menu-mode-clean">Limpio</label>
 
               <!-- Modo  una sola lista-->
               <input type="radio" class="btn-check" name="main-menu-radio" id="main-menu-mode-list-view">
-              <label class="btn btn-outline-secondary" for="main-menu-mode-list-view">List View Mode</label>
+              <label class="btn btn-outline-secondary" for="main-menu-mode-list-view">Individual</label>
 
               <!-- Modo edicion de listas -->
               <input type="radio" class="btn-check" name="main-menu-radio" id="main-menu-mode-list-edit">
-              <label class="btn btn-outline-secondary" for="main-menu-mode-list-edit">List Edit Mode</label>
+              <label class="btn btn-outline-secondary" for="main-menu-mode-list-edit">Edición</label>
             </div>
           </div>
 
           <!-- Puntos de vista de camara -->
           <div class="main-set mx-auto">
             <div class="d-flex">
-              <h5 class="mx-auto"> Camera View Points</h5>
+              <h5 class="mx-auto"> Puntos de vista de cámara </h5>
             </div>
             <div class="d-flex gap-2">
               <div class="btn-group">
@@ -88,7 +88,7 @@
                 <button class="btn btn-outline-secondary" id="camera-view-4">4</button>
                 <button class="btn btn-outline-secondary" id="camera-view-5">5</button>
               </div>
-              <button class="btn btn-primary" id="camera-view-save-btn">Save New Position</button>
+              <button class="btn btn-primary" id="camera-view-save-btn">Guardar Posición</button>
             </div>
           </div>
 
@@ -227,7 +227,7 @@
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title fs-5" id="modal-item-options">Change Item Options</h5>
+                    <h5 class="modal-title fs-5" id="modal-item-options">Opciones del Objeto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"
                       id="close-description-modal"></button>
                   </div>
@@ -235,16 +235,16 @@
                     <form onsubmit="false">
                       <div class="form-floating mb-3">
                         <input type="text" class="form-control" placeholder="name" id="item-name-input"></input>
-                        <label for="item-name">Name</label>
+                        <label for="item-name">Nombre</label>
                       </div>
                       <div class="form-floating mb-3">
                         <textarea class="form-control" placeholder="description" id="description-textarea"></textarea>
-                        <label for="description-textarea">Description</label>
+                        <label for="description-textarea">Descripción</label>
                       </div>
                     </form>
                   </div>
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="save-item-options">Save changes</button>
+                    <button type="button" class="btn btn-primary" id="save-item-options">Guardar Cambios</button>
                   </div>
                 </div>
               </div>
@@ -256,14 +256,14 @@
             <div class="mb-4">
               <!-- Boton toggle del colapsado de tamaño de objeto-->
               <button class="btn btn-primary w-45" type="button" data-bs-toggle="collapse"
-                data-bs-target="#size-collapse" aria-expanded="false" aria-controls="size-collapse">Adjust size</button>
+                data-bs-target="#size-collapse" aria-expanded="false" aria-controls="size-collapse">Tamaño</button>
               <!-- Input lock in place -->
               <input class="btn-check w-45" type="checkbox" autocomplete="off" id="fixed">
-              <label class="btn btn-outline-secondary w-45" for="fixed">Lock in place</label>
+              <label class="btn btn-outline-secondary w-45" for="fixed">Bloquear</label>
               <!-- Boton toggle de control de movimiento de objeto colapsado -->
               <button class="btn btn-primary w-45 m-t-0-5" type="button" id="elevation-controls-btn"
                 data-bs-toggle="collapse" data-bs-target="#elevation-controls" aria-expanded="false"
-                aria-controls="elevation-controls">Floor elevation</button>
+                aria-controls="elevation-controls">Elevación</button>
               <!-- Boton de supresion de objeto -->
               <button class="btn btn-block btn-danger w-45 m-t-0-5" id="context-menu-delete">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -271,19 +271,19 @@
                   <path
                     d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
                 </svg>
-                Delete Item
+                Eliminar
               </button>
             </div>
 
             <!-- Div de tamaño de objeto colapsado -->
             <div class="collapse" id="size-collapse" style="margin-top: 0.5rem;">
               <div class="card">
-                <div class="card-header"> Size </div>
+                <div class="card-header"> Tamaño </div>
                 <div class="card-body" style="color: #333333">
                   <div class="form form-horizontal" class="lead">
                     <div class="form-group">
                       <label class="col-5 control-label">
-                        Width
+                        Ancho
                       </label>
                       <div class="col-6">
                         <input type="number" class="form-control" id="item-width">
@@ -291,7 +291,7 @@
                     </div>
                     <div class="form-group">
                       <label class="col-sm-5 control-label">
-                        Depth
+                        Profundidad
                       </label>
                       <div class="col-6">
                         <input type="number" class="form-control" id="item-depth">
@@ -299,14 +299,14 @@
                     </div>
                     <div class="form-group">
                       <label class="col-sm-5 control-label">
-                        Height
+                        Altura
                       </label>
                       <div class="col-6">
                         <input type="number" class="form-control" id="item-height">
                       </div>
                     </div>
                   </div>
-                  <small><span class="text-muted">Measurements in inches.</span></small>
+                  <small><span class="text-muted">Unidad de medida en pulgadas</span></small>
                 </div>
               </div>
             </div>
@@ -314,13 +314,11 @@
             <!-- Div de control de movimiento de objeto colapsado -->
             <div class="collapse" id="elevation-controls" style="margin-top: 0.5rem;">
               <div class="card">
-                <div class="card-header"> Elevation </div>
+                <div class="card-header"> Elevación </div>
                 <div class="card-body">
                   <div class="d-flex justify-content-between">
-                    <span>0</span>
-                    <input type="number" min="0" max="300" step="5" class="form-control w-50"
+                    <input type="number" step="5" class="form-control w-50"
                       id="actual-elevation-value">
-                    <span>300</span>
                   </div>
                 </div>
               </div>
@@ -335,7 +333,7 @@
               </div>
               <div class="card-footer d-flex justify-content-center" id="comensales-side-footer">
                   <button  type="button" class="btn btn-primary" id='add-first-comensal'>
-                    Add Comensal
+                    Añadir
                   </button>
 
                   <div class="d-flex" id="comensales-side-up-and-down-buttons">
@@ -428,16 +426,16 @@
 
             <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
               data-bs-target="#floor-textures-collapse" aria-expanded="false"
-              aria-controls="floor-textures-collapse">Adjust Floor</button>
+              aria-controls="floor-textures-collapse">Texturas</button>
 
               <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
               data-bs-target="#structure-floor-height" aria-expanded="false"
-              aria-controls="structure-floor-height">Floor Height</button>
+              aria-controls="structure-floor-height">Altura</button>
 
           </div>
 
           <div class="m-t-0-5">
-            <label for="transparent-floor" class="form-label">Transparencia del suelo</label>   
+            <label for="transparent-floor" class="form-label">Transparencia</label>   
             <input class="form-range" type="range" min="0" max="1" step="0.05" id="transparent-floor"></input>         
           </div>
 
@@ -478,7 +476,7 @@
           </div>
           <div class="collapse" id="structure-floor-height" style="margin-top: 0.5rem;">
             <div class="card">
-              <div class="card-header">Floor Height </div>
+              <div class="card-header">Altura de suelo</div>
               <div class="card-body">
                 <div class="d-flex justify-content-center">
                   <input type="number" min="0" step="1" class="form-control w-50" id="actual-floor-height">
@@ -493,10 +491,10 @@
           <div class="d-flex justify-content-center align-items-center">
             <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
               data-bs-target="#wall-textures-collapse" aria-expanded="false" aria-controls="wall-textures-collapse"
-              style="margin-right: 0.5rem;">Selected Wall Texture</button>
+              style="margin-right: 0.5rem;">Texturas</button>
             <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
               data-bs-target="#structure-wall-height" aria-expanded="false"
-              aria-controls="structure-wall-height">Wall Height</button>
+              aria-controls="structure-wall-height">Altura</button>
           </div>
           <div class="collapse" id="wall-textures-collapse" style="margin-top: 0.5rem;">
             <ul class="list-group" style="color: #333333">
@@ -523,7 +521,7 @@
           </div>
           <div class="collapse" id="structure-wall-height" style="margin-top: 0.5rem;">
             <div class="card">
-              <div class="card-header"> Structure Wall Height </div>
+              <div class="card-header"> Altura </div>
               <div class="card-body">
                 <div class="d-flex justify-content-center">
                   <input type="number" min="1" step="1" class="form-control w-50" id="actual-wall-height">
@@ -544,14 +542,14 @@
           </div>
           <div id="main-controls" class="d-flex gap-2 me-2">
             <a href="#" class="btn btn-secondary btn-sm 3d-viewer-control" id="new" role="button">
-              New Plan
+              Nuevo Diseño
             </a>
             <a href="#" class="btn btn-secondary btn-sm 3d-viewer-control" id="saveFile" role="button">
-              Save Plan
+              Guardar Diseño
             </a>
             <a class="btn btn-sm btn-secondary btn-file 3d-viewer-control" role="button">
               <input type="file" class="hidden-input" id="loadFile">
-              Load Plan
+              Cargar Diseño
             </a>
           </div>
 
@@ -631,7 +629,7 @@
                 <path fill-rule="evenodd"
                   d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10M.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8" />
               </svg>
-              Move Walls
+              Mover muros
             </button>
             <button id="draw" class="btn btn-sm btn-default">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -639,7 +637,7 @@
                 <path
                   d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
               </svg>
-              Draw Walls
+              Dibujar muros
             </button>
             <button id="delete" class="btn btn-sm btn-default">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -647,15 +645,14 @@
                 <path
                   d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
               </svg>
-              Delete Walls
+              Borrar muros
             </button>
-            <span id="btn-done">
-              <button class="btn btn-primary btn-sm" id="update-floorplan">Done &raquo;</button>
-            </span>
+            <button class="btn btn-primary btn-sm" id="update-floorplan">Listo &raquo;</button>
+
 
           </div>
           <div id="draw-walls-hint">
-            Press the "Esc" key to stop drawing walls
+            Presiona la tecla "Esc" para parar de dibujar muros
           </div>
         </div>
 
@@ -674,7 +671,7 @@
   </div>
 
   <div id="script-loading-screen">
-    <label for="progress-bar">Loading...</label>
+    <label for="progress-bar">Cargando...</label>
     <progress id="progress-bar" value="0" max="100"></progress>
   </div>
 
