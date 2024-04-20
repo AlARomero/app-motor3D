@@ -21,7 +21,7 @@ class ThreeSkybox {
 
       // Se reescala (modelos suelen ser muy pequeños)
       this.bgModel.scale.set(100, 100, 100);
-      this.bgModel.position.set(-1530, 32, 200); // TODO ajustar la posición a (0, altura para que el plano se vea en 0, 0)
+      this.bgModel.position.set(0, 0, 0); // TODO ajustar la posición a (0, altura para que el plano se vea en 0, 0)
       this.skyBoxLoadedCallbacks.fire(model);
     }).catch(err => {
       console.log(err);
