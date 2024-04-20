@@ -45,6 +45,14 @@ class ComensalUtils {
         return this.categories.find(c => c.name === categoryName);
     }
 
+    setCategoriesByScene() {
+        const categories = this.scene.categories;
+        console.log(categories);
+        categories.forEach(category => {
+            this.crearCategoria(category.name, category.color);
+        });
+    }
+
     // Devuelve una lista con todos los comensales que hay en el diseño
     getAllComensals() {
         const comensals = [];
@@ -66,7 +74,7 @@ class ComensalUtils {
             this.allComensalListObject.forEach(comensalListObject => {
                 // Se buscan los comensales de la categoria
                 comensalListObject.comensales.forEach(comensal => {
-                    if (comensal.comensal.categorias.includes(category))
+                    if (comensal.comensal.categorias.some(c => c.name === category.name))
                         comensals.push(comensal.comensal);
                 });
             });
@@ -215,9 +223,9 @@ class ComensalUtils {
             const opts = {
                 id: comensal.comensal.id,
                 nombre: comensal.comensal.nombre,
-                descripcion: comensal.comensal.descripcion
+                descripcion: comensal.comensal.descripcion,
+                categorias: comensal.comensal.categorias
             };
-            
             this.addComensal(table, opts);
         });
     }
@@ -273,6 +281,7 @@ class ComensalUtils {
                 color: categoriaColor
             }
             this.categories.push(categoria);
+            this.scene.categories = this.categories;
 
             const sideHtml = ComensalDrag.createCategorySideItemHtml(categoria);
             const listSelectorHtml = ComensalDrag.createCategoryListSelectorItemHtml(categoria);
@@ -313,6 +322,7 @@ class ComensalUtils {
         index = this.categories.findIndex(c => c.name === categoria.name);
         if (index >= 0) {
             this.categories.splice(index, 1);
+            this.scene.categories = this.categories;
         }
 
         // Se elimina del dropdown de la lista y la lista lateral de categorias

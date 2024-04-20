@@ -58,6 +58,8 @@ var Scene = function(model, textureDir) {
   var scene = new THREE.Scene();
         
   var items = [];
+  this.categories = [];
+
 
   var callback = function() {
         scope.needsUpdate = true;

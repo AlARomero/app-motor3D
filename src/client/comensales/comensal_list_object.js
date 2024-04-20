@@ -107,6 +107,11 @@ class ComensalListObject {
         // Se añade el badge si tiene descripcion el nuevo comensal
         if (comensal.descripcion)
             ComensalHTML.addBadge(comensalJson.html);
+
+        // Si ya tenia categorias, se añaden
+        comensal.categorias.forEach(category => {
+            ComensalHTML.addCategoryToComensal(html, category);
+        });
     }
 
     /**
@@ -157,7 +162,7 @@ class ComensalListObject {
         // Si existe el comensal
         if (comensal && category) {
             // Si el comensal contiene esta categoria, se elimina y se quita de su html de la lista de la mesa
-            if (comensal.comensal.categorias.includes(category)) {
+            if (comensal.comensal.categorias.some(c => c.name === category.name)) {
                 // Se obtiene su indice y se borra
                 let index = comensal.comensal.categorias.indexOf(category);
                 comensal.comensal.categorias.splice(index, 1);

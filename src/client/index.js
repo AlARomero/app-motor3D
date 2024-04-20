@@ -454,6 +454,7 @@ var CameraButtons = function(blueprint3d) {
       three.getScene().itemLoadedCallbacks.add(checkNewTable);
       sideMenu.stateChangeCallbacks.add(changeMenuVisibility);
       mainControls.newModelLoadedCallbacks.add(loadNewFloorplanViewPoints);
+      mainControls.newModelLoadedCallbacks.add(getCategoriesToComensalUtils);
       mainControls.newModelLoadedCallbacks.add(() => {changeState($("#main-menu-mode-list-edit").trigger('click'))});
 
       // Evento para generar la lista de comensales en el offcanvas de lista de comensales
@@ -529,6 +530,10 @@ var CameraButtons = function(blueprint3d) {
         scope.actualCameraViewState = scope.cameraViewPointStates.SELECTING;
         removeSavingViewPointStyle();
       }
+    }
+
+    function getCategoriesToComensalUtils() {
+      comensalUtils.setCategoriesByScene();
     }
 
     function viewPointClicked(buttonClicked) {
@@ -1187,6 +1192,7 @@ var CameraButtons = function(blueprint3d) {
           "roomsTransparence": {"4e3d65cb-54c0-0681-28bf-bddcc7bdb571,71d4f128-ae80-3d58-9bd2-711c6ce6cdf2,da026c08-d76a-a944-8e7b-096b752da9ed,f90da5e3-9e0e-eba7-173d-eb0b071e838e": true}
           },
         "items": [],
+        "categories": [],
       }));
 
       scope.newModelLoadedCallbacks.fire();

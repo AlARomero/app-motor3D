@@ -30,7 +30,8 @@ var Model = function(textureDir) {
     const data = JSON.parse(data_json);
     scope.newRoom(
       data.floorplan,
-      data.items
+      data.items,
+      data.categories
     );
 
     scope.roomLoadedCallbacks.fire();
@@ -484,7 +485,8 @@ var Model = function(textureDir) {
     
     const room = {
       floorplan: (scope.floorplan.saveFloorplan()),
-      items: items_arr
+      items: items_arr,
+      categories: scope.scene.categories
     };
 
     return JSON.stringify(room);
@@ -513,7 +515,7 @@ function generateRandomString(longitud) {
 }
 
 
-  this.newRoom = function(floorplan, items) {
+  this.newRoom = function(floorplan, items, categories) {
     this.scene.clearItems();
     //console.log("EStoy en newRoom: ");
     this.floorplan.loadFloorplan(floorplan);
@@ -581,6 +583,8 @@ function generateRandomString(longitud) {
         item.fixed,
         item.itemsBounded);
     });
+
+    scope.scene.categories = categories;
   }
 }
 
