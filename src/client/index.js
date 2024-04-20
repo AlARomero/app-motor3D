@@ -1200,7 +1200,8 @@ var CameraButtons = function(blueprint3d) {
   
     function loadDesign() {
       comensalUtils.clearLists();
-      const files = $("#loadFile").get(0).files;
+      const fileInput = $("#loadFile").get(0);
+      const files = fileInput.files
       
       const reader  = new FileReader();
       reader.onload = function(event) {
@@ -1209,6 +1210,9 @@ var CameraButtons = function(blueprint3d) {
           scope.newModelLoadedCallbacks.fire();
       }
       reader.readAsText(files[0]);
+
+      // Limpio el valor del elemento de carga del navegador (ya que las cargas se manejan mediante el evento change)
+      fileInput.value = '';
     }
   
     function saveDesign() {

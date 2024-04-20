@@ -24,7 +24,6 @@ var Model = function(textureDir) {
     // TODO: better documentation on serialization format.
     // TODO: a much better serialization format.
     scope.scene.setCargandoEscena(true);
-    
     this.roomLoadingCallbacks.fire();
 
     const data = JSON.parse(data_json);
