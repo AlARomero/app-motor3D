@@ -735,6 +735,21 @@ var CameraButtons = function(blueprint3d) {
 
     }
 
+  
+    // Captura del diseño
+    function designScreenshot() {
+      const renderer = blueprint3d.three.dataUrl();
+      const a = window.document.createElement('a');
+      a.setAttribute("id", "showModel");
+      a.href = renderer;
+      a.download = "Diseño - "
+          + document.getElementById("room-name").innerHTML + " - "
+          + new Date().toLocaleString() + ".png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
 
     // Crea un pdf con una tabla que contiene a la lista actual de comensales y lo descarga
     function downloadComensalPDF(category = undefined) {
