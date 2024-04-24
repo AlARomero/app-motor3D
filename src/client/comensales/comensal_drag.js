@@ -367,7 +367,7 @@ function createCategorySideItemHtml(category) {
     const html =  `
         <div class="d-flex justify-content-between" id="container-category-${category.name}">
             <div class="d-flex justify-content-between">
-                <p id="category-nombre-${category.name}" style="margin: 0">${category.name} </p>
+                <p id="category-nombre-${category.name}" style="margin: 0">${category.displayName} </p>
                 ${circle.outerHTML}
             </div>
             <div>
@@ -406,14 +406,14 @@ function generateCircleSpan(color) {
 
 function createCategoryListSelectorItemHtml(category) {
     const html = `
-        <option value="${category.name}" id="category-offcanvas-option-${category.name}">${category.name}</option>
+        <option value="${category.name}" id="category-offcanvas-option-${category.name}">${category.displayName}</option>
     `;
     return html;
 }
 
 function createCategoryComensalSelectorItemHtml(category) {
     const html = `
-        <option value="${category.name}" id="category-comensal-option-${category.name}">${category.name}</option>
+        <option value="${category.name}" id="category-comensal-option-${category.name}">${category.displayName}</option>
     `;
     return html;
 }

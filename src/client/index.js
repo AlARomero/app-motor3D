@@ -753,7 +753,7 @@ var CameraButtons = function(blueprint3d) {
       // Añade el titulo
       let title = 'Lista de Comensales';
       if (category)
-        title += ' - ' + category.name;
+        title += ' - ' + category.displayName;
       doc.text(title, 10, 10);
 
       // Crea una matriz de objetos para la tabla

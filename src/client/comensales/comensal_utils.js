@@ -42,7 +42,9 @@ class ComensalUtils {
     }
 
     getCategoryByName(categoryName) {
-        return this.categories.find(c => c.name === categoryName);
+        // Por si acaso el categoryName es display y no tiene formato, se convierte a nombre de categoria
+        const name = this.convertNameToCategoryName(categoryName);
+        return this.categories.find(c => c.name === name);
     }
 
     setCategoriesByScene() {
@@ -55,7 +57,7 @@ class ComensalUtils {
 
         // Si la escena tenia categorias, se añaden
         categories.forEach(category => {
-            this.crearCategoria(category.name, category.color);
+            this.crearCategoria(category.displayName, category.color);
         });
     }
 
@@ -267,23 +269,38 @@ class ComensalUtils {
         ComensalUtils.initialId++;
     }
 
+    // Reemplaza todos los espacios por '_'  y toda mayuscula por minuscula
+    convertNameToCategoryName(name) {
+        return name.toLowerCase().replace(/\s/g, '_');
+    }
+
     // Crea una categoria nueva si no existe
     crearCategoria(categoriaName, categoriaColor) {
-        let toLowerName = categoriaName.toLowerCase();
-        // Expresion regular que indica cualquier cosa que no sea un numero o letra
-        const regex = /[^a-z0-9ñ]/;
+        // Expresion regular que indica cualquier cosa que no sea un numero o letra o espacios
+        const regex = /[^A-Za-z0-9Ññ ]/;
 
-        // Si el nombre de la categoria tiene guiones, no se permite crearla
-        if (toLowerName.length < 1 || regex.test(toLowerName)) {
-            alert("El nombre solo puede contener letras y numeros, no puede estar vacio");
-            console.error("El nombre solo puede contener letras, numeros y no puede estar vacio");
+        // Si el nombre de la categoria tiene caracteres especiales, no se crea
+        if (regex.test(categoriaName)) {
+            alert("No se permiten caracteres especiales en el nombre de la categoria");
+            console.error("No se permiten caracteres especiales en el nombre de la categoria");
             return;
         }
+
+        // Si el nombre de la categoria esta vacio no se crea
+        if (categoriaName.length < 1) {
+            alert("El nombre de la categoria no puede estar vacio");
+            console.error("El nombre de la categoria no puede estar vacio");
+            return;
+        }
+
+        // Se convierte el nombre a minusculas y se quitan los espacios
+        let toLowerName = this.convertNameToCategoryName(categoriaName);
 
         // Si no existe la categoria, se crea
         if (!this.categories.some(c => c.name === toLowerName)){
             const categoria = {
                 name: toLowerName,
+                displayName: categoriaName,
                 color: categoriaColor
             }
             this.categories.push(categoria);
@@ -306,7 +323,7 @@ class ComensalUtils {
             });
             // Evento del boton de edicion de categoria
             $(`#btn-edit-${categoria.name}`).on('click', function() {
-                $(`#edit-category-name`).val(categoria.name);
+                $(`#edit-category-name`).val(categoria.displayName);
                 $(`#edit-category-color`).val(categoria.color);
             });
         }
