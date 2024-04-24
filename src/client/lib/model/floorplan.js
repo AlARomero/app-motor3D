@@ -138,7 +138,7 @@ var Floorplan = function() {
   }
   
   this.getDefaultHeightWall = function() {
-    return 270;
+    return 0;
   }
 
   function removeWall(wall) {

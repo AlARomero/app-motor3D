@@ -48,7 +48,7 @@ $(function() {
     "image": "models/thumbnails/ED-ALF-03_1_TPZ7.jpg",
     "model": "models/gltf/ED-ALF-03_1_TPZ7.gltf",
     "type": "8",
-    "is-table": "true" //TODO change to false
+    "is-table": "false"
   },
   {
     "name": "Aire acondicionado. Split",
@@ -147,7 +147,43 @@ $(function() {
     "model": "models/gltf/3392_69_TOIB.gltf",
     "type": "1",
     "is-table": "false"
+  },
+  {
+    "name": "Mesa 1",
+    "image": "",
+    "model": "models/glb/Mesa4Comensales.glb",
+    "type": "1",
+    "is-table": "true" 
+  },
+  {
+    "name": "Mesa 2",
+    "image": "",
+    "model": "models/glb/Mesa8Comensales.glb",
+    "type": "1",
+    "is-table": "true" 
+  },
+  {
+    "name": "Mesa 3",
+    "image": "",
+    "model": "models/glb/Mesa10Comensales.glb",
+    "type": "1",
+    "is-table": "true" 
+  },
+  {
+    "name": "Mesa 4",
+    "image": "",
+    "model": "models/glb/Mesa12Comensales.glb",
+    "type": "1",
+    "is-table": "true" 
+  },
+  {
+    "name": "Mesa 5",
+    "image": "",
+    "model": "models/glb/MesaMatrimonio.glb",
+    "type": "1",
+    "is-table": "true" 
   }
+
     /*{
       "name" : "Chair",
       "image" : "models/thumbnails/thumbnail_Church-Chair-oak-white_1024x1024.jpg",
