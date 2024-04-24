@@ -351,7 +351,6 @@ function addCategoryToComensal(comensalLi, category, both = true) {
 
 // La categoria ha sido modificada, por lo que cambia el color de la etiqueta (es la unica opcion modificable).
 function modifyCategoryFromComensal(comensal, category) {
-    console.log(comensal);
     $(`#${comensal.id}_category_badge_${category.name}`).css('background-color', category.color);
     $(`#${comensal.id}_side_category_badge_${category.name}`).css('background-color', category.color);
 }
@@ -441,4 +440,5 @@ export {
     createCategoryListSelectorItemHtml,
     createCategoryComensalSelectorItemHtml,
     modifyCategoryFromComensal
+    //TODO: Eliminar removeBadge, no se usa
 }

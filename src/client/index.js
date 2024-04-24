@@ -4,7 +4,6 @@ import gsap from 'gsap';
 import * as THREE from 'three';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { add } from 'three/examples/jsm/libs/tween.module.js';
 
 /*
  * Camera Buttons
@@ -738,15 +737,6 @@ var CameraButtons = function(blueprint3d) {
     // Captura del diseño
     function designScreenshot() {
       const renderer = blueprint3d.three.dataUrl();
-      const a = window.document.createElement('a');
-      a.setAttribute("id", "showModel");
-      a.href = renderer;
-      a.download = "Diseño - "
-          + document.getElementById("room-name").innerHTML + " - "
-          + new Date().toLocaleString() + ".png";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
     }
 
 
@@ -770,7 +760,6 @@ var CameraButtons = function(blueprint3d) {
       const tableData = [];
       getAllComensals(category).forEach(comensal => {
         const data = [ comensal.nombre, comensal.descripcion ];
-        console.log(data);
         tableData.push(data);
       });
 
@@ -1183,7 +1172,9 @@ var CameraButtons = function(blueprint3d) {
     }
   
     function loadDesign() {
+      // Se limpian las lista de comensales
       comensalUtils.clearLists();
+      
       const fileInput = $("#loadFile").get(0);
       const files = fileInput.files
       
@@ -1214,7 +1205,7 @@ var CameraButtons = function(blueprint3d) {
       $("#new").on('click', newDesign);
       $("#loadFile").on('change', loadDesign);
       $("#saveFile").on('click', saveDesign);
-      blueprint3d.three.skyBox.onSkyBoxLoad(newDesign)
+      blueprint3d.three.skyBox.onSkyBoxLoad(newDesign);
     }
   
     init();

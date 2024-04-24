@@ -46,8 +46,13 @@ class ComensalUtils {
     }
 
     setCategoriesByScene() {
+
+        // Se eliminan las categorias actuales
+        while (this.categories.length > 0)
+            this.eliminarCategoria(this.categories[0]);
+
+        // Si la escena tiene categorias, se añaden
         const categories = this.scene.categories;
-        console.log(categories);
         categories.forEach(category => {
             this.crearCategoria(category.name, category.color);
         });

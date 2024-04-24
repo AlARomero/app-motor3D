@@ -121,7 +121,6 @@ class ComensalListObject {
     modifyComensal(params) {
         const comensalJson = this.comensales.find(c => c.comensal.id === params.id);
         let addBadge = false;
-        let removeBadge = false;
 
         // Si el comensal existe en la mesa
         if (comensalJson) {
@@ -129,11 +128,9 @@ class ComensalListObject {
             Se mira si se debe añadir un badge (Solo si pasa de no tener descripción a tenerla)
             o si se le debe quitar (pasa de tenerla a no tenerla).
             */
-           const comensal = comensalJson.comensal;
-            if (!comensal.descripcion && params.descripcion)
+            const comensal = comensalJson.comensal;
+            if (params.descripcion)
                 addBadge = true;
-            else if (comensal.descripcion && !params.descripcion)
-                removeBadge = true;
 
             // Se actualiza el comensal
             Object.assign(comensal, params);
@@ -145,8 +142,6 @@ class ComensalListObject {
             // Se añade o se quita el badge
             if (addBadge)
                 ComensalHTML.addBadge(comensalJson.html);
-            else if (removeBadge)
-                ComensalHTML.removeBadge(comensalJson.html);
         }
         else 
             console.error('El comensal no existe en esta mesa');
