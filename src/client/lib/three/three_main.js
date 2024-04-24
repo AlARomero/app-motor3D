@@ -241,8 +241,7 @@ var ThreeMain = function(model, element, canvasElement, opts) {
   }
 
   this.dataUrl = function() {
-    var dataUrl = renderer.domElement.toDataURL("image/png");
-    //console.log("DATAURL: " + dataUrl);
+    const dataUrl = renderer.domElement.toDataURL("image/png");
     return dataUrl;
   }
 

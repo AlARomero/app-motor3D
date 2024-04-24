@@ -736,7 +736,7 @@ var CameraButtons = function(blueprint3d) {
   
     // Captura del diseño
     function designScreenshot() {
-      const renderer = blueprint3d.three.dataUrl();
+      return blueprint3d.three.dataUrl();
     }
 
 
@@ -769,6 +769,12 @@ var CameraButtons = function(blueprint3d) {
         body: tableData,
         startY: 20,
       });
+      const finalY = doc.autoTable.previous.finalY;
+
+      const imgUrl = designScreenshot();
+
+      // Añade la imagen al PDF
+      doc.addImage(imgUrl, 'PNG', 10, finalY + 10, 180, 80);
 
       // Guarda el PDF
       doc.save('comensales.pdf');
