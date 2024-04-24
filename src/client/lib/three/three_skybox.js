@@ -11,21 +11,8 @@ class ThreeSkybox {
     this.background = 0xD3D3D3;
     scene.getScene().background = new THREE.Color(this.background);
 
-    // Carga del modelo 3D de fondo
-    scene.loadSkyGltf('models/gltf/Chalet_Bodas_02.gltf')
-    .then(model => {
-      this.bgModel = model;
-      // Se le añade una variable metadata si no la tiene para poner que es el background
-      this.bgModel.metadata = this.bgModel.metadata || {};
-      this.bgModel.metadata.isBackground = true;
-
-      // Se reescala (modelos suelen ser muy pequeños)
-      this.bgModel.scale.set(100, 100, 100);
-      this.bgModel.position.set(0, 0, 0);
-      this.skyBoxLoadedCallbacks.fire(model);
-    }).catch(err => {
-      console.log(err);
-    });
+    // Sky (modelo 3D de fondo)
+    this.loadNewModel('models/gltf/Chalet_Bodas_02.gltf')
   }
 
   // Carga un nuevo modelo 3D de fondo y desecha el anterior
@@ -36,6 +23,13 @@ class ThreeSkybox {
     this.scene.loadSkyGltf(url)
     .then(model => {
       this.bgModel = model;
+      // Se le añade una variable metadata si no la tiene para poner que es el background
+      this.bgModel.metadata = this.bgModel.metadata || {};
+      this.bgModel.metadata.isBackground = true;
+      
+      // Se reescala (modelos suelen ser muy pequeños)
+      this.bgModel.scale.set(100, 100, 100);
+      this.bgModel.position.set(0, 0, 0);
       // Se disparan las funciones del callback una vez esta cargado el modelo
       this.skyBoxLoadedCallbacks.fire(model);
     }).catch(err => {

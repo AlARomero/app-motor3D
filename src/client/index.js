@@ -1176,7 +1176,7 @@ var CameraButtons = function(blueprint3d) {
       comensalUtils.clearLists();
       
       const fileInput = $("#loadFile").get(0);
-      const files = fileInput.files
+      const files = fileInput.files;
       
       const reader  = new FileReader();
       reader.onload = function(event) {
@@ -1200,11 +1200,29 @@ var CameraButtons = function(blueprint3d) {
       a.click();
       document.body.removeChild(a)
     }
+
+    function loadSkyboxModel() {
+      const fileInput = $("#load-new-model").get(0);
+      const files = fileInput.files;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const data = event.target.result;
+        const blob = new Blob([data]);
+        const url = URL.createObjectURL(blob);
+
+        blueprint3d.three.skyBox.loadNewModel(url);
+      }
+
+      reader.readAsArrayBuffer(files[0]);
+      fileInput.value = '';
+    }
   
     function init() {
       $("#new").on('click', newDesign);
       $("#loadFile").on('change', loadDesign);
       $("#saveFile").on('click', saveDesign);
+      $("#load-new-model").on('change', loadSkyboxModel);
       blueprint3d.three.skyBox.onSkyBoxLoad(newDesign);
     }
   

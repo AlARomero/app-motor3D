@@ -150,35 +150,35 @@ $(function() {
   },
   {
     "name": "Mesa 1",
-    "image": "",
+    "image": "models/thumbnails/Mesa_png_sin_fondo.jpg",
     "model": "models/glb/Mesa4Comensales.glb",
     "type": "1",
     "is-table": "true" 
   },
   {
     "name": "Mesa 2",
-    "image": "",
+    "image": "models/thumbnails/Mesa_png_sin_fondo.jpg",
     "model": "models/glb/Mesa8Comensales.glb",
     "type": "1",
     "is-table": "true" 
   },
   {
     "name": "Mesa 3",
-    "image": "",
+    "image": "models/thumbnails/Mesa_png_sin_fondo.jpg",
     "model": "models/glb/Mesa10Comensales.glb",
     "type": "1",
     "is-table": "true" 
   },
   {
     "name": "Mesa 4",
-    "image": "",
+    "image": "models/thumbnails/Mesa_png_sin_fondo.jpg",
     "model": "models/glb/Mesa12Comensales.glb",
     "type": "1",
     "is-table": "true" 
   },
   {
     "name": "Mesa 5",
-    "image": "",
+    "image": "models/thumbnails/Mesa_png_sin_fondo.jpg",
     "model": "models/glb/MesaMatrimonio.glb",
     "type": "1",
     "is-table": "true" 
