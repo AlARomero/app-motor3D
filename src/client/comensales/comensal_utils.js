@@ -46,13 +46,14 @@ class ComensalUtils {
     }
 
     setCategoriesByScene() {
+        // Se clona las categorias de la escena, ya que posteriormente se borran todas las categorias existentes antes de añadir las nuevas.
+        const categories = [...this.scene.categories];
 
         // Se eliminan las categorias actuales
         while (this.categories.length > 0)
             this.eliminarCategoria(this.categories[0]);
 
-        // Si la escena tiene categorias, se añaden
-        const categories = this.scene.categories;
+        // Si la escena tenia categorias, se añaden
         categories.forEach(category => {
             this.crearCategoria(category.name, category.color);
         });
