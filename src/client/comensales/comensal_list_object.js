@@ -28,7 +28,6 @@ class ComensalListObject {
         button.dataset.bsToggle = 'collapse';
         button.dataset.bsTarget = `#collapse-${this.uuid}`;
         button.textContent = table.metadata.itemName;
-        ComensalHTML.addDeactivateControlsEvent(button);
 
         // Añade el botón al encabezado
         header.appendChild(button);
@@ -53,6 +52,7 @@ class ComensalListObject {
 
         // Añade la lista desplegable al div contenedor
         div.appendChild(item);
+        ComensalHTML.addDeactivateControlsEvent(div);
 
         // Se elimina el comportamiento por defecto de dragover (chrome no permite el drop en otros elementos por defecto)
         ComensalHTML.removeDragOverDefault(div);

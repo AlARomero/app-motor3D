@@ -43,24 +43,25 @@ function addDeactivateControlsEvent(htmlElement) {
         controls.enabled = true;
         controller.enabled = true;
     });
+    $(htmlElement).on('dblclick', () => {
+        controls.enabled = true;
+        controller.enabled = true;
+    });
 }
 
 // Deshabilita el evento mouseleave de todos los comensales.
 function unableMouseLeaveEvent() {
-    console.log('unableMouseLeaveEvent')
     allComensalListObject.forEach(comensalListObject => {
-        console.log($(`#btn-${comensalListObject.uuid}`));
-        $(`#btn-${comensalListObject.uuid}`).off('mousedown');
-        $(`#btn-${comensalListObject.uuid}`).off('mouseleave');
+        $(comensalListObject.comensalList.element).off('mousedown');
+        $(comensalListObject.comensalList.element).off('mouseleave');
     })
 }
 
 // Habilita el evento mouseleave de todos los comensales.
 function ableMouseLeaveEvent() {
-    console.log('ableMouseLeaveEvent')
     allComensalListObject.forEach(comensalListObject => {
-        $(`#btn-${comensalListObject.uuid}`).on('mousedown');
-        $(`#btn-${comensalListObject.uuid}`).on('mouseleave');
+        $(comensalListObject.comensalList.element).on('mousedown');
+        $(comensalListObject.comensalList.element).on('mouseleave');
     })
 }
 
