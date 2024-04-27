@@ -427,6 +427,9 @@ var CameraButtons = function(blueprint3d) {
       $("#increase-list-font-size").on('click', increaseTitleFontSize);
       $("#decrease-list-font-size").on('click', decreaseTitleFontSize);
 
+      $("#extract-all-list").on('click', extractAllLists);
+      $("#contract-all-list").on('click', contractAllLists);
+
       $("#camera-view-save-btn").on('click', savingMode);
       scope.cameraViewButtons.push($("#camera-view-1"));
       scope.cameraViewButtons.push($("#camera-view-2"));
@@ -530,6 +533,24 @@ var CameraButtons = function(blueprint3d) {
 
     function getCategoriesToComensalUtils() {
       comensalUtils.setCategoriesByScene();
+    }
+
+    function extractAllLists() {
+      comensalUtils.allComensalListObject.forEach(comensalListObject => {
+        const jquery = $(comensalListObject.comensalList.element);
+
+        if (!jquery.find('.collapse').hasClass('show'))
+          jquery.find(`#btn-${comensalListObject.uuid}`).trigger('click');
+      });
+    }
+
+    function contractAllLists() {
+      comensalUtils.allComensalListObject.forEach(comensalListObject => {
+        const jquery = $(comensalListObject.comensalList.element);
+
+        if (jquery.find('.collapse').hasClass('show'))
+          jquery.find(`#btn-${comensalListObject.uuid}`).trigger('click');
+      });
     }
 
     function viewPointClicked(buttonClicked) {
@@ -676,18 +697,24 @@ var CameraButtons = function(blueprint3d) {
         case scope.comensalViewStates.CLEAN:
           $("#increase-list-font-size").hide();
           $("#decrease-list-font-size").hide();
+          $("#extract-all-list").hide();
+          $("#contract-all-list").hide();
           comensalUtils.hideAllLists();
           scope.actualComensalViewState = scope.comensalViewStates.CLEAN;
           break;
         case scope.comensalViewStates.LIST_VIEW_MODE:
           $("#increase-list-font-size").hide();
           $("#decrease-list-font-size").hide();
+          $("#extract-all-list").hide();
+          $("#contract-all-list").hide();
           comensalUtils.hideAllLists();
           scope.actualComensalViewState = scope.comensalViewStates.LIST_VIEW_MODE;
           break;
         case scope.comensalViewStates.LIST_EDIT_MODE:
           $("#increase-list-font-size").show();
           $("#decrease-list-font-size").show();
+          $("#extract-all-list").show();
+          $("#contract-all-list").show();
           comensalUtils.showAllLists();
           scope.actualComensalViewState = scope.comensalViewStates.LIST_EDIT_MODE;
           break;
