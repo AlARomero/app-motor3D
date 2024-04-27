@@ -424,6 +424,9 @@ var CameraButtons = function(blueprint3d) {
       $("#main-menu-mode-list-view").on('click', () => {changeState(scope.comensalViewStates.LIST_VIEW_MODE)});
       $("#main-menu-mode-list-edit").on('click', () => {changeState(scope.comensalViewStates.LIST_EDIT_MODE)});
 
+      $("#increase-list-font-size").on('click', increaseTitleFontSize);
+      $("#decrease-list-font-size").on('click', decreaseTitleFontSize);
+
       $("#camera-view-save-btn").on('click', savingMode);
       scope.cameraViewButtons.push($("#camera-view-1"));
       scope.cameraViewButtons.push($("#camera-view-2"));
@@ -565,6 +568,27 @@ var CameraButtons = function(blueprint3d) {
       }
     }
 
+    function increaseTitleFontSize() {
+      $(".comensal-list-title").each(function() {
+        let jquery = $(this);
+        let fontSize = parseInt(jquery.css('font-size'));
+        jquery.css('font-size', `${fontSize + 2}px`);
+      });
+    }
+
+    function decreaseTitleFontSize() {
+      const allButtons = $(".comensal-list-title");
+
+      // Si es 12 o menos no se decrementa mas
+      if (parseInt(allButtons.first().css('font-size')) <= 12)
+          return;
+
+      allButtons.each(function() {
+        let fontSize = parseInt($(this).css('font-size'));
+        $(this).css('font-size', `${fontSize - 2}px`);
+      });
+    }
+
     // GSAP Animation para mover la cámara
     function moveCamera(position, rotation, target) {
       // Mientras se realizan las animaciones, se actualiza la escena y los controls
@@ -650,14 +674,20 @@ var CameraButtons = function(blueprint3d) {
         return;
       switch (newState) {
         case scope.comensalViewStates.CLEAN:
+          $("#increase-list-font-size").hide();
+          $("#decrease-list-font-size").hide();
           comensalUtils.hideAllLists();
           scope.actualComensalViewState = scope.comensalViewStates.CLEAN;
           break;
         case scope.comensalViewStates.LIST_VIEW_MODE:
+          $("#increase-list-font-size").hide();
+          $("#decrease-list-font-size").hide();
           comensalUtils.hideAllLists();
           scope.actualComensalViewState = scope.comensalViewStates.LIST_VIEW_MODE;
           break;
         case scope.comensalViewStates.LIST_EDIT_MODE:
+          $("#increase-list-font-size").show();
+          $("#decrease-list-font-size").show();
           comensalUtils.showAllLists();
           scope.actualComensalViewState = scope.comensalViewStates.LIST_EDIT_MODE;
           break;
@@ -713,6 +743,15 @@ var CameraButtons = function(blueprint3d) {
       return comensals;
     }
 
+    function getComensalsPerTable(category = undefined) {
+      let comensals;
+      if (category)
+        comensals = comensalUtils.getAllComensalsPerTableByCategory(category);
+      else
+        comensals = comensalUtils.getAllComensalsPerTable();
+      return comensals;
+    }
+
     // Funcion que genera la lista de comensales del offcanvas
     function getComensalOffCanvasList(category = undefined) {
       const comensals = getAllComensals(category);
@@ -758,18 +797,30 @@ var CameraButtons = function(blueprint3d) {
 
       // Crea una matriz de objetos para la tabla
       const tableData = [];
-      getAllComensals(category).forEach(comensal => {
-        const data = [ comensal.nombre, comensal.descripcion ];
-        tableData.push(data);
+      const tables = [];
+      getComensalsPerTable(category).forEach(({table, comensals}) => {
+        console.log(comensals);
+        tables.push(table);
+        comensals.forEach(comensal => {
+          const data = [ comensal.nombre, comensal.descripcion,  table.metadata.itemName];
+          tableData.push(data);
+        });
       });
 
       // Añade la tabla al PDF
       autoTable(doc, {
-        head: [['Nombre', 'Descripción']],
+        head: [['Nombre Del Comensal', 'Descripción Del Comensal', 'Mesa Del Comensal']],
         body: tableData,
         startY: 20,
       });
-      const finalY = doc.autoTable.previous.finalY;
+      let finalY = doc.autoTable.previous.finalY;
+
+      autoTable(doc, {
+        head: [['Nombre De La Mesa', 'Descripción De La Mesa']],
+        body: tables.map(table => [table.metadata.itemName, table.metadata.itemDescription]),
+        startY: finalY + 10,
+      })
+      finalY = doc.autoTable.previous.finalY;
 
       const imgUrl = designScreenshot();
 

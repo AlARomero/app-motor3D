@@ -5,6 +5,7 @@ var itemUtils = require('../utils/itemUtils');
 class ItemGroup extends THREE.Group {
     constructor(model, metadata, geometry, material, position, rotation, scale) {
         super();
+        this.onItemResized = $.Callbacks(); //FIX, necesito que se declare pronto
         // this.three = three;
         // this.model = three.getModel();
         // this.scene = three.getScene();

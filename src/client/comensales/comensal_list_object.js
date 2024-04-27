@@ -23,7 +23,7 @@ class ComensalListObject {
         // Crea el botón para desplegar la lista
         const button = document.createElement('button');
         button.id = `btn-${this.uuid}`;
-        button.className = 'accordion-button collapsed';
+        button.className = 'accordion-button collapsed comensal-list-title';
         button.type = 'button';
         button.dataset.bsToggle = 'collapse';
         button.dataset.bsTarget = `#collapse-${this.uuid}`;

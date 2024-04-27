@@ -48,7 +48,7 @@ $(function() {
     "image": "models/thumbnails/ED-ALF-03_1_TPZ7.jpg",
     "model": "models/gltf/ED-ALF-03_1_TPZ7.gltf",
     "type": "8",
-    "is-table": "false"
+    "is-table": "true"
   },
   {
     "name": "Aire acondicionado. Split",

@@ -6,6 +6,7 @@ class Item extends THREE.Mesh {
     constructor(model, metadata, geometry, material, position, rotation, scale) {
 
         super(geometry, material);
+        this.onItemResized = $.Callbacks(); //FIX, necesito que se declare pronto
 
         // this.three = three;
         // this.model = three.getModel();

@@ -73,6 +73,41 @@ class ComensalUtils {
         return comensals;
     }
 
+    getAllComensalsPerTable() {
+        const all = [];
+        this.allComensalListObject.forEach(comensalListObject => {
+            const table = this.tableFromComensalListObject(comensalListObject);
+            const comensalList = {
+                table: table,
+                comensals: comensalListObject.comensales.map(comensal => comensal.comensal)
+            }
+            all.push(comensalList);
+        });
+        return all;
+    }
+
+    getAllComensalsPerTableByCategory(category) {
+        const all = [];
+        this.allComensalListObject.forEach(comensalListObject => {
+            
+            const table = this.tableFromComensalListObject(comensalListObject);
+            const comensalListComensals = [];
+
+            comensalListObject.comensales.forEach(comensal => {
+                if (comensal.comensal.categorias.some(c => c.name === category.name))
+                comensalListComensals.push(comensal.comensal);
+            });
+
+            const comensalList = {
+                table: table,
+                comensals: comensalListComensals
+            }
+
+            all.push(comensalList);
+        });
+        return all;
+    }
+
     // Devuelve un array con todos los comensales que pertenezcan a la categoria pasada por parametro
     getAllComensalsByCategory(category) {
         let comensals = [];

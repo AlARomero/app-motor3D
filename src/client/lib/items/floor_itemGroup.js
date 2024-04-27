@@ -6,7 +6,6 @@ class FloorItemGroup extends ItemGroup {
     constructor(three, metadata, geometry, material, position, rotation, scale) {
         super(three, metadata, geometry, material, position, rotation, scale);
         this.boundToFloor = true;
-        this.onItemResized = $.Callbacks();
     }
     
     setDesfaseAltura(scale) {
