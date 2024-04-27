@@ -43,6 +43,7 @@ function addDeactivateControlsEvent(htmlElement) {
         controls.enabled = true;
         controller.enabled = true;
     });
+    // Si se hace doble click, se activan los controles y el controller #fix.
     $(htmlElement).on('dblclick', () => {
         controls.enabled = true;
         controller.enabled = true;

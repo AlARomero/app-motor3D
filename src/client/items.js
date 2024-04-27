@@ -111,7 +111,7 @@ $(function() {
     "image": "models/thumbnails/ED-PLA-02_1_O3NS.jpg",
     "model": "models/gltf/ED-PLA-02_1_O3NS.gltf",
     "type": "8",
-    "is-table": "false"
+    "is-table": "true"
   },
   {
     "name": "Arcón dos cajones",

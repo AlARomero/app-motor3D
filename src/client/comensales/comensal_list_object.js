@@ -62,6 +62,15 @@ class ComensalListObject {
         this.comensales = [];
         this.boundToTable(table);
         this.comensalList.position.set(0, 50, 0);
+        this.previousScale = table.scale.clone();
+
+        table.onItemResized.add(() => {
+            console.log('resized!!!')
+            let currentScale = table.scale;
+            let scaleChange = this.previousScale.clone().divide(currentScale);
+            this.comensalList.scale.multiply(scaleChange);
+            this.previousScale = currentScale.clone();
+        });
     }
 
     selected(container) {

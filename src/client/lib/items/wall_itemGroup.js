@@ -27,6 +27,7 @@ class WallItemGroup extends ItemGroup {
 
         this.frontVisible = false;
         this.backVisible = false;
+        this.onItemResized = $.Callbacks();
 
         // MOD Rafa. Inicializamos el desfase en altura en 0
         //this.desfaseAltura = 0.5 * ( this.geometry.boundingBox.max.y - this.geometry.boundingBox.min.y ) + 1;
@@ -59,6 +60,7 @@ class WallItemGroup extends ItemGroup {
 
     resized() {
         wallItemUtils.resized(this);
+        this.onItemResized.fire();
         }
 
     setDesfaseAltura(scale) {
