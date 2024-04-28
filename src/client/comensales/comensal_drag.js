@@ -35,7 +35,7 @@ function setAllComensalListObject(newAllComensalListObject) {
 }
 
 function addDeactivateControlsEvent(htmlElement) {
-    $(htmlElement).on('mousedown', () => {
+    $(htmlElement).on('mouseenter', () => {
         controls.enabled = false;
         controller.enabled = false;
     });
@@ -44,16 +44,15 @@ function addDeactivateControlsEvent(htmlElement) {
         controller.enabled = true;
     });
     // Si se hace doble click, se activan los controles y el controller #fix.
-    $(htmlElement).on('dblclick', () => {
-        controls.enabled = true;
-        controller.enabled = true;
+    $(htmlElement).on('dblclick', (e) => {
+        e.preventDefault();
     });
 }
 
 // Deshabilita el evento mouseleave de todos los comensales.
 function unableMouseLeaveEvent() {
     allComensalListObject.forEach(comensalListObject => {
-        $(comensalListObject.comensalList.element).off('mousedown');
+        $(comensalListObject.comensalList.element).off('mouseenter');
         $(comensalListObject.comensalList.element).off('mouseleave');
     })
 }
@@ -61,14 +60,21 @@ function unableMouseLeaveEvent() {
 // Habilita el evento mouseleave de todos los comensales.
 function ableMouseLeaveEvent() {
     allComensalListObject.forEach(comensalListObject => {
-        $(comensalListObject.comensalList.element).on('mousedown');
-        $(comensalListObject.comensalList.element).on('mouseleave');
+        $(comensalListObject.comensalList.element).on('mouseenter', () => {
+            controls.enabled = false;
+            controller.enabled = false;
+        });
+        $(comensalListObject.comensalList.element).on('mouseleave', () => {
+            controls.enabled = true;
+            controller.enabled = true;
+        });
     })
 }
 
 function addDragEvent(comensalHTMLElement) {
     comensalHTMLElement.draggable = true;
     comensalHTMLElement.addEventListener('mousedown', handleMouseDown);
+    comensalHTMLElement.addEventListener('mouseup', handleMouseUp);
     comensalHTMLElement.addEventListener('dragstart', handleDragStart);
     comensalHTMLElement.addEventListener('dragend', handleDragEnd);
     comensalHTMLElement.addEventListener('drag', handleDrag);
@@ -78,6 +84,11 @@ function addDragEvent(comensalHTMLElement) {
 function handleMouseDown(event) {
     controller.enabled = false;
     controls.enabled = false;
+}
+
+function handleMouseUp(event) {
+    controller.enabled = true;
+    controls.enabled = true;
 }
 
 function handleDragStart(event) {
@@ -132,10 +143,8 @@ function handleDragEnd(event) {
         }
     }
 
-    // Se devuelven los controls y el controller a su estado original y se reinicia la variable de lista previa.
+    // Se reinicia la variable de lista previa.
     prevComensalListObject = null;
-    controls.enabled = true;
-    controller.enabled = true;
 }
 
 function findComensalListFromPoint(x, y) {
@@ -314,6 +323,32 @@ function comensalToHtml(comensalListObject, comensal, container) {
 
 // Funcion que añade un badge a un li de comensal de la lista 3D y a la lista side.
 function addBadge(comensalLi, both = true) {
+    const html = getBadge();
+
+    const clone = html.cloneNode(true);
+
+    clone.id = `comensal_side_badge_${comensalLi.id.split('_')[1]}`;
+    html.id = `comensal_badge_${comensalLi.id.split('_')[1]}`
+
+    if (both)
+        comensalLi.querySelector('p').appendChild(html);
+    $(`#comensal-nombre-${comensalLi.id.split('_')[1]}`).append(clone);
+}
+
+function addTableDescriptionBadge(comensalListObject) {
+    const html = getBadge();
+    html.style.marginRight = '0';
+    html.id = `table_description_badge_${comensalListObject.uuid}`;
+
+    $(comensalListObject.comensalList.element).find(`#btn-${comensalListObject.uuid}`).append(html);
+    
+}
+
+function removeTableDescriptionBadge(comensalListObject) {
+    $(`#table_description_badge_${comensalListObject.uuid}`).remove();
+}
+
+function getBadge() {
     const html = document.createElement('span');
     html.style.margin = '0';
     html.classList.add('badge', 'text-bg-secondary');
@@ -324,14 +359,7 @@ function addBadge(comensalLi, both = true) {
     html.style.marginRight = '1rem';
     html.style.marginLeft = '1rem';
 
-    const clone = html.cloneNode(true);
-
-    clone.id = `comensal_side_badge_${comensalLi.id.split('_')[1]}`;
-    html.id = `comensal_badge_${comensalLi.id.split('_')[1]}`
-
-    if (both)
-    comensalLi.querySelector('p').appendChild(html);
-    $(`#comensal-nombre-${comensalLi.id.split('_')[1]}`).append(clone);
+    return html;
 }
 
 // Funcion que elimina un badge de un li de comensal de la lista 3D.
@@ -441,6 +469,8 @@ export {
     createCategorySideItemHtml,
     createCategoryListSelectorItemHtml,
     createCategoryComensalSelectorItemHtml,
-    modifyCategoryFromComensal
+    modifyCategoryFromComensal,
+    addTableDescriptionBadge,
+    removeTableDescriptionBadge
     //TODO: Eliminar removeBadge, no se usa
 }

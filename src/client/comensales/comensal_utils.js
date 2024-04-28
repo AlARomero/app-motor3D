@@ -304,6 +304,14 @@ class ComensalUtils {
         ComensalUtils.initialId++;
     }
 
+    addTableDescriptionBadge(comensalListObject) {
+        comensalListObject.addTableDescriptionBadge();
+    }
+
+    removeTableDescriptionBadge(comensalListObject) {
+        comensalListObject.removeTableDescriptionBadge();
+    }
+
     // Reemplaza todos los espacios por '_'  y toda mayuscula por minuscula
     convertNameToCategoryName(name) {
         return name.toLowerCase().replace(/\s/g, '_');

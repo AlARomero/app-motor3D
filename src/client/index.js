@@ -120,9 +120,27 @@ var CameraButtons = function(blueprint3d) {
         // Se verifica si el objeto seleccionado es una mesa, si tiene una lista de comensales y si ha cambiado el nombre
         if (selectedItem.metadata.isTable) {
           const comensalListObject = ComensalUtils.comensalListFromTable(selectedItem);
-          if (comensalListObject && selectedItem.metadata.itemName !== newName){
-            // Se modifica su nombre
-            comensalUtils.changeComensalListName(comensalListObject, newName)
+          if (comensalListObject){
+            // Si se modificó su nombre
+            if (selectedItem.metadata.itemName !== newName){
+              // Se modifica su nombre
+              comensalUtils.changeComensalListName(comensalListObject, newName)
+            }
+
+            // Si la mesa tiene descripcion pero no hay un badge que lo indique
+            if (selectedItem.metadata.itemDescription && !$(comensalListObject.comensalList.element).find(`#table_description_badge_${comensalListObject.uuid}`).length) {
+              //TODO entra pero no funciona
+              console.log('Añadiendo badge')
+              comensalUtils.addTableDescriptionBadge(comensalListObject);
+            }
+
+            // Si la mesa no tiene descripcion pero hay un badge que lo indique
+            else if (!selectedItem.metadata.itemDescription && $(comensalListObject.comensalList.element).find(`#table_description_badge_${comensalListObject.uuid}`).length > 0) {
+              //TODO No funciona
+              console.log('quitando badge')
+              comensalUtils.removeTableDescriptionBadge(comensalListObject);
+            }
+
           }
         }
 

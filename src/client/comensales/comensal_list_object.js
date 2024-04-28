@@ -59,6 +59,10 @@ class ComensalListObject {
 
         // Crea el objeto CSS2D
         this.comensalList = new CSS3DObject(div);
+
+        if (table.metadata.itemDescription)
+            ComensalHTML.addTableDescriptionBadge(this);
+
         this.comensales = [];
         this.boundToTable(table);
         this.comensalList.position.set(0, 50, 0);
@@ -89,6 +93,14 @@ class ComensalListObject {
     showList() {
         // Para que funcione la api drag and drop, el elemento debe estar visible, luego se usa para comprarar
         this.comensalList.visible = true;
+    }
+
+    addTableDescriptionBadge() {
+        ComensalHTML.addTableDescriptionBadge(this);
+    }
+
+    removeTableDescriptionBadge() {
+        ComensalHTML.removeTableDescriptionBadge(this);
     }
 
     addComensal(comensal, container) {
