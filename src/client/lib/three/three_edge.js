@@ -302,14 +302,26 @@ var ThreeEdge = function(scene, edge, controls) {
 
         // bottom
       // put into basePlanes since this is always visible
-      basePlanes.push(buildFiller(
+      const basePlane = buildFiller(
         edge, 0, 
-        THREE.BackSide, baseColor)); 
+        THREE.BackSide, baseColor);
+
+      if (wall.height === 0){
+        basePlane.material.transparent = true;
+        basePlane.material.opacity = 0;
+      }
+      basePlanes.push(basePlane); 
 
       // top
-      planes.push(buildFiller(
+      const topPlane = buildFiller(
         edge, wall.height, 
-        THREE.DoubleSide, fillerColor));
+        THREE.DoubleSide, fillerColor);
+      planes.push(topPlane);
+
+      if (wall.height === 0){
+        topPlane.material.transparent = true;
+        topPlane.material.opacity = 0;
+      }
 
       // sides
       planes.push(buildSideFillter(
@@ -319,9 +331,6 @@ var ThreeEdge = function(scene, edge, controls) {
       planes.push(buildSideFillter(
         edge.interiorEnd(), edge.exteriorEnd(), 
         wall.height, sideColor)); 
-       
-      
-    //});
   }
       
 
