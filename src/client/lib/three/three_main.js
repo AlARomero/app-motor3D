@@ -1,5 +1,6 @@
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
+import html2canvas from 'html2canvas';
 
 import * as THREE from 'three';
 var JQUERY = require('jquery');
@@ -244,6 +245,48 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     const dataUrl = renderer.domElement.toDataURL("image/png");
     return dataUrl;
   }
+
+  // this.dataUrl = function() {
+  //   return new Promise((resolve, reject) => {
+  //     // Captura el contenido del WebGLRenderer
+  //     const webglDataUrl = renderer.domElement.toDataURL("image/png");
+  
+  //     // Captura el contenido del CSS3DRenderer utilizando html2canvas
+  //     html2canvas(css3DRenderer.domElement).then(css3dCanvas => {
+  //       const css3dDataUrl = css3dCanvas.toDataURL("image/png");
+  
+  //       // Crea un nuevo canvas para combinar las imágenes
+  //       const combinedCanvas = document.createElement('canvas');
+  //       combinedCanvas.width = renderer.domElement.width;
+  //       combinedCanvas.height = renderer.domElement.height;
+  //       const ctx = combinedCanvas.getContext('2d');
+  
+  //       // Carga la imagen del WebGLRenderer
+  //       const webglImg = new Image();
+  //       webglImg.onload = function() {
+  //         // Dibuja la imagen del WebGLRenderer en el canvas
+  //         ctx.drawImage(webglImg, 0, 0);
+  
+  //         // Carga la imagen del CSS3DRenderer
+  //         const css3dImg = new Image();
+  //         css3dImg.onload = function() {
+  //           // Dibuja la imagen del CSS3DRenderer en el canvas, encima de la imagen del WebGLRenderer
+  //           ctx.globalAlpha = 1.0; // Ajusta la opacidad
+  //           ctx.drawImage(css3dImg, 0, 0);
+  //           ctx.globalAlpha = 0; // Restaura la opacidad
+  
+  //           // Ahora puedes capturar el contenido del canvas combinado
+  //           const combinedDataUrl = combinedCanvas.toDataURL("image/png");
+  
+  //           // Resuelve la promesa con la URL de los datos de la imagen combinada
+  //           resolve(combinedDataUrl);
+  //         };
+  //         css3dImg.src = css3dDataUrl;
+  //       };
+  //       webglImg.src = webglDataUrl;
+  //     }).catch(reject);
+  //   });
+  // }
 
   this.stopSpin = function() {
     hasClicked = true;

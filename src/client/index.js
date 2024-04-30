@@ -818,10 +818,15 @@ var CameraButtons = function(blueprint3d) {
     }
 
   
-    // Captura del diseño
+    //Captura del diseño
     function designScreenshot() {
       return blueprint3d.three.dataUrl();
     }
+
+    // function designScreenshot() {
+    //   const promise = blueprint3d.three.dataUrl();
+    //   return promise;
+    // }
 
 
     // Crea un pdf con una tabla que contiene a la lista actual de comensales y lo descarga
@@ -875,6 +880,58 @@ var CameraButtons = function(blueprint3d) {
       // Guarda el PDF
       doc.save('comensales.pdf');
     }
+
+
+    // function downloadComensalPDF(category = undefined) {
+
+    //   // Crea un nuevo documento PDF
+    //   const doc = new jsPDF();
+
+    //   // Establece el estilo del texto
+    //   doc.setFont('helvetica');
+    //   doc.setFontSize(14);
+    //   doc.setTextColor(40);
+    //   // Añade el titulo
+    //   let title = 'Lista de Comensales';
+    //   if (category)
+    //     title += ' - ' + category.displayName;
+    //   doc.text(title, 10, 10);
+
+    //   // Crea una matriz de objetos para la tabla
+    //   const tableData = [];
+    //   const tables = [];
+    //   getComensalsPerTable(category).forEach(({table, comensals}) => {
+    //     console.log(comensals);
+    //     tables.push(table);
+    //     comensals.forEach(comensal => {
+    //       const data = [ comensal.nombre, comensal.descripcion,  table.metadata.itemName];
+    //       tableData.push(data);
+    //     });
+    //   });
+
+    //   // Añade la tabla al PDF
+    //   autoTable(doc, {
+    //     head: [['Nombre Del Comensal', 'Descripción Del Comensal', 'Mesa Del Comensal']],
+    //     body: tableData,
+    //     startY: 20,
+    //   });
+    //   let finalY = doc.autoTable.previous.finalY;
+
+    //   autoTable(doc, {
+    //     head: [['Nombre De La Mesa', 'Descripción De La Mesa']],
+    //     body: tables.map(table => [table.metadata.itemName, table.metadata.itemDescription]),
+    //     startY: finalY + 10,
+    //   })
+    //   finalY = doc.autoTable.previous.finalY;
+
+    //   designScreenshot().then(imgUrl => {
+    //     // Añade la imagen al PDF
+    //     doc.addImage(imgUrl, 'PNG', 10, finalY + 10, 180, 80);
+
+    //     // Guarda el PDF
+    //     doc.save('comensales.pdf');
+    //   });
+    // }
 
     // Se inicializa
     init();

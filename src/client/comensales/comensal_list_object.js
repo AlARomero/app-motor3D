@@ -69,7 +69,6 @@ class ComensalListObject {
         this.previousScale = table.scale.clone();
 
         table.onItemResized.add(() => {
-            console.log('resized!!!')
             let currentScale = table.scale;
             let scaleChange = this.previousScale.clone().divide(currentScale);
             this.comensalList.scale.multiply(scaleChange);
