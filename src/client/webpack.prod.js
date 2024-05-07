@@ -6,4 +6,7 @@ module.exports = merge(common, {
     performance: {
         hints: false,
     },
+    optimization: {
+        minimize: false,
+    }
 })

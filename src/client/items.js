@@ -48,7 +48,7 @@ $(function() {
     "image": "models/thumbnails/ED-ALF-03_1_TPZ7.jpg",
     "model": "models/gltf/ED-ALF-03_1_TPZ7.gltf",
     "type": "8",
-    "is-table": "true"
+    "is-table": "false"
   },
   {
     "name": "Aire acondicionado. Split",
@@ -111,7 +111,7 @@ $(function() {
     "image": "models/thumbnails/ED-PLA-02_1_O3NS.jpg",
     "model": "models/gltf/ED-PLA-02_1_O3NS.gltf",
     "type": "8",
-    "is-table": "true"
+    "is-table": "false"
   },
   {
     "name": "Arcón dos cajones",
@@ -150,39 +150,32 @@ $(function() {
   },
   {
     "name": "Mesa 1",
-    "image": "models/thumbnails/Mesa_png_sin_fondo.jpg",
-    "model": "models/glb/Mesa4Comensales.glb",
+    "image": "models/thumbnails/MB-04.jpg",
+    "model": "models/glb/MB-04.glb",
     "type": "1",
     "is-table": "true" 
   },
   {
     "name": "Mesa 2",
-    "image": "models/thumbnails/Mesa_png_sin_fondo.jpg",
-    "model": "models/glb/Mesa8Comensales.glb",
+    "image": "models/thumbnails/MB-08.jpg",
+    "model": "models/glb/MB-08.glb",
     "type": "1",
     "is-table": "true" 
   },
   {
     "name": "Mesa 3",
-    "image": "models/thumbnails/Mesa_png_sin_fondo.jpg",
-    "model": "models/glb/Mesa10Comensales.glb",
+    "image": "models/thumbnails/MB-10.jpg",
+    "model": "models/glb/MB-10.glb",
     "type": "1",
     "is-table": "true" 
   },
   {
     "name": "Mesa 4",
-    "image": "models/thumbnails/Mesa_png_sin_fondo.jpg",
-    "model": "models/glb/Mesa12Comensales.glb",
+    "image": "models/thumbnails/MB-12.jpg",
+    "model": "models/glb/MB-12.glb",
     "type": "1",
     "is-table": "true" 
   },
-  {
-    "name": "Mesa 5",
-    "image": "models/thumbnails/Mesa_png_sin_fondo.jpg",
-    "model": "models/glb/MesaMatrimonio.glb",
-    "type": "1",
-    "is-table": "true" 
-  }
 
     /*{
       "name" : "Chair",
