@@ -580,7 +580,7 @@ function generateRandomString(longitud) {
         item.rotation,
         scale,
         item.fixed,
-        item.itemsBounded);
+        item.itemsBounded, false);
     });
 
     scope.scene.categories = categories;

@@ -846,7 +846,10 @@ var ThreeMain = function(model, element, canvasElement, opts) {
     const room = getRoomFromItem(item);
     if (room) {
       const roomAltitude = room.altitude;
-      item.setPosition(item.position.x, item.position.y + roomAltitude, item.position.z);
+      if (!item.fromModel)
+        item.setPosition(item.position.x, item.position.y + roomAltitude, item.position.z);
+      else 
+        item.fromModel = false;
     }
 
     // Si no hay habitacion, algo malo ha ocurrido

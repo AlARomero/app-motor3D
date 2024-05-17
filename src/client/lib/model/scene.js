@@ -416,7 +416,7 @@ var Scene = function(model, textureDir) {
     }  
   }
 
-  function loaderCallback(geometry, materials, ext, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded) {
+  function loaderCallback(geometry, materials, ext, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem = true) {
       const t0 = performance.now();  
       if (ext == "gltf" || ext == "glb") {
           itemType += 10;
@@ -427,6 +427,9 @@ var Scene = function(model, textureDir) {
         materials,
         position, rotation, scale
       );
+
+      if (!newItem) 
+        item.fromModel = true;
       
       item.fixed = fixed || false;
       item.textureFill = textureFill;
@@ -650,7 +653,7 @@ var Scene = function(model, textureDir) {
       console.log("[FIN]LoadingCallback " + item.metadata.itemName + ": " + (t1 - t0) + " milliseconds.");
   }  
 
-  this.addItem = function(itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded) {
+  this.addItem = function(itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem = true) {
     itemType = itemType || 1;
 
     //console.log("ItemType " + itemType);
@@ -661,13 +664,13 @@ var Scene = function(model, textureDir) {
     var ext = fileName.split('.').pop().split('?')[0];
     var fName = fileName.split('.').shift();
     
-    cargarItem("add",ext,fName,itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded);
+    cargarItem("add",ext,fName,itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem);
     
     
     //}
   }
   
-  function loaderCallbackDuplicate(geometry, materials, ext, itemType, fileName, metadata, position, rotation, scale, fixed, itemsBounded) {
+  function loaderCallbackDuplicate(geometry, materials, ext, itemType, fileName, metadata, position, rotation, scale, fixed, itemsBounded, newItem) {
       if (ext == "gltf" || ext == "glb") {
           itemType += 10;
       }
@@ -678,6 +681,9 @@ var Scene = function(model, textureDir) {
         //new THREE.MeshFaceMaterial(materials),
         position, rotation, scale
       );
+
+      if (!newItem) 
+        item.fromModel = true;
             
       item.fixed = fixed || false;
       items.push(item);
@@ -816,7 +822,7 @@ var Scene = function(model, textureDir) {
       scope.itemLoadedCallbacks.fire(item);     
     }
     
-  function cargarItem(type,ext,fName,itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded) {
+  function cargarItem(type,ext,fName,itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem) {
       // LOADING GLTF
     if ((ext === 'gltf') || (ext === 'glb'))  {
         //const loader = new GLTFLoader().setPath( 'models/gltf/DamagedHelmet/glTF-instancing/' );
@@ -892,9 +898,9 @@ var Scene = function(model, textureDir) {
 	
             //loaderCallback(object.scene.children[0].children[0].geometry, materials);
             if (type === "add") {
-                loaderCallback(group, materials, ext, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded);
+                loaderCallback(group, materials, ext, itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem);
             } else {
-                loaderCallbackDuplicate(group, materials, ext, itemType, fileName, metadata, position, rotation, scale, fixed, itemsBounded);
+                loaderCallbackDuplicate(group, materials, ext, itemType, fileName, metadata, position, rotation, scale, fixed, itemsBounded, newItem);
             }
             //loaderCallback(object.scene.children[0], materials);
             //loaderCallback(object.scene.children[0].geometry, object.scene.children[0].material);
@@ -947,7 +953,7 @@ var Scene = function(model, textureDir) {
   }
      
   
-  this.duplicateItem = function(itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded) {
+  this.duplicateItem = function(itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem = true) {
     itemType = itemType || 1;
 
     scope.itemLoadingCallbacks.fire();
@@ -956,7 +962,7 @@ var Scene = function(model, textureDir) {
     var ext = fileName.split('.').pop().split('?')[0];
     var fName = fileName.split('.').shift();
     
-    cargarItem("duplicate",ext,fName,itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded);
+    cargarItem("duplicate",ext,fName,itemType, fileName, metadata, textureFill, position, rotation, scale, fixed, itemsBounded, newItem);
     
   }
   
