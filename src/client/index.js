@@ -950,7 +950,8 @@ var CameraButtons = function(blueprint3d) {
     const tabs = {
       "FLOORPLAN" : $("#floorplan_tab"),
       "SHOP" : $("#items_tab"),
-      "DESIGN" : $("#design_tab")
+      "DESIGN" : $("#design_tab"),
+      "MODELS" : $("#models_tab")
     }
   
     const scope = this;
@@ -968,6 +969,10 @@ var CameraButtons = function(blueprint3d) {
       "SHOP" : {
         "div" : $("#add-items"),
         "tab" : tabs.SHOP
+      },
+      "MODELS" : {
+        "div" : $("#add-models"),
+        "tab" : tabs.MODELS
       }
     }
   
@@ -988,6 +993,8 @@ var CameraButtons = function(blueprint3d) {
       handleWindowResize();
   
       initItems();
+
+      initModels();
   
       scope.stateChangeCallbacks.add((state) => {
         if (state !== scope.states.DEFAULT) {
@@ -1091,6 +1098,18 @@ var CameraButtons = function(blueprint3d) {
         }
   
         blueprint3d.model.scene.addItem(itemType, modelUrl, metadata);
+        setCurrentState(scope.states.DEFAULT);
+      });
+    }
+
+    function initModels() {
+      $("#add-models").find(".add-model").on("mousedown", function(e) {
+        const model =      {
+          "name" : $(this).attr("model-name"),
+          "image" : $(this).find(".img").attr("src"),
+          "model" : $(this).attr("model-url")
+        }
+        blueprint3d.three.skyBox.loadFromModels(model);
         setCurrentState(scope.states.DEFAULT);
       });
     }

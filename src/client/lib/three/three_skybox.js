@@ -11,8 +11,13 @@ class ThreeSkybox {
     this.background = 0xD3D3D3;
     scene.getScene().background = new THREE.Color(this.background);
 
-    // Sky (modelo 3D de fondo)
-    this.loadNewModel('models/gltf/Chalet_Bodas_02.gltf')
+    // Sky (modelo 3D de fondo) por default
+    this.model = {
+      "name" : "Chalet",
+      "image" : "models/thumbnails/Chalet.png",
+      "model" : "models/gltf/Chalet_Bodas_02.gltf"
+    }
+    this.loadNewModel(this.model.model);
   }
 
   // Carga un nuevo modelo 3D de fondo y desecha el anterior
@@ -35,6 +40,13 @@ class ThreeSkybox {
     }).catch(err => {
       console.log(err);
     });
+  }
+
+  loadFromModels(model) {
+    if (this.model.name === model.name)
+      return;
+    this.model = model;
+    this.loadNewModel(model.model);
   }
 
   // Añadir callbacks

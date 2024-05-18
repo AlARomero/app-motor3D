@@ -5,6 +5,7 @@ module.exports = {
     entry: {
         bundle: './src/client/index.js', 
         items: './src/client/items.js',
+        models: './src/client/models.js'
     },
     module: {
         rules: [
