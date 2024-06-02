@@ -30,6 +30,14 @@ var CameraButtons = function(blueprint3d) {
       $("#zoom-out").on('dblclick', preventDefault);
   
       $("#reset-view").on('click', three.centerCamera)
+
+      $("#top-view").on('click', function() {
+        three.centerCamera();
+        
+        orbitControls.rotateUp(90);
+        orbitControls.update();
+        
+      });
   
       $("#move-left").on('click', function(){
         pan(directions.LEFT)
