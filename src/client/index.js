@@ -860,14 +860,18 @@ var CameraButtons = function(blueprint3d) {
         console.log(comensals);
         tables.push(table);
         comensals.forEach(comensal => {
-          const data = [ comensal.nombre, comensal.descripcion,  table.metadata.itemName];
+          let categorias = "";
+          comensal.categorias.forEach(categoria => {categorias += categoria.displayName + ", "});
+          if (categorias !== "")
+            categorias = categorias.substring(0, categorias.length - 2);
+          const data = [ comensal.nombre, comensal.descripcion,  table.metadata.itemName, categorias];
           tableData.push(data);
         });
       });
 
       // Añade la tabla al PDF
       autoTable(doc, {
-        head: [['Nombre Del Comensal', 'Descripción Del Comensal', 'Mesa Del Comensal']],
+        head: [['Nombre Del Comensal', 'Descripción Del Comensal', 'Mesa Del Comensal', 'Categorías Del Comensal']],
         body: tableData,
         startY: 20,
       });
