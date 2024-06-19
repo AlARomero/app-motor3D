@@ -1,0 +1,59 @@
+El proyecto está dividido enstre los arvhivos ejecutables sin ser compilados (carpeta dist/client) y 
+los archivos que deben ser procesados para luego ser ejecutados (carpeta src/client).
+
+/*** Carpeta dist/client ***/
+En esta carpeta esta el archivo principal para la visualización y ejecución del proyecto, index.html. En
+adición, hay numerosas carpetas para dividir contenidos estáticos que son usados en el html:
+
+    - assets: Son imágenes .hdr y .png, separadas ambas entre las carpetas hdr e img. Estos recursos actualmente
+              no estan siendo usados ya que han sido recursos de pruebas. 
+    - css: Carpeta en la que se encuentran los recursos css, actualmente solo uno. En este recurso estan los
+           los estilos propios usados. La mayoría se aplican a través de Bootstrap directamente en el html pero 
+           eran necesarios ciertos cambios en algunos elementos.
+    - js: Carpeta en la que se encuentra todo el js necesario para ejecutar el proyecto. Actualmente, ya que
+          todos los archivos de la carpeta src/client se compilan y ejecutan dinámicamente, solo está modernizr,
+          un archivo que usa el proyecto para tener un correcto funcionamiento.
+    - models: Carpeta en la que se pueden encontrar todos los modelos 3D, divididos en glb y gltf y sus imágenes
+              de presentación, ubicadas en la carpeta thumbnails. También contiene una carpeta llamada textures con
+              diferentes texturas que actualmente no estan siendo usadas.
+    - rooms:  Carpeta en la que se encuentran las texturas de los suelos y muros de habitaciones en la carpeta
+              textures además de sus imágenes de presentación en la carpeta thumbnails.
+
+/*** Carpeta src/client ***/
+En esta carpeta se encuentran todos los archivos relacionados con el motor de renderización 3D. Estos posteriormente
+son compilados para poder ser ejecutados desde el html de manera dinámica.
+
+Inicialmente se encuentran ciertos archivos sin ser agrupados en carpetas:
+    - index.js: Archivo que se encarga de generar toda la lógica necesaria para que el usuario tenga visible la aplicación.
+    - items.js: Archivo que genera en la carga inicial de la aplicación todos los tipos de objetos disponibles para posteriormente
+                ser usados.
+    - models.js: Archivo que genera en la carga inicial de la aplicación todos los modelos 3D de fondo predeterminados disponibles 
+                 para posteriormente ser usados.
+    - Archivos webpack: Son los encargados de orquestar cómo deben ser compilados todos los demás archivos javascript.
+                        Entre ellos hay ciertas diferencias:
+                            - webpack.common.js: Configuración que es similar tanto para producción como para desarrollo.
+                            - webpack.dev.js: Configuración únicamente válida para desarrollo.
+                            - webpack.prod.js: Configuración únicamente válida para producción.
+Después hay dos carpetas diferentes:
+    - comensales: Contiene las tres clases necesarias para gestionar a los comensales de las mesas.
+    - lib: Contiene todo el motor Blueprint3D.
+
+/*** Carpeta lib ***/
+Como ya se ha indicado, esta carpeta se encuentra en la ruta src/client/lib y contiene todo el motor Blueprint3D.
+
+Contiene la siguiente estructura:
+    - archivo blueprint3d.js: Archivo principal del motor con el que se inicializa todo lo necesario para su funcionamiento.
+    - carpeta floorplanner: Archivos que sirven para manejar el plano 2D
+    - carpeta items: Arvhivos que represetan las clases de objetos. Se diferencian entre clases que heredan de THREE.Group
+                     y clases que heredan de THREE.Mesh.
+    - carpeta model: Clases que representan la lógica de los modelos que maneja el motor, como son habitaciones o muros.
+    - carpeta three: Clases que utilizan ThreeJS para representar 3D los elementos y los modelos que estan en la carpeta model.
+    - carpeta utils: Carpeta en la que se encuentran funciones de utilidad utilizadas a lo largo de las clases del proyecto.
+                     Hay utilidades para los objetos que se posicionan en un muro, objetos que se posicionan en el suelo, objetos
+                     en general y utilidades generales.
+
+A parte de todos estas estructuras hay otros archivos necesarios para el funcionamiento de la aplicación:
+    - package-lock.json y package.json: Archivos que contienen información de la aplicación como las librerías
+      usadas y su versión.
+    - .gitignore: Archivo usado para indicar qué elementos tiene que pasar por alto el gestor de archivos.
+    - README.md: Archivo en el que se encuentra un tutorial de cómo ejecutar el proyecto.
