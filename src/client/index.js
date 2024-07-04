@@ -884,10 +884,15 @@ var CameraButtons = function(blueprint3d) {
       })
       finalY = doc.autoTable.previous.finalY;
 
+      // Si la imagen es mas grande que el restante de página se crea una nueva previamente
+      if (finalY + 10 + 120 > doc.internal.pageSize.height) {
+        doc.addPage();
+        finalY = 10;
+      }
       const imgUrl = designScreenshot();
 
       // Añade la imagen al PDF
-      doc.addImage(imgUrl, 'PNG', 10, finalY + 10, 180, 80);
+      doc.addImage(imgUrl, 'PNG', 10, finalY + 10, 180, 120);
 
       // Guarda el PDF
       doc.save('comensales.pdf');
